@@ -1,0 +1,3 @@
+[submodule "Grimity"]
+	path = Assets/Grimity
+	url = https://github.com/manuelhuber/Grimity.git
