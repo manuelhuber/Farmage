@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Settings
+  - HQ
   layers:
   - Default
   - TransparentFX
