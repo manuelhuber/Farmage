@@ -7,10 +7,11 @@ namespace Features.Terrain {
 public class FarmageTerrain : MonoBehaviour {
     public Material material;
     public int size = 250;
-    public int octaves = 6;
-    public float scale = 2.5f;
-    public float persistence = 0.4f;
-    public int lacunarity = 2;
+    [Range(1, 10)] public int octaves = 6;
+    public float scale = 30f;
+    public float meshScale = 2.5f;
+    [Range(0, 1)] public float persistence = 0.4f;
+    [Range(1, 10)]public int lacunarity = 2;
     public int seed = 8645153;
     public AnimationCurve heightCurve;
     public int heightAmplifier = 1;
@@ -25,6 +26,7 @@ public class FarmageTerrain : MonoBehaviour {
                 _chunk = transform.GetChild(0).gameObject;
             } else {
                 _chunk = new GameObject();
+                _chunk.layer = 8;
                 _chunk.transform.parent = transform;
                 _meshFilter = _chunk.AddComponent<MeshFilter>();
                 _collider = _chunk.AddComponent<MeshCollider>();
@@ -47,7 +49,8 @@ public class FarmageTerrain : MonoBehaviour {
         var mesh = MeshGenerator.GenerateMesh(
             noise,
             heightAmplifier,
-            heightCurve).generateMesh();
+            heightCurve,
+            scale: meshScale).generateMesh();
         _meshFilter.sharedMesh = mesh;
         _collider.sharedMesh = mesh;
     }

@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Features.Building;
+using Common.Settings;
 using Grimity.Cursor;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace UnityEngine {
+namespace Features.Building {
 public class BuildingInput : MonoBehaviour {
     public List<BuildingMenuEntry> entries;
     public LayerMask terrainLayer;
@@ -13,11 +14,13 @@ public class BuildingInput : MonoBehaviour {
     private GameObject _uiCore;
     private bool _dragObject;
     private Placeable _placeable;
-    private Camera _camera;
+    private UnityEngine.Camera _camera;
+    private Hotkeys _hotkeys;
 
-    private void OnEnable() {
-        _camera = GetComponent<Camera>();
-        if (_camera == null) _camera = Camera.main;
+    private void Start() {
+        _hotkeys = Settings.Instance.Hotkeys;
+        _camera = GetComponent<UnityEngine.Camera>();
+        if (_camera == null) _camera = UnityEngine.Camera.main;
         InitUi();
     }
 
@@ -26,11 +29,13 @@ public class BuildingInput : MonoBehaviour {
             _placeable.gameObject.transform.position = MouseToTerrain().point - _placeable.lowerCenter;
         }
 
-        if (Input.GetKeyDown(KeyCode.B)) {
+        if (Input.GetKeyDown(_hotkeys.buildings)) {
             _uiCore.SetActive(true);
             _uiCore.transform.position = Input.mousePosition;
         } else if (Input.GetKeyDown(KeyCode.Escape)) {
             _uiCore.SetActive(false);
+            _dragObject = false;
+            Destroy(_placeable.gameObject);
         }
 
         if (Input.GetMouseButtonDown(0) && _dragObject) {
@@ -70,7 +75,7 @@ public class BuildingInput : MonoBehaviour {
     }
 
     private RaycastHit MouseToTerrain() {
-        CursorUtil.GetCursorLocation(out RaycastHit terrainHit, terrainLayer, _camera, debug: true);
+        CursorUtil.GetCursorLocation(out RaycastHit terrainHit, terrainLayer, _camera);
         return terrainHit;
     }
 }
