@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Settings
   - HQ
+  - Canvas
   layers:
   - Default
   - TransparentFX

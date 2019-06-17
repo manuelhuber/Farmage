@@ -16,6 +16,7 @@ public class BuildingInput : MonoBehaviour {
     private Placeable _placeable;
     private UnityEngine.Camera _camera;
     private Hotkeys _hotkeys;
+    private BuildingMenuEntry selected;
 
     private void Start() {
         _hotkeys = Settings.Instance.Hotkeys;
@@ -39,7 +40,7 @@ public class BuildingInput : MonoBehaviour {
         }
 
         if (Input.GetMouseButtonDown(0) && _dragObject) {
-            DetachFromCursor();
+            PlaceBuilding();
         }
     }
 
@@ -54,7 +55,10 @@ public class BuildingInput : MonoBehaviour {
             button.transform.localPosition = new Vector3(offset, 0, 0);
             offset += button.GetComponent<RectTransform>().rect.width;
             var buttonClickedEvent = new Button.ButtonClickedEvent();
-            buttonClickedEvent.AddListener(() => { AttachToCursor(entry.buildingPrefab); });
+            buttonClickedEvent.AddListener(() => {
+                selected = entry;
+                AttachToCursor(entry.previewPrefab);
+            });
             button.GetComponent<Button>().onClick = buttonClickedEvent;
         }
 
@@ -69,9 +73,11 @@ public class BuildingInput : MonoBehaviour {
         _dragObject = true;
     }
 
-    private void DetachFromCursor() {
+    private void PlaceBuilding() {
         _dragObject = false;
-        _placeable.Place();
+        _placeable.FlattenFloor();
+        Instantiate(selected.buildingPrefab, _placeable.transform.position, _placeable.transform.rotation);
+        Destroy(_placeable.gameObject);
     }
 
     private RaycastHit MouseToTerrain() {
@@ -84,5 +90,6 @@ public class BuildingInput : MonoBehaviour {
 public struct BuildingMenuEntry {
     public GameObject uiPrefab;
     public GameObject buildingPrefab;
+    public GameObject previewPrefab;
 }
 }

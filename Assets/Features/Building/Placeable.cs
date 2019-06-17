@@ -34,7 +34,7 @@ public class Placeable : MonoBehaviour {
         lowerCenter = Geometry.LowerCenter(o);
     }
 
-    public void Place() {
+    public void FlattenFloor() {
         var collisionVertices = CollisionVertices();
 
         var avg = collisionVertices.Select(tuple => tuple.Item2.y)
@@ -52,8 +52,6 @@ public class Placeable : MonoBehaviour {
         _terrainMesh.SetVertices(_terrainVertices);
         _terrainCollider.sharedMesh = null;
         _terrainCollider.sharedMesh = _terrainMesh;
-
-        Destroy(this);
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -73,9 +71,7 @@ public class Placeable : MonoBehaviour {
         var heights = collisionVertices.Select(tuple => tuple.Item2.y).ToArray();
         var dif = heights.Max() - heights.Min();
         // TODO implement "not placeable" feature
-        if (dif > 2) {
-            Debug.Log("Bad place");
-        }
+        if (dif > 2) { }
     }
 
     private List<Tuple<int, Vector3>> CollisionVertices() {
