@@ -8,8 +8,12 @@ namespace Features.Building {
 public class Placeable : MonoBehaviour {
     public Vector3 lowerCenter;
     public LayerMask terrainLayer;
+    public Material placementOk;
+    public Material placementBad;
+    public bool Placable => placable;
 
     private MeshFilter _filter;
+    private MeshRenderer _renderer;
     private BoxCollider _floorChecker;
     private List<Vector3> _terrainVertices;
     private List<Vector3> _terrainVerticesWorldSpace;
@@ -17,9 +21,12 @@ public class Placeable : MonoBehaviour {
     private MeshCollider _terrainCollider;
     private GameObject _terrain;
     private List<Tuple<int, Vector3>> _collisionVertices = new List<Tuple<int, Vector3>>();
+    private bool placable;
+
 
     private void Start() {
         _filter = GetComponent<MeshFilter>();
+        _renderer = GetComponent<MeshRenderer>();
         var o = gameObject;
         _floorChecker = o.AddComponent<BoxCollider>();
         var bounds = _filter.sharedMesh.bounds;
@@ -70,8 +77,14 @@ public class Placeable : MonoBehaviour {
         if (collisionVertices.Count == 0) return;
         var heights = collisionVertices.Select(tuple => tuple.Item2.y).ToArray();
         var dif = heights.Max() - heights.Min();
-        // TODO implement "not placeable" feature
-        if (dif > 2) { }
+        var badTerrain = dif > 2;
+        if (badTerrain && placable) {
+            placable = false;
+            _renderer.material = placementBad;
+        } else if (!badTerrain && !placable) {
+            placable = true;
+            _renderer.material = placementOk;
+        }
     }
 
     private List<Tuple<int, Vector3>> CollisionVertices() {

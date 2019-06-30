@@ -1,13 +1,13 @@
-using System;
 using System.Collections.Generic;
 using Common.Settings;
+using Features.Building.Structures;
 using Grimity.Cursor;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Features.Building {
 public class BuildingInput : MonoBehaviour {
-    public List<BuildingMenuEntry> entries;
+    public BuildMenu buildMenu;
     public LayerMask terrainLayer;
 
     private Canvas _canvas;
@@ -16,7 +16,7 @@ public class BuildingInput : MonoBehaviour {
     private Placeable _placeable;
     private UnityEngine.Camera _camera;
     private Hotkeys _hotkeys;
-    private BuildingMenuEntry selected;
+    private BuildingMenuEntry _selected;
 
     private void Start() {
         _hotkeys = Settings.Instance.Hotkeys;
@@ -50,13 +50,13 @@ public class BuildingInput : MonoBehaviour {
         _uiCore.name = "Mouse Centric UI";
         // TODO arrange them nicely
         var offset = 50f;
-        foreach (var entry in entries) {
+        foreach (var entry in buildMenu.entries) {
             var button = Instantiate(entry.uiPrefab, _uiCore.transform, false);
             button.transform.localPosition = new Vector3(offset, 0, 0);
             offset += button.GetComponent<RectTransform>().rect.width;
             var buttonClickedEvent = new Button.ButtonClickedEvent();
             buttonClickedEvent.AddListener(() => {
-                selected = entry;
+                _selected = entry;
                 AttachToCursor(entry.previewPrefab);
             });
             button.GetComponent<Button>().onClick = buttonClickedEvent;
@@ -69,14 +69,17 @@ public class BuildingInput : MonoBehaviour {
         var building = Instantiate(prefab);
         _placeable = building.AddComponent<Placeable>();
         _placeable.terrainLayer = terrainLayer;
+        _placeable.placementBad = buildMenu.placementBad;
+        _placeable.placementOk = buildMenu.placementOk;
         _uiCore.SetActive(false);
         _dragObject = true;
     }
 
     private void PlaceBuilding() {
+        if (!_placeable.Placable) return;
         _dragObject = false;
         _placeable.FlattenFloor();
-        Instantiate(selected.buildingPrefab, _placeable.transform.position, _placeable.transform.rotation);
+        Instantiate(_selected.buildingPrefab, _placeable.transform.position, _placeable.transform.rotation);
         Destroy(_placeable.gameObject);
     }
 
@@ -84,12 +87,5 @@ public class BuildingInput : MonoBehaviour {
         CursorUtil.GetCursorLocation(out RaycastHit terrainHit, terrainLayer, _camera);
         return terrainHit;
     }
-}
-
-[Serializable]
-public struct BuildingMenuEntry {
-    public GameObject uiPrefab;
-    public GameObject buildingPrefab;
-    public GameObject previewPrefab;
 }
 }
