@@ -11,8 +11,7 @@ public class Placeable : MonoBehaviour {
     public PlacementSettings settings;
     public bool Placable => placable;
 
-    private MeshFilter _filter;
-    private MeshRenderer _renderer;
+    private MeshRenderer[] _renderer;
     private BoxCollider _floorChecker;
     private List<Vector3> _terrainVertices;
     private List<Vector3> _terrainVerticesWorldSpace;
@@ -24,11 +23,11 @@ public class Placeable : MonoBehaviour {
 
 
     private void Start() {
-        _filter = GetComponent<MeshFilter>();
-        _renderer = GetComponent<MeshRenderer>();
+        _renderer = GetComponentsInChildren<MeshRenderer>();
         var o = gameObject;
         _floorChecker = o.AddComponent<BoxCollider>();
-        var bounds = _filter.sharedMesh.bounds;
+        var bounds = Geometry.CalculateBounds(gameObject);
+
         // TODO remove magic numbers
         _floorChecker.center = new Vector3(0, -0.5f, 0);
         _floorChecker.isTrigger = true;
@@ -42,6 +41,9 @@ public class Placeable : MonoBehaviour {
 
     public void FlattenFloor() {
         var collisionVertices = CollisionVertices();
+        if (collisionVertices.Count == 0) {
+            return;
+        }
 
         var avg = collisionVertices.Select(tuple => tuple.Item2.y)
                       .Aggregate((sum, value) => sum + value) /
@@ -79,10 +81,14 @@ public class Placeable : MonoBehaviour {
         var badTerrain = dif > settings.placementThreshold;
         if (badTerrain && placable) {
             placable = false;
-            _renderer.material = settings.placementBad;
+            foreach (var ren in _renderer) {
+                ren.material = settings.placementBad;
+            }
         } else if (!badTerrain && !placable) {
             placable = true;
-            _renderer.material = settings.placementOk;
+            foreach (var ren in _renderer) {
+                ren.material = settings.placementOk;
+            }
         }
     }
 

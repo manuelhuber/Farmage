@@ -8,7 +8,7 @@ public class Spawner : MonoBehaviour {
     public float waveInterval = 5f;
     public GameObject[] spawnPoints;
     public GameObject enemyPrefab;
-    public RangeInt spawnCount = new RangeInt(1, 3);
+    public RangeInt spawnCount = new RangeInt(5, 10);
 
     private float _lastSpawn;
     private GameObject[] _hqs;

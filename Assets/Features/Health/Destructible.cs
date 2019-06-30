@@ -6,6 +6,7 @@ namespace Features.Health {
 public class Destructible : MonoBehaviour {
     public int hitpoints;
     private Slider _slider;
+    public Team team;
 
     private void Start() {
         _slider = GetComponentInChildren<Slider>();
@@ -25,5 +26,10 @@ public class Destructible : MonoBehaviour {
     private void Die() {
         Destroy(gameObject);
     }
+}
+
+public enum Team {
+    Farmers,
+    Aliens
 }
 }

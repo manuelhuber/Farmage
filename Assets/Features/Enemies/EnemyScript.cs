@@ -25,16 +25,16 @@ public class EnemyScript : MonoBehaviour {
 
         _navMeshAgent.SetDestination(_target.transform.position);
     }
-    
+
     public void setTargets(GameObject[] targets) {
         _targets = targets;
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (other.CompareTag("HQ")) {
-            other.gameObject.GetComponent<Destructible>().DealDamage(damage);
-            Destroy(gameObject);
-        }
+        var destructible = other.gameObject.GetComponent<Destructible>();
+        if (destructible == null || destructible.team == Team.Aliens) return;
+        destructible.DealDamage(damage);
+        Destroy(gameObject);
     }
 }
 }

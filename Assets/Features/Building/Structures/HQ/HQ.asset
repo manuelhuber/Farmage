@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84747c50b2b8422683e10affc725c9db, type: 3}
   m_Name: HQ
   m_EditorClassIdentifier: 
-  image: {fileID: 2800000, guid: 9257bbfdb35e0db4fbee6ae24d84e8c3, type: 3}
+  image: {fileID: 21300000, guid: 9257bbfdb35e0db4fbee6ae24d84e8c3, type: 3}
   buildingPrefab: {fileID: 3747101473060355667, guid: 99d6185132b1e8c459567f29186c5797,
     type: 3}
   previewPrefab: {fileID: 7896822171643210548, guid: 5e71d59dfb2dfd54eb7c181e4caebc4f,
