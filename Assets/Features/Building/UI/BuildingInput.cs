@@ -4,6 +4,7 @@ using Features.Building.Placement;
 using Grimity.Cursor;
 using UnityEngine;
 using UnityEngine.UI;
+using ResourceManager = Features.Resources.ResourceManager;
 
 namespace Features.Building.UI {
 public class BuildingInput : MonoBehaviour {
@@ -19,8 +20,10 @@ public class BuildingInput : MonoBehaviour {
     private UnityEngine.Camera _camera;
     private Hotkeys _hotkeys;
     private BuildingMenuEntry _selected;
+    private ResourceManager _resourceManager;
 
     private void Start() {
+        _resourceManager = ResourceManager.Instance;
         _hotkeys = Settings.Instance.Hotkeys;
         _camera = GetComponent<UnityEngine.Camera>();
         if (_camera == null) _camera = UnityEngine.Camera.main;
@@ -60,15 +63,26 @@ public class BuildingInput : MonoBehaviour {
             button.GetComponent<Image>().sprite = entry.image;
             button.transform.localPosition = new Vector3(offset, 0, 0);
             offset += button.GetComponent<RectTransform>().rect.width;
+            void UpdateThisButton(bool playable) => UpdateButton(playable, entry, button);
+            var canBePayed = _resourceManager.subscribe(entry.cost, UpdateThisButton);
+            UpdateThisButton(canBePayed);
+        }
+
+        _uiCore.SetActive(false);
+    }
+
+    private void UpdateButton(bool canBePayed, BuildingMenuEntry entry, GameObject button) {
+        if (canBePayed) {
             var buttonClickedEvent = new Button.ButtonClickedEvent();
             buttonClickedEvent.AddListener(() => {
                 _selected = entry;
                 AttachToCursor(entry.previewPrefab);
             });
             button.GetComponent<Button>().onClick = buttonClickedEvent;
+        } else {
+            button.GetComponent<Image>().color = Color.red;
+            button.GetComponent<Button>().onClick = null;
         }
-
-        _uiCore.SetActive(false);
     }
 
     private void AttachToCursor(GameObject prefab) {
@@ -82,10 +96,16 @@ public class BuildingInput : MonoBehaviour {
 
     private void PlaceBuilding() {
         if (!_placeable.Placable) return;
-        _dragObject = false;
         _placeable.FlattenFloor();
-        Instantiate(_selected.buildingPrefab, _placeable.transform.position, _placeable.transform.rotation);
-        Destroy(_placeable.gameObject);
+        if (_resourceManager.Reduce(_selected.cost)) {
+            Instantiate(_selected.buildingPrefab, _placeable.transform.position, _placeable.transform.rotation);
+            if (!Input.GetKey(KeyCode.LeftShift)) {
+                _dragObject = false;
+                Destroy(_placeable.gameObject);
+            }
+        } else {
+            // TODO handle error case
+        }
     }
 
     private RaycastHit MouseToTerrain() {

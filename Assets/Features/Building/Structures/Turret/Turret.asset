@@ -17,3 +17,5 @@ MonoBehaviour:
     type: 3}
   previewPrefab: {fileID: 8893555642787168403, guid: 4ef896687a66d774d80407d4cf833e2c,
     type: 3}
+  cost:
+    cash: 5

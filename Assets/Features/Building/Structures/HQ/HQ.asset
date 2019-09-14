@@ -17,3 +17,5 @@ MonoBehaviour:
     type: 3}
   previewPrefab: {fileID: 7896822171643210548, guid: 5e71d59dfb2dfd54eb7c181e4caebc4f,
     type: 3}
+  cost:
+    cash: 150
