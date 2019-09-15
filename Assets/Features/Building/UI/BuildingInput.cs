@@ -79,6 +79,7 @@ public class BuildingInput : MonoBehaviour {
                 AttachToCursor(entry.previewPrefab);
             });
             button.GetComponent<Button>().onClick = buttonClickedEvent;
+            button.GetComponent<Image>().color = Color.white;
         } else {
             button.GetComponent<Image>().color = Color.red;
             button.GetComponent<Button>().onClick = null;
