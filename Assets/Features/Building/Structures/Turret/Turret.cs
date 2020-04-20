@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Features.Health;
+using Features.Units;
 using UnityEngine;
 
 namespace Features.Building.Structures.Turret {
@@ -12,8 +12,8 @@ public class Turret : MonoBehaviour {
     public float attackSpeed;
 
 
-    private readonly List<Destructible> _targets = new List<Destructible>();
-    private Destructible currentTarget;
+    private readonly List<Mortal> _targets = new List<Mortal>();
+    private Mortal currentTarget;
     private float nextShot;
 
 
@@ -48,14 +48,14 @@ public class Turret : MonoBehaviour {
 
 
     private void OnTriggerEnter(Collider other) {
-        var target = other.gameObject.GetComponent<Destructible>();
+        var target = other.gameObject.GetComponent<Mortal>();
         if (target != null && target.team == Team.Aliens) {
             _targets.Add(target);
         }
     }
 
     private void OnTriggerExit(Collider other) {
-        var target = other.gameObject.GetComponent<Destructible>();
+        var target = other.gameObject.GetComponent<Mortal>();
         _targets.Remove(target);
         if (target == currentTarget) {
             GetNewTarget();

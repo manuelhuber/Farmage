@@ -53,7 +53,7 @@ public class BuildingInput : MonoBehaviour {
     }
 
     private void InitUi() {
-        _canvas = FindObjectOfType<Canvas>();
+        _canvas = GameObject.FindWithTag("MainUI").GetComponent<Canvas>();
         _uiCore = Instantiate(new GameObject(), _canvas.transform, false);
         _uiCore.name = "Mouse Centric UI";
         // TODO arrange them nicely
@@ -110,7 +110,7 @@ public class BuildingInput : MonoBehaviour {
     }
 
     private RaycastHit MouseToTerrain() {
-        CursorUtil.GetCursorLocation(out RaycastHit terrainHit, terrainLayer, _camera);
+        CursorUtil.GetCursorLocation(out RaycastHit terrainHit, _camera, terrainLayer);
         return terrainHit;
     }
 }

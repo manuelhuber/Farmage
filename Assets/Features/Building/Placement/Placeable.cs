@@ -35,7 +35,6 @@ public class Placeable : MonoBehaviour {
         new Dictionary<int, List<Tuple<int, Vector3>>>();
 
     private bool placable;
-    private int counter = 0;
 
 
     private void Start() {
@@ -116,11 +115,6 @@ public class Placeable : MonoBehaviour {
         if (collisionVertices.Count == 0) return;
         var heights = collisionVertices.SelectMany(pair => pair.Value).Select(tuple => tuple.Item2.y).ToArray();
         var dif = heights.Max() - heights.Min();
-        if (counter % 10 == 0) {
-            Debug.Log($"Dif: {dif} (min: {heights.Min()}, max: {heights.Max()}");
-        } else {
-            counter++;
-        }
 
         var badTerrain = dif > settings.placementThreshold;
         if (badTerrain && placable) {
