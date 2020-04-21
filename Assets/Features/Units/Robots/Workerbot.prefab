@@ -170,6 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fbf82782055a9d44aada64f63ddc830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jobQueue: {fileID: 11400000, guid: fab29857e19ec7d4ab5385bab66dafd3, type: 2}
 --- !u!65 &-1607080630944190864
 BoxCollider:
   m_ObjectHideFlags: 0

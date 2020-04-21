@@ -1,34 +1,33 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Features.Queue;
-using Features.Units.Robots;
+﻿using Features.Queue;
 using UnityEngine;
 using UnityEngine.AI;
-using Queue = Features.Queue.Queue;
+using UnityEngine.Serialization;
 
+namespace Features.Units.Robots {
 public class LootGatherer : MonoBehaviour, WokerbotBehaviour {
-    private GameObject loot;
-    private bool isCarryingLoot;
+    private GameObject _loot;
+    private bool _isCarryingLoot;
     private NavMeshAgent _navMeshAgent;
+    [SerializeField] private JobQueue jobQueue;
 
     private void Start() {
         _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     public int ActivationPriority() {
-        return Queue.Count(TaskType.Loot);
+        return jobQueue.Count();
     }
 
     public void Behave() {
-        if (loot == null) {
-            var dequeue = Queue.Dequeue(TaskType.Loot);
+        if (_loot == null) {
+            var dequeue =
+                jobQueue.Dequeue(task => Vector3.Distance(task.payload.transform.position, transform.position));
             if (dequeue == null) return;
-            loot = dequeue.Value.payload;
-            _navMeshAgent.SetDestination(loot.transform.position);
+            _loot = dequeue.Value.payload;
+            _navMeshAgent.SetDestination(_loot.transform.position);
         } else {
             if (!((transform.position - _navMeshAgent.destination).magnitude < 5)) return;
-            if (!isCarryingLoot) {
+            if (!_isCarryingLoot) {
                 PickupLoot();
             } else {
                 DropLoot();
@@ -37,18 +36,19 @@ public class LootGatherer : MonoBehaviour, WokerbotBehaviour {
     }
 
     private void DropLoot() {
-        loot.transform.parent = null;
-        loot = null;
-        isCarryingLoot = false;
+        _loot.transform.parent = null;
+        _loot = null;
+        _isCarryingLoot = false;
     }
 
     private void PickupLoot() {
-        loot.transform.parent = transform;
+        _loot.transform.parent = transform;
         var hq = GameObject.FindGameObjectWithTag("HQ");
         _navMeshAgent.SetDestination(hq.transform.position);
-        isCarryingLoot = true;
+        _isCarryingLoot = true;
     }
 
     public void Abandon() {
     }
+}
 }

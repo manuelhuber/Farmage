@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Features.Camera {
 public class CameraControl : MonoBehaviour {
-    public float zoomFactor = 3;
     private Hotkeys _hotkeys;
     private Control _control;
     private Transform _camera;
@@ -43,7 +42,7 @@ public class CameraControl : MonoBehaviour {
             rotation.y -= 1;
         }
 
-        var zoomValue = Input.mouseScrollDelta.y * zoomFactor;
+        var zoomValue = Input.mouseScrollDelta.y * _control.zoomSpeed;
         _camera.Translate(0, 0, zoomValue);
 
         rotation *= _control.cameraRotateSpeed;
