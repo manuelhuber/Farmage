@@ -12,4 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a6c741ca1624a868b6495821fe9c57e, type: 3}
   m_Name: BoblingLoot
   m_EditorClassIdentifier: 
-  loot: []
+  loot:
+  - prefab: {fileID: 2944708649086578826, guid: d6d5475aa215f0e4aa286ec79bc99c06,
+      type: 3}
+    dropchance: 1
+  - prefab: {fileID: 2944708649086578826, guid: d6d5475aa215f0e4aa286ec79bc99c06,
+      type: 3}
+    dropchance: 1
+  - prefab: {fileID: 2944708649086578826, guid: d6d5475aa215f0e4aa286ec79bc99c06,
+      type: 3}
+    dropchance: 1

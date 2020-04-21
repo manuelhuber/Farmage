@@ -2,6 +2,7 @@ using Common.Settings;
 using Features.Building.BuildMenu;
 using Features.Building.Placement;
 using Grimity.Cursor;
+using Grimity.ScriptableObject;
 using UnityEngine;
 using UnityEngine.UI;
 using ResourceManager = Features.Resources.ResourceManager;

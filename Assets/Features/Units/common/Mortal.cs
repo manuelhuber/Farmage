@@ -1,9 +1,6 @@
-﻿using System;
-using Features.Queue;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace Features.Units {
 public class Mortal : MonoBehaviour {
@@ -14,6 +11,7 @@ public class Mortal : MonoBehaviour {
 
     private void Start() {
         _slider = GetComponentInChildren<Slider>();
+        if (_slider == null) return;
         _slider.maxValue = hitpoints;
         _slider.value = hitpoints;
     }
