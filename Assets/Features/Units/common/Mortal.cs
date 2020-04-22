@@ -4,27 +4,27 @@ using UnityEngine.UI;
 
 namespace Features.Units {
 public class Mortal : MonoBehaviour {
-    public int hitpoints;
-    private Slider _slider;
+    [SerializeField] private int hitpoints;
+    [SerializeField] private Slider _hitpointBar;
     public Team team;
-    public UnityEvent onDeath;
+    [SerializeField] private UnityEvent onDeath;
 
     private void Start() {
-        _slider = GetComponentInChildren<Slider>();
-        if (_slider == null) return;
-        _slider.maxValue = hitpoints;
-        _slider.value = hitpoints;
+        _hitpointBar = GetComponentInChildren<Slider>();
+        if (_hitpointBar == null) return;
+        _hitpointBar.maxValue = hitpoints;
+        _hitpointBar.value = hitpoints;
     }
 
-    public void Die() {
+    private void Die() {
         onDeath.Invoke();
         Destroy(gameObject);
     }
 
-    public void DealDamage(int amount) {
+    public void TakeDamage(int amount) {
         hitpoints -= amount;
         if (hitpoints > 0) {
-            _slider.value = hitpoints;
+            _hitpointBar.value = hitpoints;
         } else {
             Die();
         }

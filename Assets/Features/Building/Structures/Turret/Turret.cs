@@ -13,8 +13,8 @@ public class Turret : MonoBehaviour {
 
 
     private readonly List<Mortal> _targets = new List<Mortal>();
-    private Mortal currentTarget;
-    private float nextShot;
+    private Mortal _currentTarget;
+    private float _nextShot;
 
 
     // Start is called before the first frame update
@@ -25,24 +25,24 @@ public class Turret : MonoBehaviour {
     }
 
     private void Update() {
-        if (currentTarget == null || currentTarget.Equals(null)) {
+        if (_currentTarget == null || _currentTarget.Equals(null)) {
             if (!GetNewTarget()) return;
         }
 
-        if (Time.time > nextShot) {
+        if (Time.time > _nextShot) {
             Shoot();
         }
     }
 
     private void Shoot() {
-        currentTarget.DealDamage(damage);
-        nextShot = Time.time + attackSpeed;
+        _currentTarget.TakeDamage(damage);
+        _nextShot = Time.time + attackSpeed;
     }
 
     private bool GetNewTarget() {
         _targets.RemoveAll(destructible => destructible == null);
         if (_targets.Count == 0) return false;
-        currentTarget = _targets.First();
+        _currentTarget = _targets.First();
         return true;
     }
 
@@ -57,7 +57,7 @@ public class Turret : MonoBehaviour {
     private void OnTriggerExit(Collider other) {
         var target = other.gameObject.GetComponent<Mortal>();
         _targets.Remove(target);
-        if (target == currentTarget) {
+        if (target == _currentTarget) {
             GetNewTarget();
         }
     }

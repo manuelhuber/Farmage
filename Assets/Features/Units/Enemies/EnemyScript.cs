@@ -35,7 +35,7 @@ public class EnemyScript : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         var destructible = other.gameObject.GetComponent<Mortal>();
         if (destructible == null || destructible.team == Team.Aliens) return;
-        destructible.DealDamage(damage);
+        destructible.TakeDamage(damage);
         Destroy(gameObject);
     }
 }

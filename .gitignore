@@ -154,3 +154,20 @@ OS generated
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# ODIN
+# Ignore the auto-generated AOT compatibility dll.
+Assets/Plugins/Sirenix/Assemblies/AOT/*
+
+# Ignore all unpacked demos.
+Assets/Plugins/Sirenix/Demos/*
+
+# But keep the demo packages themselves.
+!/Assets/Plugins/Sirenix/Demos/*.unitypackage 
+
+
+# Peek
+## Peek
+Assets/Ludiq/Ludiq.PeekCore
+Assets/Ludiq/Ludiq.Peek
+Assets/Ludiq.Generated/Transient
