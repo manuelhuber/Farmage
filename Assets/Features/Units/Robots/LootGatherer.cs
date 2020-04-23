@@ -8,27 +8,32 @@ using UnityEngine.AI;
 using UnityEngine.Serialization;
 
 namespace Features.Units.Robots {
-public class LootGatherer : MonoBehaviour, WokerbotBehaviour {
+public class LootGatherer : WokerbotBehaviourBase {
     private GameObject _loot;
     private Storage _targetStorage;
     private bool _isCarryingLoot;
     private NavMeshAgent _navMeshAgent;
-    [SerializeField] private JobQueue jobQueue;
+    [SerializeField] private JobMultiQueue jobQueue;
     [SerializeField] private RuntimeGameObjectSet buildings;
 
     private void Start() {
         _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    public int ActivationPriority() {
-        return jobQueue.Count();
+    public override int ActivationPriority() {
+        return 1;
     }
 
-    public void Behave() {
+    public override void Behave() {
         if (_loot == null) {
             var dequeue =
-                jobQueue.Dequeue(task => Vector3.Distance(task.payload.transform.position, transform.position));
-            if (dequeue == null) return;
+                jobQueue.Dequeue(TaskType.Loot,
+                    task => Vector3.Distance(task.payload.transform.position, transform.position));
+            if (dequeue == null) {
+                completeTask();
+                return;
+            }
+
             _loot = dequeue.Value.payload;
             _navMeshAgent.SetDestination(_loot.transform.position);
         } else {
@@ -46,6 +51,7 @@ public class LootGatherer : MonoBehaviour, WokerbotBehaviour {
         _targetStorage.Deliver(_loot.GetComponent<Storable>());
         _loot = null;
         _isCarryingLoot = false;
+        completeTask();
     }
 
     private void PickupLoot() {
@@ -58,7 +64,7 @@ public class LootGatherer : MonoBehaviour, WokerbotBehaviour {
         _isCarryingLoot = true;
     }
 
-    public void Abandon() {
+    public override void Abandon() {
     }
 }
 }

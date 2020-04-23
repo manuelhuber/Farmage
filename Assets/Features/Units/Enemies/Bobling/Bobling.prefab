@@ -225,6 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitpoints: 1
+  _hitpointBar: {fileID: 0}
   team: 1
   onDeath:
     m_PersistentCalls:
@@ -264,7 +265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lootTable: {fileID: 11400000, guid: acd6bdf59d7ca984785f1f6b91a7291b, type: 2}
-  lootQueue: {fileID: 11400000, guid: fab29857e19ec7d4ab5385bab66dafd3, type: 2}
+  lootQueue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
 --- !u!1 &4167541634758979818
 GameObject:
   m_ObjectHideFlags: 0
@@ -524,7 +525,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 311
 --- !u!1 &5511030855311296878
 GameObject:
   m_ObjectHideFlags: 0

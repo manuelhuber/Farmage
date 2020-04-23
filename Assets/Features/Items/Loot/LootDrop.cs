@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 namespace Features.Units.common {
 public class LootDrop : MonoBehaviour {
     public LootTable lootTable;
-    [CanBeNull] public JobQueue lootQueue;
+    [CanBeNull] public JobMultiQueue lootQueue;
 
     public void DropRandom() {
         foreach (var tuple in lootTable.loot) {

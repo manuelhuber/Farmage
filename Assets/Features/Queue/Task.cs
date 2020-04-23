@@ -10,6 +10,7 @@ public struct Task {
 
 [Serializable]
 public enum TaskType {
-    Loot
+    Loot,
+    Harvest
 }
 }

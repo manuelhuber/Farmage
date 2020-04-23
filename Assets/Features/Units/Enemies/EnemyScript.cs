@@ -11,17 +11,15 @@ public class EnemyScript : MonoBehaviour {
     private GameObject[] _targets;
     private GameObject _target;
     private NavMeshAgent _navMeshAgent;
-    private CapsuleCollider _collider;
 
     private void Start() {
         _navMeshAgent = GetComponent<NavMeshAgent>();
-        _collider = GetComponent<CapsuleCollider>();
     }
 
     private void Update() {
         if (_targets.Length == 0) return;
         if (_target == null) {
-            if (!_targets.Any()) return;
+            if (_targets.All(t => t == null)) return;
             _target = _targets.GetRandomElement();
         }
 

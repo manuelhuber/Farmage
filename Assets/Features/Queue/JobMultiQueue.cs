@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Grimity.Collections;
 using UnityEngine;
 
@@ -15,9 +17,9 @@ public class JobMultiQueue : ScriptableObject {
         Tasks.GetOrCompute(task.type, type => new List<Task>()).Add(task);
     }
 
-    public Task? Dequeue(TaskType type) {
+    public Task? Dequeue(TaskType type, Func<Task, float> prioritisation = null) {
         if (!Tasks.TryGetValue(type, out var tasks) || tasks.Count == 0) return null;
-        var task = tasks[0];
+        var task = prioritisation == null ? tasks[0] : tasks.OrderBy(prioritisation).First();
         tasks.Remove(task);
         return task;
     }

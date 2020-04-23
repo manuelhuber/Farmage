@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: -1607080630944190864}
   - component: {fileID: 7322232160706500991}
   - component: {fileID: -8459571203205506747}
+  - component: {fileID: 2320420996683170019}
   m_Layer: 0
   m_Name: Workerbot
   m_TagString: Untagged
@@ -170,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fbf82782055a9d44aada64f63ddc830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jobQueue: {fileID: 11400000, guid: fab29857e19ec7d4ab5385bab66dafd3, type: 2}
+  jobQueue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
   buildings: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376, type: 2}
 --- !u!65 &-1607080630944190864
 BoxCollider:
@@ -246,3 +247,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &2320420996683170019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7329494047211502047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cca998b4992143c599b26a755d5e9427, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _queue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
+  _buildings: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376, type: 2}

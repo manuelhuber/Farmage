@@ -1,13 +1,38 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Features.Queue;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
+namespace Features.Building.Structures.WheatField {
 public class WheatField : MonoBehaviour {
-    // Start is called before the first frame update
-    void Start() {
+    public int growthDurationS;
+    private float _progress;
+    [Required] [SerializeField] private JobMultiQueue _queue;
+    private bool _waitingForHarvest = false;
+    private int _harvestValue = 100;
+
+    private void Update() {
+        if (_waitingForHarvest) return;
+        if (_progress >= growthDurationS) {
+            FinishGrowth();
+        } else {
+            UpdateProgress();
+        }
     }
 
-    // Update is called once per frame
-    void Update() {
+    private void UpdateProgress() {
+        _progress += Time.deltaTime;
     }
+
+    private void FinishGrowth() {
+        Debug.Log("ready for harvest");
+        _waitingForHarvest = true;
+        _queue.Enqueue(new Task {payload = gameObject, type = TaskType.Harvest});
+    }
+
+    public int harvest() {
+        _waitingForHarvest = false;
+        _progress = 0;
+        return _harvestValue;
+    }
+}
 }
