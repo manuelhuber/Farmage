@@ -4,16 +4,19 @@ using UnityEngine.UI;
 
 namespace Features.Units {
 public class Mortal : MonoBehaviour {
-    [SerializeField] private int hitpoints;
+    [field: SerializeField] public int MaxHitpoints { get; private set; }
+    [field: SerializeField] public int Hitpoints { get; private set; }
     [SerializeField] private Slider _hitpointBar;
     public Team team;
     public UnityEvent onDeath;
+    public UnityEvent onDamage;
 
     private void Start() {
+        Hitpoints = MaxHitpoints;
         _hitpointBar = GetComponentInChildren<Slider>();
         if (_hitpointBar == null) return;
-        _hitpointBar.maxValue = hitpoints;
-        _hitpointBar.value = hitpoints;
+        _hitpointBar.maxValue = Hitpoints;
+        _hitpointBar.value = Hitpoints;
     }
 
     private void Die() {
@@ -22,9 +25,10 @@ public class Mortal : MonoBehaviour {
     }
 
     public void TakeDamage(int amount) {
-        hitpoints -= amount;
-        if (hitpoints > 0) {
-            _hitpointBar.value = hitpoints;
+        Hitpoints -= amount;
+        if (Hitpoints > 0) {
+            onDamage.Invoke();
+            _hitpointBar.value = Hitpoints;
         } else {
             Die();
         }

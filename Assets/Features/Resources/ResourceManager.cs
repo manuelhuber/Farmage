@@ -22,7 +22,7 @@ public class ResourceManager : GrimitySingleton<ResourceManager> {
         return _have;
     }
 
-    public bool Reduce(Cost change) {
+    public bool Pay(Cost change) {
         if (!CanBePayed(change)) {
             return false;
         }

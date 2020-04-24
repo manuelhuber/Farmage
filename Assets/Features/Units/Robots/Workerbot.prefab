@@ -40,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2581871720530791490}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
 --- !u!23 &2486284456102161305
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -104,11 +104,10 @@ GameObject:
   - component: {fileID: 1331183209462515297}
   - component: {fileID: 3886040663033481838}
   - component: {fileID: -5885053916378252448}
-  - component: {fileID: 6806979415542736278}
   - component: {fileID: -1607080630944190864}
   - component: {fileID: 7322232160706500991}
   - component: {fileID: -8459571203205506747}
-  - component: {fileID: 2320420996683170019}
+  - component: {fileID: 9180183574046876357}
   m_Layer: 0
   m_Name: Workerbot
   m_TagString: Untagged
@@ -143,6 +142,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd4390112a103b40a7f5d3a4871322d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activeBehaviour: {fileID: 0}
+  _jobQueue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
+  _typePriority: 020000000100000000000000
+  buildings: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376, type: 2}
 --- !u!54 &-5885053916378252448
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -159,20 +162,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6806979415542736278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7329494047211502047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fbf82782055a9d44aada64f63ddc830, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jobQueue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
-  buildings: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376, type: 2}
 --- !u!65 &-1607080630944190864
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -184,7 +173,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 1, z: 2.12}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!195 &7322232160706500991
 NavMeshAgent:
@@ -247,17 +236,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &2320420996683170019
-MonoBehaviour:
+--- !u!135 &9180183574046876357
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7329494047211502047}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cca998b4992143c599b26a755d5e9427, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _queue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
-  _buildings: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376, type: 2}
+  serializedVersion: 2
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 0, z: 1.18}

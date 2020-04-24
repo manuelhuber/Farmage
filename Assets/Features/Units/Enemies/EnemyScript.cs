@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Features.Units;
 using Grimity.Actions;
 using Grimity.Collections;
@@ -20,14 +19,11 @@ public class EnemyScript : MonoBehaviour {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _attack = gameObject.AddComponent<IntervaledAction>();
         _attack.interval = attackSpeed;
-        _attack.action = () => { _victim.TakeDamage(damage); };
+        _attack.action = () => {
+            _victim.TakeDamage(damage);
+            return true;
+        };
         FindNewTarget();
-    }
-
-    private void Update() {
-        if (_attack.IsRunning) {
-            return;
-        }
     }
 
     public void setTargets(GameObject[] targets) {
@@ -48,15 +44,12 @@ public class EnemyScript : MonoBehaviour {
         _navMeshAgent.isStopped = true;
         _victim = destructible;
         _attack.IsRunning = true;
-        _victim.onDeath.AddListener(() => {
-            StopAttack();
-        });
+        _victim.onDeath.AddListener(StopAttack);
     }
 
     private void StopAttack() {
         _attack.IsRunning = false;
         _navMeshAgent.isStopped = false;
-
         FindNewTarget();
     }
 
@@ -64,7 +57,6 @@ public class EnemyScript : MonoBehaviour {
         if (_targets.Length == 0) return;
         if (_targets.All(t => t == null)) return;
         var target = _targets.GetRandomElement();
-
         _navMeshAgent.SetDestination(target.transform.position);
     }
 }

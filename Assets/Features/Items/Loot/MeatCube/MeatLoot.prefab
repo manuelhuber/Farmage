@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3422980397616220992}
   - component: {fileID: 4803615821640408873}
+  - component: {fileID: 216447116440646007}
+  - component: {fileID: 4559078122192643616}
   m_Layer: 0
   m_Name: MeatLoot
   m_TagString: Untagged
@@ -44,6 +46,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe2bead74eecc284a97ec95a73b237da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
+--- !u!65 &216447116440646007
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2944708649086578826}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &4559078122192643616
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2944708649086578826}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8373831559297018435
 GameObject:
   m_ObjectHideFlags: 0
@@ -55,7 +87,6 @@ GameObject:
   - component: {fileID: 7315906037086967420}
   - component: {fileID: 6683415987906245127}
   - component: {fileID: 1911525170227755161}
-  - component: {fileID: 6926895836692402265}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -124,16 +155,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &6926895836692402265
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8373831559297018435}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

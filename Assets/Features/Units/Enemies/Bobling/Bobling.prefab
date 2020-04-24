@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: -299588837507417560}
   - component: {fileID: -8155420910916292377}
   - component: {fileID: 6714567697864151312}
+  - component: {fileID: 5920640029651094403}
   m_Layer: 0
   m_Name: Bobling
   m_TagString: Untagged
@@ -225,7 +226,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a80c88de8082f4eb1b6efc5d4af31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitpoints: 100
+  <MaxHitpoints>k__BackingField: 25
+  <Hitpoints>k__BackingField: 0
   _hitpointBar: {fileID: 0}
   team: 1
   onDeath:
@@ -253,6 +255,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onDamage:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &6714567697864151312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,6 +272,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lootTable: {fileID: 11400000, guid: acd6bdf59d7ca984785f1f6b91a7291b, type: 2}
   lootQueue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
+--- !u!135 &5920640029651094403
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3895268208643040504}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4167541634758979818
 GameObject:
   m_ObjectHideFlags: 0

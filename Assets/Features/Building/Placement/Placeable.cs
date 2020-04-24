@@ -61,10 +61,8 @@ public class Placeable : MonoBehaviour {
                 return;
             }
 
-            Debug.Log("Adding collisions: " + other.gameObject.name);
             _collisions.Add(other);
             UpdateMaterial();
-
             return;
         }
 
@@ -111,8 +109,6 @@ public class Placeable : MonoBehaviour {
 
     private void OnTriggerExit(Collider other) {
         if (!IsTerrainLayer(other)) {
-            Debug.Log("Removing collisions: " + other.gameObject.name);
-
             _collisions.Remove(other);
             UpdateMaterial();
             return;

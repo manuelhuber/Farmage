@@ -28,8 +28,9 @@ public class Turret : MonoBehaviour {
         _attack.interval = attackSpeed;
     }
 
-    private void Shoot() {
+    private bool Shoot() {
         _currentTarget.TakeDamage(damage);
+        return true;
     }
 
     private void GetNewTarget() {

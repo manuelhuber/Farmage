@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84747c50b2b8422683e10affc725c9db, type: 3}
+  m_Name: Warehouse
+  m_EditorClassIdentifier: 
+  image: {fileID: 21300000, guid: e4b809ab2eeb33f45b8e1dbeceff0cf3, type: 3}
+  buildingPrefab: {fileID: 7219245548793499584, guid: 5c08f047a4f4d804999a426da3a4d145,
+    type: 3}
+  previewPrefab: {fileID: 7871623509545793830, guid: 6028c2a65c75696408579d7630059355,
+    type: 3}
+  cost:
+    cash: 50

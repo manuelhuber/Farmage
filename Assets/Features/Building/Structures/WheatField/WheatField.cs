@@ -29,6 +29,7 @@ public class WheatField : MonoBehaviour {
     }
 
     public int harvest() {
+        if (!_waitingForHarvest) return 0;
         _waitingForHarvest = false;
         _progress = 0;
         return _harvestValue;

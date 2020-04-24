@@ -11,6 +11,7 @@ public struct Task {
 [Serializable]
 public enum TaskType {
     Loot,
-    Harvest
+    Harvest,
+    Repair
 }
 }
