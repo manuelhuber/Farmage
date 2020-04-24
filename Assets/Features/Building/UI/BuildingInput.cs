@@ -33,7 +33,7 @@ public class BuildingInput : MonoBehaviour {
 
     private void Update() {
         if (_dragObject) {
-            _placeable.gameObject.transform.position = MouseToTerrain().point - _placeable.lowerCenter;
+            _placeable.transform.position = MouseToTerrain().point;
         }
 
         if (Input.GetKeyDown(_hotkeys.buildings)) {
@@ -97,9 +97,9 @@ public class BuildingInput : MonoBehaviour {
     }
 
     private void PlaceBuilding() {
-        if (!_placeable.Placable) return;
-        _placeable.FlattenFloor();
+        if (!_placeable.CanBePlaced) return;
         if (_resourceManager.Reduce(_selected.cost)) {
+            _placeable.FlattenFloor();
             Instantiate(_selected.buildingPrefab, _placeable.transform.position, _placeable.transform.rotation);
             if (!Input.GetKey(KeyCode.LeftShift)) {
                 _dragObject = false;
@@ -107,11 +107,12 @@ public class BuildingInput : MonoBehaviour {
             }
         } else {
             // TODO handle error case
+            Debug.Log("Can't pay!");
         }
     }
 
     private RaycastHit MouseToTerrain() {
-        CursorUtil.GetCursorLocation(out RaycastHit terrainHit, _camera, terrainLayer);
+        CursorUtil.GetCursorLocation(out var terrainHit, _camera, terrainLayer);
         return terrainHit;
     }
 }

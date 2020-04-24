@@ -708,7 +708,7 @@ GameObject:
   - component: {fileID: 7211300792180410101}
   m_Layer: 0
   m_Name: Attack
-  m_TagString: Untagged
+  m_TagString: AttackRangeCollider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -821,11 +821,11 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8893555642787168403}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4, y: 4, z: 4}
-  m_Center: {x: 0, y: 0.52, z: 0}
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &-7845571550464512735
 MonoBehaviour:
   m_ObjectHideFlags: 0

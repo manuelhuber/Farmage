@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Features.Units;
 using Grimity.Actions;
+using Ludiq.PeekCore;
 using UnityEngine;
 
 namespace Features.Building.Structures.Turret {
@@ -27,36 +28,44 @@ public class Turret : MonoBehaviour {
         _attack.interval = attackSpeed;
     }
 
-    private void Update() {
-        if (_currentTarget != null && !_currentTarget.Equals(null)) return;
-        GetNewTarget();
-    }
-
     private void Shoot() {
         _currentTarget.TakeDamage(damage);
     }
 
-    private bool GetNewTarget() {
-        _targets.RemoveAll(destructible => destructible == null);
-        if (_targets.Count == 0) return false;
+    private void GetNewTarget() {
+        if (_targets.Count == 0) {
+            _attack.IsRunning = false;
+            return;
+        }
+
         _currentTarget = _targets.First();
-        return true;
+        _attack.IsRunning = true;
     }
 
 
     private void OnTriggerEnter(Collider other) {
         var target = other.gameObject.GetComponent<Mortal>();
-        if (target != null && target.team == Team.Aliens) {
-            _targets.Add(target);
+        if (target == null || target.team != Team.Aliens) return;
+
+        target.onDeath.AddListener(() => { RemoveTarget(target); });
+
+        _targets.Add(target);
+
+        if (_currentTarget == null) {
+            GetNewTarget();
+        }
+    }
+
+    private void RemoveTarget(Mortal target) {
+        _targets.Remove(target);
+        if (_currentTarget == target) {
+            GetNewTarget();
         }
     }
 
     private void OnTriggerExit(Collider other) {
         var target = other.gameObject.GetComponent<Mortal>();
-        _targets.Remove(target);
-        if (target == _currentTarget) {
-            GetNewTarget();
-        }
+        RemoveTarget(target);
     }
 }
 }

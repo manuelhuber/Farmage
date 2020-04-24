@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: -2349841988634247754}
   - component: {fileID: 7172371388808588454}
   - component: {fileID: 7195048175627150239}
+  - component: {fileID: 9073839393798500601}
   m_Layer: 0
   m_Name: Warehouse
   m_TagString: Untagged
@@ -141,6 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitpoints: 100
+  _hitpointBar: {fileID: 0}
   team: 0
   onDeath:
     m_PersistentCalls:
@@ -174,3 +176,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RuntimeSet: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376, type: 2}
+--- !u!65 &9073839393798500601
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7871623509545793830}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 1, z: 10}
+  m_Center: {x: 0, y: 0.5, z: 0}

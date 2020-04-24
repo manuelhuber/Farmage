@@ -15,7 +15,7 @@ MonoBehaviour:
   autoUpdate: 1
   material: {fileID: 2100000, guid: eafe7cef2622a8c4e9ebb88faa930ca9, type: 2}
   size: 64
-  octaves: 6
+  octaves: 4
   scale: 60
   meshScale: 2.5
   persistence: 0.4

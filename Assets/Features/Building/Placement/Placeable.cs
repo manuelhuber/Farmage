@@ -18,7 +18,7 @@ public class Placeable : MonoBehaviour {
     public Vector3 lowerCenter;
     public LayerMask terrainLayer;
     public PlacementSettings settings;
-    public bool Placable => placable;
+    public bool CanBePlaced => _terrainIsGood && _collisions.Count == 0;
 
     private MeshRenderer[] _renderer;
     private BoxCollider _floorChecker;
@@ -34,52 +34,40 @@ public class Placeable : MonoBehaviour {
     private readonly Dictionary<int, List<Tuple<int, Vector3>>> _collisionVertices =
         new Dictionary<int, List<Tuple<int, Vector3>>>();
 
-    private bool placable;
+    private bool _terrainIsGood;
+    private Vector3 _lastPosition = Vector3.negativeInfinity;
+    private Bounds _bounds;
 
+    private readonly List<Collider> _collisions = new List<Collider>();
 
     private void Start() {
         _renderer = GetComponentsInChildren<MeshRenderer>();
-        var o = gameObject;
-        _floorChecker = o.AddComponent<BoxCollider>();
-        var bounds = Geometry.CalculateBounds(gameObject);
+        _floorChecker = gameObject.AddComponent<BoxCollider>();
+        _bounds = Geometry.CalculateBounds(gameObject);
         // TODO remove magic numbers
         _floorChecker.center = new Vector3(0, -0.5f, 0);
         _floorChecker.isTrigger = true;
-        var floorCheckerSize = bounds.size;
-        floorCheckerSize.y = 20;
-        floorCheckerSize.x = 2;
-        floorCheckerSize.z = 2;
-        _floorChecker.size = floorCheckerSize;
-        lowerCenter = Geometry.LowerCenter(o);
-    }
-
-    public void FlattenFloor() {
-        var collisionVertices = CollisionVertices();
-        if (collisionVertices.Count == 0) {
-            return;
-        }
-
-        var vertices = collisionVertices.SelectMany(pair => pair.Value).Select(tuple => tuple.Item2.y).ToList();
-        var avg = vertices.Aggregate((sum, value) => sum + value) / vertices.Count;
-
-
-        foreach (var entry in collisionVertices) {
-            if (!_terrains.TryGetValue(entry.Key, out var terrain)) continue;
-            foreach (var (index, pos) in entry.Value) {
-                terrain.terrainVertices.RemoveAt(index);
-                terrain.terrainVertices.Insert(index, new Vector3(pos.x, avg, pos.z));
-            }
-
-            var newHeight = Math.Abs(lowerCenter.y) + avg;
-            transform.SetY(newHeight);
-            terrain.terrainMesh.SetVertices(terrain.terrainVertices);
-            terrain.terrainCollider.sharedMesh = null;
-            terrain.terrainCollider.sharedMesh = terrain.terrainMesh;
-        }
+        var floorCheckerSize = _bounds.size;
+        floorCheckerSize.y = Math.Max(floorCheckerSize.y, 5);
+        // make the floor checker bigger than the building so we average the vertices around the building too
+        _floorChecker.size = floorCheckerSize * 1.1f;
+        lowerCenter = Geometry.LowerCenter(gameObject);
+        UpdateMaterial();
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (!IsTerrainLayer(other)) return;
+        if (!IsTerrainLayer(other)) {
+            if (other.gameObject.tag.Equals("AttackRangeCollider")) {
+                return;
+            }
+
+            Debug.Log("Adding collisions: " + other.gameObject.name);
+            _collisions.Add(other);
+            UpdateMaterial();
+
+            return;
+        }
+
         var terrainId = other.gameObject.GetInstanceID();
         if (_terrains.ContainsKey(terrainId)) return;
         if (_terrainsArchive.ContainsKey(terrainId)) {
@@ -105,36 +93,69 @@ public class Placeable : MonoBehaviour {
         _terrains.Add(terrainId, container);
     }
 
-    private bool IsTerrainLayer(Component other) {
-        return terrainLayer == (terrainLayer | (1 << other.gameObject.layer));
-    }
-
     private void OnTriggerStay(Collider other) {
+        if (transform.position.Equals(_lastPosition)) return;
+        _lastPosition = transform.position;
         var collisionVertices = CollisionVertices();
         if (collisionVertices.Count == 0) return;
         var heights = collisionVertices.SelectMany(pair => pair.Value).Select(tuple => tuple.Item2.y).ToArray();
         var dif = heights.Max() - heights.Min();
 
-        var badTerrain = dif > settings.placementThreshold;
-        if (badTerrain && placable) {
-            placable = false;
-            foreach (var ren in _renderer) {
-                ren.material = settings.placementBad;
-            }
-        } else if (!badTerrain && !placable) {
-            placable = true;
-            foreach (var ren in _renderer) {
-                ren.material = settings.placementOk;
-            }
+        var terrainIsGood = dif < settings.placementThreshold;
+        var updateNeeded = terrainIsGood != _terrainIsGood;
+        _terrainIsGood = terrainIsGood;
+        if (updateNeeded) {
+            UpdateMaterial();
         }
     }
 
     private void OnTriggerExit(Collider other) {
-        if (!IsTerrainLayer(other)) return;
+        if (!IsTerrainLayer(other)) {
+            Debug.Log("Removing collisions: " + other.gameObject.name);
+
+            _collisions.Remove(other);
+            UpdateMaterial();
+            return;
+        }
+
         var id = other.gameObject.GetInstanceID();
         if (!_terrains.ContainsKey(id)) return;
         _terrainsArchive.Add(id, _terrains[id]);
         _terrains.Remove(id);
+    }
+
+    private bool IsTerrainLayer(Component other) {
+        return terrainLayer == (terrainLayer | (1 << other.gameObject.layer));
+    }
+
+    public void FlattenFloor() {
+        var collisionVertices = CollisionVertices();
+        if (collisionVertices.Count == 0) {
+            return;
+        }
+
+        var vertices = collisionVertices.SelectMany(pair => pair.Value).Select(tuple => tuple.Item2.y).ToList();
+        var avg = vertices.Aggregate((sum, value) => sum + value) / vertices.Count;
+
+
+        foreach (var entry in collisionVertices) {
+            if (!_terrains.TryGetValue(entry.Key, out var terrain)) continue;
+            foreach (var (index, pos) in entry.Value) {
+                terrain.terrainVertices.RemoveAt(index);
+                terrain.terrainVertices.Insert(index, new Vector3(pos.x, avg, pos.z));
+            }
+
+            terrain.terrainMesh.SetVertices(terrain.terrainVertices);
+            terrain.terrainCollider.sharedMesh = null;
+            terrain.terrainCollider.sharedMesh = terrain.terrainMesh;
+        }
+    }
+
+    private void UpdateMaterial() {
+        var material = CanBePlaced ? settings.placementOk : settings.placementBad;
+        foreach (var ren in _renderer) {
+            ren.material = material;
+        }
     }
 
     private Dictionary<int, List<Tuple<int, Vector3>>> CollisionVertices() {

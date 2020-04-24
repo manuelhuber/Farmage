@@ -24,7 +24,6 @@ public class WheatField : MonoBehaviour {
     }
 
     private void FinishGrowth() {
-        Debug.Log("ready for harvest");
         _waitingForHarvest = true;
         _queue.Enqueue(new Task {payload = gameObject, type = TaskType.Harvest});
     }

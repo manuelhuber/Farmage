@@ -37,7 +37,6 @@ public class EnemyScript : MonoBehaviour {
     private void OnTriggerExit(Collider other) {
         if (_victim == null) return;
         if (other.gameObject != _victim.gameObject) return;
-        Debug.Log("Too far from victim: " + Vector3.Distance(_victim.transform.position, transform.position));
         StopAttack();
         _navMeshAgent.SetDestination(_victim.transform.position);
     }
@@ -45,13 +44,11 @@ public class EnemyScript : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         var destructible = other.gameObject.GetComponent<Mortal>();
         if (destructible == null || destructible.team == Team.Aliens) return;
-        Debug.Log("Picked target");
         transform.LookAt(destructible.transform);
         _navMeshAgent.isStopped = true;
         _victim = destructible;
         _attack.IsRunning = true;
         _victim.onDeath.AddListener(() => {
-            Debug.Log("target dead");
             StopAttack();
         });
     }
