@@ -8,12 +8,13 @@ public class Spawner : MonoBehaviour {
     public float waveInterval = 5f;
     public GameObject[] spawnPoints;
     public GameObject enemyPrefab;
-    public RangeInt spawnCount = new RangeInt(5, 10);
+    public RangeInt spawnCount = new RangeInt(1, 1);
 
     private float _lastSpawn;
     private GameObject[] _hqs;
 
-    private void Start() { }
+    private void Start() {
+    }
 
     private void Update() {
         if (Time.time - _lastSpawn < waveInterval) return;

@@ -7,7 +7,7 @@ public class Mortal : MonoBehaviour {
     [SerializeField] private int hitpoints;
     [SerializeField] private Slider _hitpointBar;
     public Team team;
-    [SerializeField] private UnityEvent onDeath;
+    public UnityEvent onDeath;
 
     private void Start() {
         _hitpointBar = GetComponentInChildren<Slider>();

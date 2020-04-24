@@ -42,7 +42,6 @@ public class Placeable : MonoBehaviour {
         var o = gameObject;
         _floorChecker = o.AddComponent<BoxCollider>();
         var bounds = Geometry.CalculateBounds(gameObject);
-
         // TODO remove magic numbers
         _floorChecker.center = new Vector3(0, -0.5f, 0);
         _floorChecker.isTrigger = true;

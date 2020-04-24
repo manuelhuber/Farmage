@@ -305,7 +305,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a80c88de8082f4eb1b6efc5d4af31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitpoints: 100
+  hitpoints: 1000
+  _hitpointBar: {fileID: 0}
   team: 0
   onDeath:
     m_PersistentCalls:
