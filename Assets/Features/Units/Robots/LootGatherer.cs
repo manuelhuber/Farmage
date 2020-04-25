@@ -11,7 +11,6 @@ namespace Features.Units.Robots {
 public class LootGatherer : UnitBehaviourBase {
     private GameObject _loot;
     private Storage _targetStorage;
-    private bool _isCarryingLoot;
     private NavMeshAgent _navMeshAgent;
     public RuntimeGameObjectSet buildings;
 
@@ -47,14 +46,13 @@ public class LootGatherer : UnitBehaviourBase {
     private void DeliverLoot() {
         _loot.transform.parent = null;
         _targetStorage.Deliver(_loot.GetComponent<Storable>());
+        _navMeshAgent.isStopped = true;
         _loot = null;
-        _isCarryingLoot = false;
         CompleteTask();
     }
 
     private void PickupLoot() {
         _loot.transform.parent = transform;
-        _isCarryingLoot = true;
         _navMeshAgent.SetDestination(_targetStorage.transform.position);
     }
 

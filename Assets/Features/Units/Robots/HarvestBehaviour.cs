@@ -24,7 +24,7 @@ public class HarvestBehaviour : UnitBehaviourBase {
     }
 
     public override void Behave() {
-        if (!(_navMeshAgent.remainingDistance < 1)) return;
+        if (!(_navMeshAgent.remainingDistance < _navMeshAgent.stoppingDistance)) return;
         var harvest = target.GetComponent<WheatField>().harvest();
         _resourceManager.Add(new Cost {cash = harvest});
         CompleteTask();

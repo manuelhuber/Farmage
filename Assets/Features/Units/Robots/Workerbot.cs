@@ -26,6 +26,7 @@ public class Workerbot : MonoBehaviour {
         _behaviours[TaskType.Harvest] = gameObject.AddComponent<HarvestBehaviour>();
         _behaviours[TaskType.Repair] = gameObject.AddComponent<RepairBehaviour>();
         foreach (var unitBehaviourBase in _behaviours.Values) {
+            // TODO disable them in the next frame so their "start" code runs?
             unitBehaviourBase.enabled = false;
         }
 
@@ -69,7 +70,7 @@ public class Workerbot : MonoBehaviour {
                 yield break;
             }
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(.5f);
         }
     }
 }

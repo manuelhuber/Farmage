@@ -99,7 +99,7 @@ public class BuildingInput : MonoBehaviour {
     private void PlaceBuilding() {
         if (!_placeable.CanBePlaced) return;
         if (_resourceManager.Pay(_selected.cost)) {
-            _placeable.FlattenFloor();
+            // _placeable.FlattenFloor();
             Instantiate(_selected.buildingPrefab, _placeable.transform.position, _placeable.transform.rotation);
             if (!Input.GetKey(KeyCode.LeftShift)) {
                 _dragObject = false;
