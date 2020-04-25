@@ -9,7 +9,7 @@ namespace Features.Enemies {
 public class EnemyScript : MonoBehaviour {
     public int damage = 5;
     public float attackSpeed;
-    private GameObject[] _targets;
+    private GameObject[] _targets = new GameObject[0];
     private NavMeshAgent _navMeshAgent;
     private Mortal _victim;
     private IntervaledAction _attack;

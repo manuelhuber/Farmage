@@ -1,10 +1,10 @@
 namespace Features.Terrain {
 public struct GridNode {
-    public int index;
+    public int Index;
 
-    public int x;
-    public int z;
+    public int X;
+    public int Z;
 
-    public bool isWalkable;
+    public bool IsWalkable;
 }
 }

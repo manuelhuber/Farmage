@@ -1,9 +1,7 @@
-using System.Collections;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace Features.Terrain {
 [BurstCompile]
@@ -12,6 +10,7 @@ public struct FindPathJob : IJob {
     public int2 MapSize;
     public int2 StartPosition;
     public int2 EndPosition;
+    public NativeList<PathNode> Path;
 
     private int _startIndex;
     private int _endIndex;
@@ -20,27 +19,26 @@ public struct FindPathJob : IJob {
     public int MoveStraightCost;
 
     public void Execute() {
+        if (!Map[_endIndex].IsWalkable) return;
         var pathNodes = new NativeArray<PathNode>(Map.Length, Allocator.Temp);
         var neighbourOffsets = GetNeighbourOffsets();
         _startIndex = CalculateIndex(StartPosition.x, StartPosition.y);
         _endIndex = CalculateIndex(EndPosition.x, EndPosition.y);
-
         for (var index = 0; index < Map.Length; index++) {
             var gridNode = Map[index];
-            pathNodes[gridNode.index] = new PathNode {
-                index = gridNode.index,
-                heuristicCost = HeuristicCost(gridNode.x, gridNode.z, Map[gridNode.index].x, Map[gridNode.index].z),
-                arrivalCost = int.MaxValue,
-                totalCost = int.MaxValue,
-                cameFromNodeIndex = -1
+            pathNodes[gridNode.Index] = new PathNode {
+                Index = gridNode.Index,
+                HeuristicCost = HeuristicCost(gridNode.X, gridNode.Z, EndPosition.x, EndPosition.y),
+                ArrivalCost = int.MaxValue,
+                TotalCost = int.MaxValue,
+                CameFromNodeIndex = -1
             };
         }
 
         var startingNode = pathNodes[_startIndex];
-        startingNode.arrivalCost = 0;
+        startingNode.ArrivalCost = 0;
         startingNode.UpdateTotalCost();
         pathNodes[_startIndex] = startingNode;
-
 
         var openList = new NativeList<int>(20, Allocator.Temp);
         var alreadyChecked = new NativeList<int>(20, Allocator.Temp);
@@ -52,17 +50,18 @@ public struct FindPathJob : IJob {
             var currentNode = pathNodes[currentNodeIndex];
             openList.RemoveAtSwapBack(openList.IndexOf(currentNodeIndex));
             var neighbours = GetNeighbours(currentNodeIndex, neighbourOffsets);
-            for (var index = 0; index < neighbours.Length; index++) {
-                var neighbourIndex = neighbours[index];
-                if (alreadyChecked.Contains(neighbourIndex)) continue;
+            for (var i = 0; i < neighbours.Length; i++) {
+                var neighbourIndex = neighbours[i];
+
+                if (alreadyChecked.Contains(neighbourIndex) || !Map[neighbourIndex].IsWalkable) continue;
+
                 var neighbour = pathNodes[neighbourIndex];
-                if (!Map[neighbourIndex].isWalkable) continue;
-                var newArrivalCost = currentNode.arrivalCost + TransitionCost(currentNodeIndex, neighbour.index);
-                if (newArrivalCost >= neighbour.arrivalCost) continue;
-                neighbour.arrivalCost = newArrivalCost;
+                var newArrivalCost = currentNode.ArrivalCost + TransitionCost(currentNodeIndex, neighbour.Index);
+                if (newArrivalCost >= neighbour.ArrivalCost) continue;
+                neighbour.ArrivalCost = newArrivalCost;
                 neighbour.UpdateTotalCost();
-                neighbour.cameFromNodeIndex = currentNodeIndex;
-                pathNodes[neighbour.index] = neighbour;
+                neighbour.CameFromNodeIndex = currentNodeIndex;
+                pathNodes[neighbour.Index] = neighbour;
                 if (!openList.Contains(neighbourIndex)) {
                     openList.Add(neighbourIndex);
                 }
@@ -71,44 +70,39 @@ public struct FindPathJob : IJob {
             alreadyChecked.Add(currentNodeIndex);
         }
 
-        if (pathNodes[_endIndex].cameFromNodeIndex != -1) {
-            Debug.Log("Found path");
-            var node = pathNodes[_endIndex];
-
-            while (node.cameFromNodeIndex != -1) {
-                Debug.Log("Node");
-                Debug.Log(Map[node.index].x);
-                Debug.Log(Map[node.index].z);
-                node = pathNodes[node.cameFromNodeIndex];
-            }
-        } else {
-            Debug.Log("Found no path");
-        }
-
         openList.Dispose();
         alreadyChecked.Dispose();
         neighbourOffsets.Dispose();
-        neighbourOffsets.Dispose();
+        WritePath(pathNodes);
     }
 
-    private int TransitionCost(int currentIndex, int neighbhourIndex) {
+    private void WritePath(NativeArray<PathNode> pathNodes) {
+        if (pathNodes[_endIndex].CameFromNodeIndex == -1) return;
+        var node = pathNodes[_endIndex];
+        while (node.CameFromNodeIndex != -1) {
+            Path.Add(node);
+            node = pathNodes[node.CameFromNodeIndex];
+        }
+    }
+
+    private int TransitionCost(int currentIndex, int neighbourIndex) {
         // TODO: modify cost based on something?
         var from = Map[currentIndex];
-        var to = Map[neighbhourIndex];
-        return HeuristicCost(from.x, from.z, to.x, to.z);
+        var to = Map[neighbourIndex];
+        return HeuristicCost(from.X, from.Z, to.X, to.Z);
     }
 
     private int CalculateIndex(int x, int z) {
-        // TODO maybe mapSize.y?
         return x + z * MapSize.x;
     }
 
     private NativeList<int> GetNeighbours(int currentIndex, NativeArray<int2> neighbourOffsetArray) {
         var neighbours = new NativeList<int>(8, Allocator.Temp);
         var currentNode = Map[currentIndex];
-        foreach (var offset in neighbourOffsetArray) {
-            var neighbourX = currentNode.x + offset.x;
-            var neighbourZ = currentNode.z + offset.y;
+        for (var index = 0; index < neighbourOffsetArray.Length; index++) {
+            var offset = neighbourOffsetArray[index];
+            var neighbourX = currentNode.X + offset.x;
+            var neighbourZ = currentNode.Z + offset.y;
             if (OutOfBounds(neighbourX, neighbourZ)) continue;
             neighbours.Add(CalculateIndex(neighbourX, neighbourZ));
         }
@@ -140,30 +134,31 @@ public struct FindPathJob : IJob {
         return MoveDiagonalCost * math.min(xDistance, yDistance) + MoveStraightCost * remaining;
     }
 
-    private int FindLowestTotalCost(NativeList<int> openList, NativeArray<PathNode> _pathNodes) {
+    private int FindLowestTotalCost(NativeList<int> openList, NativeArray<PathNode> pathNodes) {
         var lowestValue = int.MaxValue;
         var lowestIndex = -1;
-        foreach (var index in openList) {
-            var node = _pathNodes[index];
-            if (node.totalCost >= lowestValue) continue;
-            lowestValue = node.totalCost;
-            lowestIndex = node.index;
+        for (var i = 0; i < openList.Length; i++) {
+            var index = openList[i];
+            var node = pathNodes[index];
+            if (node.TotalCost >= lowestValue) continue;
+            lowestValue = node.TotalCost;
+            lowestIndex = node.Index;
         }
 
         return lowestIndex;
     }
 
-    private struct PathNode {
-        public int index;
+    public struct PathNode {
+        public int Index;
 
-        public int arrivalCost;
-        public int heuristicCost;
-        public int totalCost;
+        public int ArrivalCost;
+        public int HeuristicCost;
+        public int TotalCost;
 
-        public int cameFromNodeIndex;
+        public int CameFromNodeIndex;
 
         public void UpdateTotalCost() {
-            totalCost = arrivalCost + heuristicCost;
+            TotalCost = ArrivalCost + HeuristicCost;
         }
     }
 }
