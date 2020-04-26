@@ -12,11 +12,11 @@ public struct FindPathJob : IJob {
     public int2 EndPosition;
     public NativeList<PathNode> Path;
 
+    public int MoveDiagonalCost;
+    public int MoveStraightCost;
+
     private int _startIndex;
     private int _endIndex;
-    public int MoveDiagonalCost;
-
-    public int MoveStraightCost;
 
     public void Execute() {
         if (!Map[_endIndex].IsWalkable) return;
@@ -89,7 +89,7 @@ public struct FindPathJob : IJob {
         // TODO: modify cost based on something?
         var from = Map[currentIndex];
         var to = Map[neighbourIndex];
-        return HeuristicCost(from.X, from.Z, to.X, to.Z);
+        return HeuristicCost(from.X, from.Z, to.X, to.Z) + to.Penalty;
     }
 
     private int CalculateIndex(int x, int z) {

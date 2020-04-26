@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Grimity.Cursor;
 using Grimity.Loops;
+using Sirenix.OdinInspector;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -20,10 +22,22 @@ public class PathFindingGrid : MonoBehaviour {
     public NativeArray<GridNode> map;
     public LayerMask terrainLayer;
 
+    public int GrassPenalty {
+        get => _grassPenalty;
+        set {
+            _grassPenalty = value;
+            UpdatePenalty();
+        }
+    }
+
+    public int DiagonalCost = 1;
+
+
     private int _cellCountZ;
     private int _cellCountX;
     private List<int[]> paths = new List<int[]>();
     private UnityEngine.Camera _camera;
+    [SerializeField] private int _grassPenalty;
 
 
     private void Start() {
@@ -38,9 +52,19 @@ public class PathFindingGrid : MonoBehaviour {
                 Index = index,
                 X = x,
                 Z = z,
-                IsWalkable = (x != 0 || z != 2)
+                IsWalkable = true,
+                Penalty = (x == 15 || x == 16) ? 0 : GrassPenalty,
             };
         });
+    }
+
+    [Button("Update Penalty")]
+    private void UpdatePenalty() {
+        for (var index = 0; index < map.Length; index++) {
+            var gridNode = map[index];
+            gridNode.Penalty = (gridNode.X == 15 || gridNode.X == 16) ? 0 : GrassPenalty;
+            map[index] = gridNode;
+        }
     }
 
     private void OnDestroy() {
@@ -70,8 +94,8 @@ public class PathFindingGrid : MonoBehaviour {
                     Map = map,
                     StartPosition = new int2(0, 0),
                     EndPosition = clickedNode,
-                    MoveDiagonalCost = 14,
-                    MoveStraightCost = 10,
+                    MoveDiagonalCost = DiagonalCost,
+                    MoveStraightCost = 11,
                     MapSize = new int2(_cellCountX, _cellCountZ),
                     Path = newPath[i]
                 };
@@ -110,9 +134,20 @@ public class PathFindingGrid : MonoBehaviour {
         Gizmos.DrawWireCube(transform.position, new Vector3(sizeX, 1, sizeZ));
         var size = cellSize * .9f;
         foreach (var gridNode in map) {
-            Gizmos.color = gridNode.IsWalkable ? Color.green : Color.red;
+            if (gridNode.IsWalkable) {
+                Gizmos.color = Color.green;
+            }
+
+            if (Math.Abs(gridNode.Penalty) < 0.1) {
+                Gizmos.color = Color.grey;
+            }
+
             if (paths.Any(indices => indices.Contains(gridNode.Index))) {
                 Gizmos.color = Color.blue;
+            }
+
+            if (!gridNode.IsWalkable) {
+                Gizmos.color = Color.red;
             }
 
             Gizmos.DrawCube(

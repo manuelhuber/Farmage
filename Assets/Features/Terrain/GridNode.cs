@@ -6,5 +6,7 @@ public struct GridNode {
     public int Z;
 
     public bool IsWalkable;
+
+    public int Penalty;
 }
 }
