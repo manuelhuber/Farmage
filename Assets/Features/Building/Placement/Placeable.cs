@@ -16,30 +16,29 @@ internal struct TerrainContainer {
 }
 
 public class Placeable : MonoBehaviour {
-    public Vector3 lowerCenter;
-    public LayerMask terrainLayer;
-    public PlacementSettings settings;
-    public bool CanBePlaced => _terrainIsGood && _collisions.Count == 0;
+    private readonly List<Collider> _collisions = new List<Collider>();
 
-    private MeshRenderer[] _renderer;
-    private BoxCollider _floorChecker;
-    private List<GameObject> _debugCubes = new List<GameObject>();
+    // Keep this as class member to avoid recreating dict/lists every frame
+    private readonly Dictionary<int, List<Tuple<int, Vector3>>> _collisionVertices =
+        new Dictionary<int, List<Tuple<int, Vector3>>>();
 
     // Currently relevant terrain that will be iterated over constantly
     private readonly Dictionary<int, TerrainContainer> _terrains = new Dictionary<int, TerrainContainer>();
 
     // Previously visited terrain - saved for reuse
     private readonly Dictionary<int, TerrainContainer> _terrainsArchive = new Dictionary<int, TerrainContainer>();
+    private Bounds _bounds;
+    private List<GameObject> _debugCubes = new List<GameObject>();
+    private BoxCollider _floorChecker;
+    private Vector3 _lastPosition = Vector3.negativeInfinity;
 
-    // Keep this as class member to avoid recreating dict/lists every frame
-    private readonly Dictionary<int, List<Tuple<int, Vector3>>> _collisionVertices =
-        new Dictionary<int, List<Tuple<int, Vector3>>>();
+    private MeshRenderer[] _renderer;
 
     private bool _terrainIsGood;
-    private Vector3 _lastPosition = Vector3.negativeInfinity;
-    private Bounds _bounds;
-
-    private readonly List<Collider> _collisions = new List<Collider>();
+    public Vector3 lowerCenter;
+    public PlacementSettings settings;
+    public LayerMask terrainLayer;
+    public bool CanBePlaced => _terrainIsGood && _collisions.Count == 0;
 
     private void Start() {
         _renderer = GetComponentsInChildren<MeshRenderer>();
@@ -58,9 +57,7 @@ public class Placeable : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if (!IsTerrainLayer(other)) {
-            if (other.gameObject.tag.Equals("AttackRangeCollider")) {
-                return;
-            }
+            if (other.gameObject.tag.Equals("AttackRangeCollider")) return;
 
             _collisions.Add(other);
             UpdateMaterial();
@@ -87,7 +84,7 @@ public class Placeable : MonoBehaviour {
             terrainCollider = terrainCollider,
             terrain = terrain,
             terrainVertices = terrainVertices,
-            terrainVerticesWorldSpace = terrainVerticesWorldSpace,
+            terrainVerticesWorldSpace = terrainVerticesWorldSpace
         };
         _terrains.Add(terrainId, container);
     }
@@ -103,9 +100,7 @@ public class Placeable : MonoBehaviour {
         var terrainIsGood = dif < settings.placementThreshold;
         var updateNeeded = terrainIsGood != _terrainIsGood;
         _terrainIsGood = terrainIsGood;
-        if (updateNeeded) {
-            UpdateMaterial();
-        }
+        if (updateNeeded) UpdateMaterial();
     }
 
     private void OnTriggerExit(Collider other) {
@@ -127,9 +122,7 @@ public class Placeable : MonoBehaviour {
 
     public void FlattenFloor() {
         var collisionVertices = CollisionVertices();
-        if (collisionVertices.Count == 0) {
-            return;
-        }
+        if (collisionVertices.Count == 0) return;
 
         var vertices = collisionVertices.SelectMany(pair => pair.Value).Select(tuple => tuple.Item2.y).ToList();
         var avg = vertices.Aggregate((sum, value) => sum + value) / vertices.Count;
@@ -150,15 +143,11 @@ public class Placeable : MonoBehaviour {
 
     private void UpdateMaterial() {
         var material = CanBePlaced ? settings.placementOk : settings.placementBad;
-        foreach (var ren in _renderer) {
-            ren.material = material;
-        }
+        foreach (var ren in _renderer) ren.material = material;
     }
 
     private Dictionary<int, List<Tuple<int, Vector3>>> CollisionVertices() {
-        foreach (var pair in _collisionVertices) {
-            pair.Value.Clear();
-        }
+        foreach (var pair in _collisionVertices) pair.Value.Clear();
 
         foreach (var entry in _terrains) {
             var container = entry.Value;

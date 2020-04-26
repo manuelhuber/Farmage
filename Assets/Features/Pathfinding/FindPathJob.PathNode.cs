@@ -1,4 +1,4 @@
-namespace Features.Terrain {
+namespace Features.Pathfinding {
 /// <summary>
 /// Contains the path-related info for a node
 /// This struct will be instantiated per path

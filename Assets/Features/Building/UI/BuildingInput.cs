@@ -1,27 +1,26 @@
 using Common.Settings;
 using Features.Building.BuildMenu;
 using Features.Building.Placement;
+using Features.Resources;
 using Grimity.Cursor;
-using Grimity.ScriptableObject;
 using UnityEngine;
 using UnityEngine.UI;
-using ResourceManager = Features.Resources.ResourceManager;
 
 namespace Features.Building.UI {
 public class BuildingInput : MonoBehaviour {
-    public BuildMenu.BuildMenu buildMenu;
-    public PlacementSettings placementSettings;
-    public LayerMask terrainLayer;
-    public GameObject iconPrefab;
+    private UnityEngine.Camera _camera;
 
     private Canvas _canvas;
-    private GameObject _uiCore;
     private bool _dragObject;
-    private Placeable _placeable;
-    private UnityEngine.Camera _camera;
     private Hotkeys _hotkeys;
-    private BuildingMenuEntry _selected;
+    private Placeable _placeable;
     private ResourceManager _resourceManager;
+    private BuildingMenuEntry _selected;
+    private GameObject _uiCore;
+    public BuildMenu.BuildMenu buildMenu;
+    public GameObject iconPrefab;
+    public PlacementSettings placementSettings;
+    public LayerMask terrainLayer;
 
     private void Start() {
         _resourceManager = ResourceManager.Instance;
@@ -32,9 +31,7 @@ public class BuildingInput : MonoBehaviour {
     }
 
     private void Update() {
-        if (_dragObject) {
-            _placeable.transform.position = MouseToTerrain().point;
-        }
+        if (_dragObject) _placeable.transform.position = MouseToTerrain().point;
 
         if (Input.GetKeyDown(_hotkeys.buildings)) {
             _uiCore.SetActive(true);
@@ -48,9 +45,7 @@ public class BuildingInput : MonoBehaviour {
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && _dragObject) {
-            PlaceBuilding();
-        }
+        if (Input.GetMouseButtonDown(0) && _dragObject) PlaceBuilding();
     }
 
     private void InitUi() {
@@ -64,7 +59,11 @@ public class BuildingInput : MonoBehaviour {
             button.GetComponent<Image>().sprite = entry.image;
             button.transform.localPosition = new Vector3(offset, 0, 0);
             offset += button.GetComponent<RectTransform>().rect.width;
-            void UpdateThisButton(bool playable) => UpdateButton(playable, entry, button);
+
+            void UpdateThisButton(bool playable) {
+                UpdateButton(playable, entry, button);
+            }
+
             var canBePayed = _resourceManager.subscribe(entry.cost, UpdateThisButton);
             UpdateThisButton(canBePayed);
         }

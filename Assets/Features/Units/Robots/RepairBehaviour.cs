@@ -1,4 +1,3 @@
-using System;
 using Features.Queue;
 using Features.Resources;
 using Grimity.Actions;
@@ -7,17 +6,15 @@ using UnityEngine.AI;
 
 namespace Features.Units.Robots {
 public class RepairBehaviour : UnitBehaviourBase {
-    private Mortal _target;
     private NavMeshAgent _navMeshAgent;
     private IntervaledAction _repairAction;
     private ResourceManager _resourceManager;
+    private Mortal _target;
 
     private void Start() {
         _resourceManager = ResourceManager.Instance;
         _navMeshAgent = GetComponent<NavMeshAgent>();
-        if (_repairAction == null) {
-            _repairAction = gameObject.AddComponent<IntervaledAction>();
-        }
+        if (_repairAction == null) _repairAction = gameObject.AddComponent<IntervaledAction>();
 
         _repairAction.interval = 1;
         _repairAction.initialDelay = true;

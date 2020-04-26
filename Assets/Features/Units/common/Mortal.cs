@@ -4,12 +4,12 @@ using UnityEngine.UI;
 
 namespace Features.Units {
 public class Mortal : MonoBehaviour {
+    [SerializeField] private Slider _hitpointBar;
+    public UnityEvent onDamage;
+    public UnityEvent onDeath;
+    public Team team;
     [field: SerializeField] public int MaxHitpoints { get; private set; }
     [field: SerializeField] public int Hitpoints { get; private set; }
-    [SerializeField] private Slider _hitpointBar;
-    public Team team;
-    public UnityEvent onDeath;
-    public UnityEvent onDamage;
 
     private void Start() {
         Hitpoints = MaxHitpoints;

@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Features.Units;
 using Grimity.Actions;
-using Ludiq.PeekCore;
 using UnityEngine;
 
 namespace Features.Building.Structures.Turret {
 public class Turret : MonoBehaviour {
-    private SphereCollider _sphereCollider;
-    public int range;
-    public int damage;
-    public float attackSpeed;
-
     private readonly List<Mortal> _targets = new List<Mortal>();
-    private Mortal _currentTarget;
     private IntervaledAction _attack;
+    private Mortal _currentTarget;
+    private SphereCollider _sphereCollider;
+    public float attackSpeed;
+    public int damage;
+    public int range;
 
 
     // Start is called before the first frame update
@@ -52,16 +49,12 @@ public class Turret : MonoBehaviour {
 
         _targets.Add(target);
 
-        if (_currentTarget == null) {
-            GetNewTarget();
-        }
+        if (_currentTarget == null) GetNewTarget();
     }
 
     private void RemoveTarget(Mortal target) {
         _targets.Remove(target);
-        if (_currentTarget == target) {
-            GetNewTarget();
-        }
+        if (_currentTarget == target) GetNewTarget();
     }
 
     private void OnTriggerExit(Collider other) {

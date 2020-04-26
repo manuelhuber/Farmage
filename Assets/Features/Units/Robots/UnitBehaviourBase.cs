@@ -1,13 +1,12 @@
-using System;
 using Features.Queue;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Features.Units.Robots {
 public abstract class UnitBehaviourBase : MonoBehaviour, IUnitBehaviour {
+    private IUnitBehaviour _unitBehaviourImplementation;
     public UnityEvent TaskCompleted { get; } = new UnityEvent();
     public UnityEvent TaskAbandoned { get; } = new UnityEvent();
-    private IUnitBehaviour _unitBehaviourImplementation;
 
     public abstract bool Init(Task task);
 

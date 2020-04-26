@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Features.Building.Structures.Warehouse;
 using Features.Items;
 using Features.Queue;
@@ -10,8 +9,8 @@ using UnityEngine.AI;
 namespace Features.Units.Robots {
 public class LootGatherer : UnitBehaviourBase {
     private GameObject _loot;
-    private Storage _targetStorage;
     private NavMeshAgent _navMeshAgent;
+    private Storage _targetStorage;
     public RuntimeGameObjectSet buildings;
 
     private void Start() {
@@ -23,9 +22,7 @@ public class LootGatherer : UnitBehaviourBase {
         var item = task.payload.GetComponent<Storable>();
         var target = buildings.Items.Select(o => o.GetComponent<Storage>())
             .Where(storage => storage != null).FirstOrDefault(storage => item.isType(storage._type));
-        if (target == null) {
-            return false;
-        }
+        if (target == null) return false;
 
         _loot = task.payload;
         _targetStorage = target;
@@ -36,11 +33,9 @@ public class LootGatherer : UnitBehaviourBase {
 
     private void OnTriggerEnter(Collider other) {
         if (_loot == null) return;
-        if (other.gameObject == _loot.gameObject) {
+        if (other.gameObject == _loot.gameObject)
             PickupLoot();
-        } else if (other.gameObject == _targetStorage.gameObject) {
-            DeliverLoot();
-        }
+        else if (other.gameObject == _targetStorage.gameObject) DeliverLoot();
     }
 
     private void DeliverLoot() {

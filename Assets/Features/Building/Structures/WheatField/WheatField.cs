@@ -4,19 +4,18 @@ using UnityEngine;
 
 namespace Features.Building.Structures.WheatField {
 public class WheatField : MonoBehaviour {
-    public int growthDurationS;
+    private readonly int _harvestValue = 100;
     private float _progress;
     [Required] [SerializeField] private JobMultiQueue _queue;
-    private bool _waitingForHarvest = false;
-    private int _harvestValue = 100;
+    private bool _waitingForHarvest;
+    public int growthDurationS;
 
     private void Update() {
         if (_waitingForHarvest) return;
-        if (_progress >= growthDurationS) {
+        if (_progress >= growthDurationS)
             FinishGrowth();
-        } else {
+        else
             UpdateProgress();
-        }
     }
 
     private void UpdateProgress() {

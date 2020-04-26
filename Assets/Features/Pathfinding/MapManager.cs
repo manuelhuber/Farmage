@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Features.Terrain;
 using Grimity.Layer;
 using Grimity.Loops;
 using Grimity.NativeCollections;
@@ -10,9 +11,8 @@ using Sirenix.OdinInspector;
 using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Features.Terrain {
+namespace Features.Pathfinding {
 public struct PathRequest {
     public Vector3 From;
     public Vector3 To;
@@ -20,22 +20,23 @@ public struct PathRequest {
 }
 
 public class MapManager : GrimitySingleton<MapManager> {
-    private Queue<PathRequest> _requests = new Queue<PathRequest>();
-    public float cellSize;
-    public float sizeX;
-    public float sizeZ;
-    public NativeArray<GridNode> map;
-
-    [InfoBox("Layers that block pathfinding", InfoMessageType.Info)]
-    public LayerMask blockingLayer;
-
-    [InfoBox("All layers (incl blocking) that count as terrain", InfoMessageType.Info)]
-    public LayerMask terrainLayer;
-
-    public int nodeScansPerFrame;
+    private int _cellCountX;
 
     private int _cellCountZ;
-    private int _cellCountX;
+    private readonly Queue<PathRequest> _requests = new Queue<PathRequest>();
+
+    [InfoBox("Layers that block pathfinding")]
+    public LayerMask blockingLayer;
+
+    public float cellSize;
+    public NativeArray<GridNode> map;
+
+    public int nodeScansPerFrame;
+    public float sizeX;
+    public float sizeZ;
+
+    [InfoBox("All layers (incl blocking) that count as terrain")]
+    public LayerMask terrainLayer;
 
     private void Start() {
         _cellCountX = Mathf.RoundToInt(sizeX / cellSize);
@@ -49,7 +50,7 @@ public class MapManager : GrimitySingleton<MapManager> {
                 X = x,
                 Z = z,
                 IsWalkable = true,
-                Penalty = 0,
+                Penalty = 0
             };
         });
         StartCoroutine(ScanMap());
@@ -65,13 +66,12 @@ public class MapManager : GrimitySingleton<MapManager> {
     private IEnumerator ScanMap() {
         while (true) {
             var count = 0;
-            for (var x = 0; x < _cellCountX; x++) {
-                for (var z = 0; z < _cellCountZ; z++) {
-                    count++;
-                    UpdateGridNode(x, z);
-                    if (count % nodeScansPerFrame != 0) continue;
-                    yield return null;
-                }
+            for (var x = 0; x < _cellCountX; x++)
+            for (var z = 0; z < _cellCountZ; z++) {
+                count++;
+                UpdateGridNode(x, z);
+                if (count % nodeScansPerFrame != 0) continue;
+                yield return null;
             }
         }
     }

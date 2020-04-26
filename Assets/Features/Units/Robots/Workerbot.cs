@@ -9,14 +9,16 @@ using UnityEngine.Serialization;
 
 namespace Features.Units.Robots {
 public class Workerbot : MonoBehaviour {
-    [FormerlySerializedAs("active")] public UnitBehaviourBase activeBehaviour;
-    [SerializeField] private JobMultiQueue _jobQueue;
-    [SerializeField] private TaskType[] _typePriority;
-    private Dictionary<TaskType, UnitBehaviourBase> _behaviours = new Dictionary<TaskType, UnitBehaviourBase>();
-    [SerializeField] private RuntimeGameObjectSet buildings;
+    private readonly Dictionary<TaskType, UnitBehaviourBase>
+        _behaviours = new Dictionary<TaskType, UnitBehaviourBase>();
+
     private Task _currentTask;
+    [SerializeField] private JobMultiQueue _jobQueue;
 
     private Func<bool, UnityAction> _resetBehaviour;
+    [SerializeField] private TaskType[] _typePriority;
+    [FormerlySerializedAs("active")] public UnitBehaviourBase activeBehaviour;
+    [SerializeField] private RuntimeGameObjectSet buildings;
 
     // Start is called before the first frame update
     private void Start() {
@@ -25,12 +27,11 @@ public class Workerbot : MonoBehaviour {
         _behaviours[TaskType.Loot] = lootGatherer;
         _behaviours[TaskType.Harvest] = gameObject.AddComponent<HarvestBehaviour>();
         _behaviours[TaskType.Repair] = gameObject.AddComponent<RepairBehaviour>();
-        foreach (var unitBehaviourBase in _behaviours.Values) {
-            // TODO disable them in the next frame so their "start" code runs?
+        foreach (var unitBehaviourBase in _behaviours.Values
+        ) // TODO disable them in the next frame so their "start" code runs?
             unitBehaviourBase.enabled = false;
-        }
 
-        _resetBehaviour = (bool requeue) => () => {
+        _resetBehaviour = requeue => () => {
             if (activeBehaviour != null) {
                 activeBehaviour.TaskCompleted.RemoveAllListeners();
                 activeBehaviour.TaskAbandoned.RemoveAllListeners();
@@ -38,9 +39,7 @@ public class Workerbot : MonoBehaviour {
                 activeBehaviour = null;
             }
 
-            if (requeue) {
-                _jobQueue.Enqueue(_currentTask);
-            }
+            if (requeue) _jobQueue.Enqueue(_currentTask);
 
             StartCoroutine(GetNewTask());
         };

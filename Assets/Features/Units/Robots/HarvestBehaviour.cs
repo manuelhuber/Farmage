@@ -6,9 +6,9 @@ using UnityEngine.AI;
 
 namespace Features.Units.Robots {
 public class HarvestBehaviour : UnitBehaviourBase {
-    private GameObject target;
     private NavMeshAgent _navMeshAgent;
     private ResourceManager _resourceManager;
+    private GameObject target;
 
     private void Start() {
         _resourceManager = ResourceManager.Instance;

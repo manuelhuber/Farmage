@@ -1,17 +1,15 @@
-﻿using System;
-using Features.Enemies;
+﻿using Features.Enemies;
 using Grimity.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour {
-    public float waveInterval = 5f;
-    public GameObject[] spawnPoints;
-    public GameObject enemyPrefab;
-    public RangeInt spawnCount = new RangeInt(1, 1);
+    private GameObject[] _hqs;
 
     private float _lastSpawn;
-    private GameObject[] _hqs;
+    public GameObject enemyPrefab;
+    public RangeInt spawnCount = new RangeInt(1, 1);
+    public GameObject[] spawnPoints;
+    public float waveInterval = 5f;
 
     private void Start() {
     }

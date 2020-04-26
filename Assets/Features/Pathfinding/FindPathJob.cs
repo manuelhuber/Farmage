@@ -5,7 +5,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 
-namespace Features.Terrain {
+namespace Features.Pathfinding {
 [BurstCompile]
 public struct FindPathJob : IJob {
     [ReadOnly] public NativeArray<GridNode> Map;
@@ -76,20 +76,17 @@ public struct FindPathJob : IJob {
                 neighbour.UpdateTotalCost();
                 neighbour.CameFromNodeIndex = currentNodeIndex;
                 pathNodes[neighbour.Index] = neighbour;
-                if (!openList.Contains(neighbourIndex)) {
-                    openList.Add(neighbourIndex);
-                }
+                if (!openList.Contains(neighbourIndex)) openList.Add(neighbourIndex);
             }
 
             alreadyChecked.Add(currentNodeIndex);
         }
 
-        if (visited != null) {
+        if (visited != null)
             for (var index = 0; index < alreadyChecked.Length; index++) {
                 var i = alreadyChecked[index];
                 visited.Value.Add(i);
             }
-        }
 
         openList.Dispose();
         alreadyChecked.Dispose();
@@ -102,7 +99,7 @@ public struct FindPathJob : IJob {
     }
 
     /// <summary>
-    /// Writes the final path to the "Path" field 
+    ///     Writes the final path to the "Path" field
     /// </summary>
     /// <param name="pathNodes">A list of all nodes</param>
     /// <param name="endIndex"></param>
@@ -170,20 +167,19 @@ public struct FindPathJob : IJob {
             var index = openList[i];
             var node = pathNodes[index];
             if (node.TotalCost < bestNode.TotalCost
-                || (node.TotalCost == bestNode.TotalCost && node.HeuristicCost < bestNode.HeuristicCost)
-            ) {
+                || node.TotalCost == bestNode.TotalCost && node.HeuristicCost < bestNode.HeuristicCost
+            )
                 bestNode = node;
-            }
         }
 
         return bestNode.Index;
     }
 
     /// <summary>
-    /// Finds the best valid end node for the path finding
-    /// If the requested end node is walkable returns the end node
-    /// If the requested end is not walkable it will find the best closest alternative (based on starting position)
-    /// DOES NOT FIX ISLAND PROBLEM! If the end node is walkable but has no path this will NOT be detected here! 
+    ///     Finds the best valid end node for the path finding
+    ///     If the requested end node is walkable returns the end node
+    ///     If the requested end is not walkable it will find the best closest alternative (based on starting position)
+    ///     DOES NOT FIX ISLAND PROBLEM! If the end node is walkable but has no path this will NOT be detected here!
     /// </summary>
     /// <param name="endIndex">The index of the proposed end node</param>
     /// <param name="startIndex">The index of the starting node</param>
@@ -195,17 +191,13 @@ public struct FindPathJob : IJob {
         while (!node.IsWalkable && node.Index != startIndex) {
             var nextX = node.X;
             var nextZ = node.Z;
-            if (startNode.X < node.X) {
+            if (startNode.X < node.X)
                 nextX--;
-            } else if (startNode.Z > node.X) {
-                nextX++;
-            }
+            else if (startNode.Z > node.X) nextX++;
 
-            if (startNode.Z < node.Z) {
+            if (startNode.Z < node.Z)
                 nextZ--;
-            } else if (startNode.Z > node.Z) {
-                nextZ++;
-            }
+            else if (startNode.Z > node.Z) nextZ++;
 
             node = map[CalculateIndex(nextX, nextZ)];
         }

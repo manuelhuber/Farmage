@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
-using Features.Queue;
 using Grimity.Singleton;
 using UnityEngine;
 using static Grimity.Cursor.CursorUtil;
 
 namespace Features.Units {
 public class UnitControl : GrimitySingleton<UnitControl> {
-    public LayerMask clickableLayers;
-    private readonly HashSet<Unit> _selection = new HashSet<Unit>();
     private readonly HashSet<Unit> _all = new HashSet<Unit>();
+    private readonly HashSet<Unit> _selection = new HashSet<Unit>();
     private UnityEngine.Camera _camera;
+    public LayerMask clickableLayers;
 
     private void Start() {
         _camera = UnityEngine.Camera.main;
@@ -33,9 +32,7 @@ public class UnitControl : GrimitySingleton<UnitControl> {
         if (rightClick) {
             var target = MouseToTerrain();
             if (_selection.Count == 0) return;
-            foreach (var unit in _selection) {
-                unit.setTarget(target.point);
-            }
+            foreach (var unit in _selection) unit.setTarget(target.point);
         } else if (leftClickDown) {
             GetCursorLocation(out var target, _camera);
             var unit = target.transform.gameObject.GetComponent<Unit>();
@@ -48,7 +45,7 @@ public class UnitControl : GrimitySingleton<UnitControl> {
     }
 
     private RaycastHit MouseToTerrain() {
-        GetCursorLocation(out RaycastHit terrainHit, _camera, clickableLayers);
+        GetCursorLocation(out var terrainHit, _camera, clickableLayers);
         return terrainHit;
     }
 }

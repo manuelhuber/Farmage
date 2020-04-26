@@ -7,12 +7,12 @@ using UnityEngine.AI;
 
 namespace Features.Enemies {
 public class EnemyScript : MonoBehaviour {
-    public int damage = 5;
-    public float attackSpeed;
-    private GameObject[] _targets = new GameObject[0];
-    private NavMeshAgent _navMeshAgent;
-    private Mortal _victim;
     private IntervaledAction _attack;
+    private NavMeshAgent _navMeshAgent;
+    private GameObject[] _targets = new GameObject[0];
+    private Mortal _victim;
+    public float attackSpeed;
+    public int damage = 5;
 
 
     private void Start() {

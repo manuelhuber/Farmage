@@ -1,4 +1,4 @@
-namespace Features.Terrain {
+namespace Features.Pathfinding {
 /// <summary>
 /// 
 /// </summary>

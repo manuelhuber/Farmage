@@ -1,12 +1,11 @@
-﻿using System;
-using Common.Settings;
+﻿using Common.Settings;
 using UnityEngine;
 
 namespace Features.Camera {
 public class CameraControl : MonoBehaviour {
-    private Hotkeys _hotkeys;
-    private Control _control;
     private Transform _camera;
+    private Control _control;
+    private Hotkeys _hotkeys;
 
     private void Start() {
         _hotkeys = Settings.Instance.Hotkeys;
@@ -18,29 +17,17 @@ public class CameraControl : MonoBehaviour {
     private void Update() {
         var movement = new Vector3();
         var rotation = new Vector3();
-        if (Input.GetKey(_hotkeys.moveCameraUp)) {
-            movement.z += 1;
-        }
+        if (Input.GetKey(_hotkeys.moveCameraUp)) movement.z += 1;
 
-        if (Input.GetKey(_hotkeys.moveCameraDown)) {
-            movement.z -= 1;
-        }
+        if (Input.GetKey(_hotkeys.moveCameraDown)) movement.z -= 1;
 
-        if (Input.GetKey(_hotkeys.moveCameraLeft)) {
-            movement.x -= 1;
-        }
+        if (Input.GetKey(_hotkeys.moveCameraLeft)) movement.x -= 1;
 
-        if (Input.GetKey(_hotkeys.moveCameraRight)) {
-            movement.x += 1;
-        }
+        if (Input.GetKey(_hotkeys.moveCameraRight)) movement.x += 1;
 
-        if (Input.GetKey(_hotkeys.turnCameraLeft)) {
-            rotation.y += 1;
-        }
+        if (Input.GetKey(_hotkeys.turnCameraLeft)) rotation.y += 1;
 
-        if (Input.GetKey(_hotkeys.turnCameraRight)) {
-            rotation.y -= 1;
-        }
+        if (Input.GetKey(_hotkeys.turnCameraRight)) rotation.y -= 1;
 
         var zoomValue = Input.mouseScrollDelta.y * _control.zoomSpeed;
         _camera.Translate(0, 0, zoomValue);

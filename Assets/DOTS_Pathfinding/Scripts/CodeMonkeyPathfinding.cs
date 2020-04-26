@@ -22,23 +22,23 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
 
     private void Start() {
         // FunctionPeriodic.Create(() => {
-            float startTime = Time.realtimeSinceStartup;
+        var startTime = Time.realtimeSinceStartup;
 
-            int findPathJobCount = 5;
-            NativeArray<JobHandle> jobHandleArray = new NativeArray<JobHandle>(findPathJobCount, Allocator.TempJob);
+        var findPathJobCount = 5;
+        var jobHandleArray = new NativeArray<JobHandle>(findPathJobCount, Allocator.TempJob);
 
-            for (int i = 0; i < findPathJobCount; i++) {
-                FindPathJob findPathJob = new FindPathJob {
-                    startPosition = new int2(0, 0),
-                    endPosition = new int2(99, 99)
-                };
-                jobHandleArray[i] = findPathJob.Schedule();
-            }
+        for (var i = 0; i < findPathJobCount; i++) {
+            var findPathJob = new FindPathJob {
+                startPosition = new int2(0, 0),
+                endPosition = new int2(99, 99)
+            };
+            jobHandleArray[i] = findPathJob.Schedule();
+        }
 
-            JobHandle.CompleteAll(jobHandleArray);
-            jobHandleArray.Dispose();
+        JobHandle.CompleteAll(jobHandleArray);
+        jobHandleArray.Dispose();
 
-            Debug.Log("Time: " + ((Time.realtimeSinceStartup - startTime) * 1000f));
+        Debug.Log("Time: " + (Time.realtimeSinceStartup - startTime) * 1000f);
         // }, 1f);
     }
 
@@ -48,26 +48,25 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
         public int2 endPosition;
 
         public void Execute() {
-            int2 gridSize = new int2(100, 100);
+            var gridSize = new int2(100, 100);
 
-            NativeArray<PathNode> pathNodeArray = new NativeArray<PathNode>(gridSize.x * gridSize.y, Allocator.Temp);
+            var pathNodeArray = new NativeArray<PathNode>(gridSize.x * gridSize.y, Allocator.Temp);
 
-            for (int x = 0; x < gridSize.x; x++) {
-                for (int y = 0; y < gridSize.y; y++) {
-                    PathNode pathNode = new PathNode();
-                    pathNode.x = x;
-                    pathNode.y = y;
-                    pathNode.index = CalculateIndex(x, y, gridSize.x);
+            for (var x = 0; x < gridSize.x; x++)
+            for (var y = 0; y < gridSize.y; y++) {
+                var pathNode = new PathNode();
+                pathNode.x = x;
+                pathNode.y = y;
+                pathNode.index = CalculateIndex(x, y, gridSize.x);
 
-                    pathNode.gCost = int.MaxValue;
-                    pathNode.hCost = CalculateDistanceCost(new int2(x, y), endPosition);
-                    pathNode.CalculateFCost();
+                pathNode.gCost = int.MaxValue;
+                pathNode.hCost = CalculateDistanceCost(new int2(x, y), endPosition);
+                pathNode.CalculateFCost();
 
-                    pathNode.isWalkable = true;
-                    pathNode.cameFromNodeIndex = -1;
+                pathNode.isWalkable = true;
+                pathNode.cameFromNodeIndex = -1;
 
-                    pathNodeArray[pathNode.index] = pathNode;
-                }
+                pathNodeArray[pathNode.index] = pathNode;
             }
 
             /*
@@ -87,7 +86,7 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
             }
             */
 
-            NativeArray<int2> neighbourOffsetArray = new NativeArray<int2>(8, Allocator.Temp);
+            var neighbourOffsetArray = new NativeArray<int2>(8, Allocator.Temp);
             neighbourOffsetArray[0] = new int2(-1, 0); // Left
             neighbourOffsetArray[1] = new int2(+1, 0); // Right
             neighbourOffsetArray[2] = new int2(0, +1); // Up
@@ -97,63 +96,54 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
             neighbourOffsetArray[6] = new int2(+1, -1); // Right Down
             neighbourOffsetArray[7] = new int2(+1, +1); // Right Up
 
-            int endNodeIndex = CalculateIndex(endPosition.x, endPosition.y, gridSize.x);
+            var endNodeIndex = CalculateIndex(endPosition.x, endPosition.y, gridSize.x);
 
-            PathNode startNode = pathNodeArray[CalculateIndex(startPosition.x, startPosition.y, gridSize.x)];
+            var startNode = pathNodeArray[CalculateIndex(startPosition.x, startPosition.y, gridSize.x)];
             startNode.gCost = 0;
             startNode.CalculateFCost();
             pathNodeArray[startNode.index] = startNode;
 
-            NativeList<int> openList = new NativeList<int>(Allocator.Temp);
-            NativeList<int> closedList = new NativeList<int>(Allocator.Temp);
+            var openList = new NativeList<int>(Allocator.Temp);
+            var closedList = new NativeList<int>(Allocator.Temp);
 
             openList.Add(startNode.index);
 
             while (openList.Length > 0) {
-                int currentNodeIndex = GetLowestCostFNodeIndex(openList, pathNodeArray);
-                PathNode currentNode = pathNodeArray[currentNodeIndex];
+                var currentNodeIndex = GetLowestCostFNodeIndex(openList, pathNodeArray);
+                var currentNode = pathNodeArray[currentNodeIndex];
 
-                if (currentNodeIndex == endNodeIndex) {
-                    // Reached our destination!
+                if (currentNodeIndex == endNodeIndex) // Reached our destination!
                     break;
-                }
 
                 // Remove current node from Open List
-                for (int i = 0; i < openList.Length; i++) {
+                for (var i = 0; i < openList.Length; i++)
                     if (openList[i] == currentNodeIndex) {
                         openList.RemoveAtSwapBack(i);
                         break;
                     }
-                }
 
                 closedList.Add(currentNodeIndex);
 
-                for (int i = 0; i < neighbourOffsetArray.Length; i++) {
-                    int2 neighbourOffset = neighbourOffsetArray[i];
-                    int2 neighbourPosition =
+                for (var i = 0; i < neighbourOffsetArray.Length; i++) {
+                    var neighbourOffset = neighbourOffsetArray[i];
+                    var neighbourPosition =
                         new int2(currentNode.x + neighbourOffset.x, currentNode.y + neighbourOffset.y);
 
-                    if (!IsPositionInsideGrid(neighbourPosition, gridSize)) {
-                        // Neighbour not valid position
+                    if (!IsPositionInsideGrid(neighbourPosition, gridSize)) // Neighbour not valid position
                         continue;
-                    }
 
-                    int neighbourNodeIndex = CalculateIndex(neighbourPosition.x, neighbourPosition.y, gridSize.x);
+                    var neighbourNodeIndex = CalculateIndex(neighbourPosition.x, neighbourPosition.y, gridSize.x);
 
-                    if (closedList.Contains(neighbourNodeIndex)) {
-                        // Already searched this node
+                    if (closedList.Contains(neighbourNodeIndex)) // Already searched this node
                         continue;
-                    }
 
-                    PathNode neighbourNode = pathNodeArray[neighbourNodeIndex];
-                    if (!neighbourNode.isWalkable) {
-                        // Not walkable
+                    var neighbourNode = pathNodeArray[neighbourNodeIndex];
+                    if (!neighbourNode.isWalkable) // Not walkable
                         continue;
-                    }
 
-                    int2 currentNodePosition = new int2(currentNode.x, currentNode.y);
+                    var currentNodePosition = new int2(currentNode.x, currentNode.y);
 
-                    int tentativeGCost =
+                    var tentativeGCost =
                         currentNode.gCost + CalculateDistanceCost(currentNodePosition, neighbourPosition);
                     if (tentativeGCost < neighbourNode.gCost) {
                         neighbourNode.cameFromNodeIndex = currentNodeIndex;
@@ -161,20 +151,18 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
                         neighbourNode.CalculateFCost();
                         pathNodeArray[neighbourNodeIndex] = neighbourNode;
 
-                        if (!openList.Contains(neighbourNode.index)) {
-                            openList.Add(neighbourNode.index);
-                        }
+                        if (!openList.Contains(neighbourNode.index)) openList.Add(neighbourNode.index);
                     }
                 }
             }
 
-            PathNode endNode = pathNodeArray[endNodeIndex];
+            var endNode = pathNodeArray[endNodeIndex];
             if (endNode.cameFromNodeIndex == -1) {
                 // Didn't find a path!
                 //Debug.Log("Didn't find a path!");
             } else {
                 // Found a path
-                NativeList<int2> path = CalculatePath(pathNodeArray, endNode);
+                var path = CalculatePath(pathNodeArray, endNode);
                 /*
                 foreach (int2 pathPosition in path) {
                     Debug.Log(pathPosition);
@@ -190,23 +178,21 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
         }
 
         private NativeList<int2> CalculatePath(NativeArray<PathNode> pathNodeArray, PathNode endNode) {
-            if (endNode.cameFromNodeIndex == -1) {
-                // Couldn't find a path!
+            if (endNode.cameFromNodeIndex == -1) // Couldn't find a path!
                 return new NativeList<int2>(Allocator.Temp);
-            } else {
-                // Found a path
-                NativeList<int2> path = new NativeList<int2>(Allocator.Temp);
-                path.Add(new int2(endNode.x, endNode.y));
 
-                PathNode currentNode = endNode;
-                while (currentNode.cameFromNodeIndex != -1) {
-                    PathNode cameFromNode = pathNodeArray[currentNode.cameFromNodeIndex];
-                    path.Add(new int2(cameFromNode.x, cameFromNode.y));
-                    currentNode = cameFromNode;
-                }
+            // Found a path
+            var path = new NativeList<int2>(Allocator.Temp);
+            path.Add(new int2(endNode.x, endNode.y));
 
-                return path;
+            var currentNode = endNode;
+            while (currentNode.cameFromNodeIndex != -1) {
+                var cameFromNode = pathNodeArray[currentNode.cameFromNodeIndex];
+                path.Add(new int2(cameFromNode.x, cameFromNode.y));
+                currentNode = cameFromNode;
             }
+
+            return path;
         }
 
         private bool IsPositionInsideGrid(int2 gridPosition, int2 gridSize) {
@@ -222,20 +208,18 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
         }
 
         private int CalculateDistanceCost(int2 aPosition, int2 bPosition) {
-            int xDistance = math.abs(aPosition.x - bPosition.x);
-            int yDistance = math.abs(aPosition.y - bPosition.y);
-            int remaining = math.abs(xDistance - yDistance);
+            var xDistance = math.abs(aPosition.x - bPosition.x);
+            var yDistance = math.abs(aPosition.y - bPosition.y);
+            var remaining = math.abs(xDistance - yDistance);
             return MOVE_DIAGONAL_COST * math.min(xDistance, yDistance) + MOVE_STRAIGHT_COST * remaining;
         }
 
 
         private int GetLowestCostFNodeIndex(NativeList<int> openList, NativeArray<PathNode> pathNodeArray) {
-            PathNode lowestCostPathNode = pathNodeArray[openList[0]];
-            for (int i = 1; i < openList.Length; i++) {
-                PathNode testPathNode = pathNodeArray[openList[i]];
-                if (testPathNode.fCost < lowestCostPathNode.fCost) {
-                    lowestCostPathNode = testPathNode;
-                }
+            var lowestCostPathNode = pathNodeArray[openList[0]];
+            for (var i = 1; i < openList.Length; i++) {
+                var testPathNode = pathNodeArray[openList[i]];
+                if (testPathNode.fCost < lowestCostPathNode.fCost) lowestCostPathNode = testPathNode;
             }
 
             return lowestCostPathNode.index;

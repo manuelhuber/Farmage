@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Features.Terrain;
 using Grimity.Cursor;
 using Grimity.Loops;
 using Sirenix.OdinInspector;
@@ -11,17 +12,29 @@ using Unity.Mathematics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace Features.Terrain {
+namespace Features.Pathfinding {
+/// <summary>
+///     Testing and debuging class for pathfinding - not intended for use in game
+/// </summary>
 public class PathFindingGrid : MonoBehaviour {
-    public int findPathJobCount = 20;
-    public bool schedule;
-    public bool drawGizmos;
+    private UnityEngine.Camera _camera;
+    private int _cellCountX;
+
+
+    private int _cellCountZ;
+    [SerializeField] private int _grassPenalty;
     public float cellSize;
+    public int DiagonalCost = 1;
+    public bool drawGizmos;
+    public int findPathJobCount = 20;
+    public NativeArray<GridNode> map;
+
+    private readonly List<int[]> paths = new List<int[]>();
+    public bool schedule;
     public float sizeX;
     public float sizeZ;
-    public NativeArray<GridNode> map;
     public LayerMask terrainLayer;
-    public int DiagonalCost = 1;
+    private readonly List<int> visitedIndices = new List<int>();
 
     public int GrassPenalty {
         get => _grassPenalty;
@@ -30,15 +43,6 @@ public class PathFindingGrid : MonoBehaviour {
             UpdatePenalty();
         }
     }
-
-
-    private int _cellCountZ;
-    private int _cellCountX;
-    private List<int> visitedIndices = new List<int>();
-
-    private List<int[]> paths = new List<int[]>();
-    private UnityEngine.Camera _camera;
-    [SerializeField] private int _grassPenalty;
 
     private void Start() {
         _camera = UnityEngine.Camera.main;
@@ -53,7 +57,7 @@ public class PathFindingGrid : MonoBehaviour {
                 X = x,
                 Z = z,
                 IsWalkable = true,
-                Penalty = (x != 15 && x != 16) ? 0 : GrassPenalty,
+                Penalty = x != 15 && x != 16 ? 0 : GrassPenalty
             };
         });
     }
@@ -62,7 +66,7 @@ public class PathFindingGrid : MonoBehaviour {
     private void UpdatePenalty() {
         for (var index = 0; index < map.Length; index++) {
             var gridNode = map[index];
-            gridNode.Penalty = (gridNode.X == 15 || gridNode.X == 16) ? 0 : GrassPenalty;
+            gridNode.Penalty = gridNode.X == 15 || gridNode.X == 16 ? 0 : GrassPenalty;
             map[index] = gridNode;
         }
     }
@@ -102,20 +106,17 @@ public class PathFindingGrid : MonoBehaviour {
                     Path = newPaths[i],
                     visited = visited[i]
                 };
-                if (schedule) {
+                if (schedule)
                     jobHandleArray[i] = findPathJob.Schedule();
-                } else {
+                else
                     findPathJob.Execute();
-                }
             }
 
             JobHandle.CompleteAll(jobHandleArray);
 
             visitedIndices.Clear();
             foreach (var visitedByPath in visited) {
-                foreach (var i in visitedByPath) {
-                    visitedIndices.Add(i);
-                }
+                foreach (var i in visitedByPath) visitedIndices.Add(i);
 
                 visitedByPath.Dispose();
             }
@@ -147,25 +148,15 @@ public class PathFindingGrid : MonoBehaviour {
         Gizmos.DrawWireCube(transform.position, new Vector3(sizeX, 1, sizeZ));
         var size = cellSize * .9f;
         foreach (var gridNode in map) {
-            if (gridNode.IsWalkable) {
-                Gizmos.color = Color.green;
-            }
+            if (gridNode.IsWalkable) Gizmos.color = Color.green;
 
-            if (Math.Abs(gridNode.Penalty) < 0.1) {
-                Gizmos.color = Color.grey;
-            }
+            if (Math.Abs(gridNode.Penalty) < 0.1) Gizmos.color = Color.grey;
 
-            if (visitedIndices.Contains(gridNode.Index)) {
-                Gizmos.color = Color.yellow;
-            }
+            if (visitedIndices.Contains(gridNode.Index)) Gizmos.color = Color.yellow;
 
-            if (paths.Any(indices => indices.Contains(gridNode.Index))) {
-                Gizmos.color = Color.blue;
-            }
+            if (paths.Any(indices => indices.Contains(gridNode.Index))) Gizmos.color = Color.blue;
 
-            if (!gridNode.IsWalkable) {
-                Gizmos.color = Color.red;
-            }
+            if (!gridNode.IsWalkable) Gizmos.color = Color.red;
 
             Gizmos.DrawCube(
                 new Vector3(gridNode.X * cellSize - sizeX / 2 + cellSize / 2,

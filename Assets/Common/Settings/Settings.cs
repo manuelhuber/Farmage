@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Common.Settings {
 public class Settings : GrimitySingleton<Settings> {
-    [SerializeField] private Hotkeys hotkeys;
     [SerializeField] private Control control;
+    [SerializeField] private Hotkeys hotkeys;
 
     public Hotkeys Hotkeys => hotkeys;
 

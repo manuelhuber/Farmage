@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 namespace Features.Resources {
 public class ResourceManager : GrimitySingleton<ResourceManager> {
+    private readonly List<Tuple<Cost, Action<bool>>> _callbacks = new List<Tuple<Cost, Action<bool>>>();
     private Cost _have = new Cost {cash = 100};
     private Text _text;
-    private readonly List<Tuple<Cost, Action<bool>>> _callbacks = new List<Tuple<Cost, Action<bool>>>();
 
     private void Start() {
         _text = GameObject.FindWithTag("ResourceText").GetComponent<Text>();
@@ -23,9 +23,7 @@ public class ResourceManager : GrimitySingleton<ResourceManager> {
     }
 
     public bool Pay(Cost change) {
-        if (!CanBePayed(change)) {
-            return false;
-        }
+        if (!CanBePayed(change)) return false;
 
         _have -= change;
         onChange();
@@ -34,9 +32,7 @@ public class ResourceManager : GrimitySingleton<ResourceManager> {
 
     private void onChange() {
         _text.text = _have.ToString();
-        foreach (var callback in _callbacks) {
-            callback.Item2(CanBePayed(callback.Item1));
-        }
+        foreach (var callback in _callbacks) callback.Item2(CanBePayed(callback.Item1));
     }
 
     public bool subscribe(Cost cost, Action<bool> callback) {
@@ -62,7 +58,7 @@ public struct Cost {
     }
 
     public static Cost operator -(Cost a, Cost b) {
-        return a + (-b);
+        return a + -b;
     }
 
     public static bool operator <=(Cost a, Cost b) {

@@ -1,7 +1,7 @@
-using System;
 using Grimity.Loops;
 using Grimity.Mesh;
 using Grimity.Rng;
+using UnityEditor;
 using UnityEngine;
 
 namespace Features.Terrain {
@@ -14,7 +14,7 @@ public class FarmageTerrain : MonoBehaviour {
     public void generateTerrain() {
         foreach (var child in GetComponentsInChildren<Transform>()) {
             if (child.gameObject == gameObject) continue;
-            UnityEditor.EditorApplication.delayCall += () => {
+            EditorApplication.delayCall += () => {
                 if (child == null) return;
                 DestroyImmediate(child.gameObject);
             };
