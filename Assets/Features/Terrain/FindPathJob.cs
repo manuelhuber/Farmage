@@ -1,3 +1,5 @@
+using Grimity.NativeCollections;
+using Grimity.PathFinding;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -11,6 +13,7 @@ public struct FindPathJob : IJob {
     public int2 StartPosition;
     public int2 EndPosition;
     public NativeList<PathNode> Path;
+    public NativeList<int>? visited;
 
     public int MoveDiagonalCost;
     public int MoveStraightCost;
@@ -19,16 +22,17 @@ public struct FindPathJob : IJob {
     private int _endIndex;
 
     public void Execute() {
-        if (!Map[_endIndex].IsWalkable) return;
+        _startIndex = CalculateIndex(StartPosition.x, StartPosition.y);
+        var requestedEndIndex = CalculateIndex(EndPosition.x, EndPosition.y);
+        _endIndex = FindBestEnd(requestedEndIndex, _startIndex, Map);
+        var endNode = Map[_endIndex];
         var pathNodes = new NativeArray<PathNode>(Map.Length, Allocator.Temp);
         var neighbourOffsets = GetNeighbourOffsets();
-        _startIndex = CalculateIndex(StartPosition.x, StartPosition.y);
-        _endIndex = CalculateIndex(EndPosition.x, EndPosition.y);
         for (var index = 0; index < Map.Length; index++) {
             var gridNode = Map[index];
             pathNodes[gridNode.Index] = new PathNode {
                 Index = gridNode.Index,
-                HeuristicCost = HeuristicCost(gridNode.X, gridNode.Z, EndPosition.x, EndPosition.y),
+                HeuristicCost = HeuristicCost(gridNode.X, gridNode.Z, endNode.X, endNode.Z),
                 ArrivalCost = int.MaxValue,
                 TotalCost = int.MaxValue,
                 CameFromNodeIndex = -1
@@ -40,6 +44,11 @@ public struct FindPathJob : IJob {
         startingNode.UpdateTotalCost();
         pathNodes[_startIndex] = startingNode;
 
+        // We record the closest we get to the target
+        // In case the target is unreachable we can at least show the path to the closest possible node
+        var bestAttemptTargetIndex = -1;
+        var bestAttemptTargetDistance = int.MaxValue;
+
         var openList = new NativeList<int>(20, Allocator.Temp);
         var alreadyChecked = new NativeList<int>(20, Allocator.Temp);
         openList.Add(_startIndex);
@@ -48,7 +57,12 @@ public struct FindPathJob : IJob {
             var currentNodeIndex = FindLowestTotalCost(openList, pathNodes);
             if (currentNodeIndex == _endIndex) break;
             var currentNode = pathNodes[currentNodeIndex];
-            openList.RemoveAtSwapBack(openList.IndexOf(currentNodeIndex));
+            if (currentNode.HeuristicCost < bestAttemptTargetDistance) {
+                bestAttemptTargetIndex = currentNodeIndex;
+                bestAttemptTargetDistance = currentNode.HeuristicCost;
+            }
+
+            openList.Remove(currentNodeIndex);
             var neighbours = GetNeighbours(currentNodeIndex, neighbourOffsets);
             for (var i = 0; i < neighbours.Length; i++) {
                 var neighbourIndex = neighbours[i];
@@ -56,7 +70,7 @@ public struct FindPathJob : IJob {
                 if (alreadyChecked.Contains(neighbourIndex) || !Map[neighbourIndex].IsWalkable) continue;
 
                 var neighbour = pathNodes[neighbourIndex];
-                var newArrivalCost = currentNode.ArrivalCost + TransitionCost(currentNodeIndex, neighbour.Index);
+                var newArrivalCost = currentNode.ArrivalCost + TransitionCost(currentNodeIndex, neighbourIndex);
                 if (newArrivalCost >= neighbour.ArrivalCost) continue;
                 neighbour.ArrivalCost = newArrivalCost;
                 neighbour.UpdateTotalCost();
@@ -70,15 +84,30 @@ public struct FindPathJob : IJob {
             alreadyChecked.Add(currentNodeIndex);
         }
 
+        if (visited != null) {
+            for (var index = 0; index < alreadyChecked.Length; index++) {
+                var i = alreadyChecked[index];
+                visited.Value.Add(i);
+            }
+        }
+
         openList.Dispose();
         alreadyChecked.Dispose();
         neighbourOffsets.Dispose();
-        WritePath(pathNodes);
+
+        // If we could find a path to the _endIndex node let's go to the closest alternative
+        var finalEndIndex = pathNodes[_endIndex].CameFromNodeIndex != -1 ? _endIndex : bestAttemptTargetIndex;
+
+        WritePath(pathNodes, finalEndIndex);
     }
 
-    private void WritePath(NativeArray<PathNode> pathNodes) {
-        if (pathNodes[_endIndex].CameFromNodeIndex == -1) return;
-        var node = pathNodes[_endIndex];
+    /// <summary>
+    /// Writes the final path to the "Path" field 
+    /// </summary>
+    /// <param name="pathNodes">A list of all nodes</param>
+    /// <param name="endIndex"></param>
+    private void WritePath(NativeArray<PathNode> pathNodes, int endIndex) {
+        var node = pathNodes[endIndex];
         while (node.CameFromNodeIndex != -1) {
             Path.Add(node);
             node = pathNodes[node.CameFromNodeIndex];
@@ -86,10 +115,14 @@ public struct FindPathJob : IJob {
     }
 
     private int TransitionCost(int currentIndex, int neighbourIndex) {
-        // TODO: modify cost based on something?
         var from = Map[currentIndex];
         var to = Map[neighbourIndex];
-        return HeuristicCost(from.X, from.Z, to.X, to.Z) + to.Penalty;
+        return PathFindingUtils.ManhattanDistanceDiagonal(from.X,
+            from.Z,
+            to.X,
+            to.Z,
+            MoveStraightCost,
+            MoveDiagonalCost) + to.Penalty;
     }
 
     private int CalculateIndex(int x, int z) {
@@ -128,38 +161,56 @@ public struct FindPathJob : IJob {
     }
 
     private int HeuristicCost(int fromX, int fromZ, int toX, int toZ) {
-        var xDistance = math.abs(fromX - toX);
-        var yDistance = math.abs(fromZ - toZ);
-        var remaining = math.abs(xDistance - yDistance);
-        return MoveDiagonalCost * math.min(xDistance, yDistance) + MoveStraightCost * remaining;
+        return PathFindingUtils.ManhattanDistanceDiagonal(fromX, fromZ, toX, toZ, MoveStraightCost, MoveDiagonalCost);
     }
 
     private int FindLowestTotalCost(NativeList<int> openList, NativeArray<PathNode> pathNodes) {
-        var lowestValue = int.MaxValue;
-        var lowestIndex = -1;
+        var bestNode = pathNodes[openList[0]];
         for (var i = 0; i < openList.Length; i++) {
             var index = openList[i];
             var node = pathNodes[index];
-            if (node.TotalCost >= lowestValue) continue;
-            lowestValue = node.TotalCost;
-            lowestIndex = node.Index;
+            if (node.TotalCost < bestNode.TotalCost
+                || (node.TotalCost == bestNode.TotalCost && node.HeuristicCost < bestNode.HeuristicCost)
+            ) {
+                bestNode = node;
+            }
         }
 
-        return lowestIndex;
+        return bestNode.Index;
     }
 
-    public struct PathNode {
-        public int Index;
+    /// <summary>
+    /// Finds the best valid end node for the path finding
+    /// If the requested end node is walkable returns the end node
+    /// If the requested end is not walkable it will find the best closest alternative (based on starting position)
+    /// DOES NOT FIX ISLAND PROBLEM! If the end node is walkable but has no path this will NOT be detected here! 
+    /// </summary>
+    /// <param name="endIndex">The index of the proposed end node</param>
+    /// <param name="startIndex">The index of the starting node</param>
+    /// <param name="map">A list of all nmodes</param>
+    /// <returns>The index of the best end node</returns>
+    private int FindBestEnd(int endIndex, int startIndex, NativeArray<GridNode> map) {
+        var startNode = map[startIndex];
+        var node = map[endIndex];
+        while (!node.IsWalkable && node.Index != startIndex) {
+            var nextX = node.X;
+            var nextZ = node.Z;
+            if (startNode.X < node.X) {
+                nextX--;
+            } else if (startNode.Z > node.X) {
+                nextX++;
+            }
 
-        public int ArrivalCost;
-        public int HeuristicCost;
-        public int TotalCost;
+            if (startNode.Z < node.Z) {
+                nextZ--;
+            } else if (startNode.Z > node.Z) {
+                nextZ++;
+            }
 
-        public int CameFromNodeIndex;
-
-        public void UpdateTotalCost() {
-            TotalCost = ArrivalCost + HeuristicCost;
+            node = map[CalculateIndex(nextX, nextZ)];
         }
+
+        return node.Index;
     }
 }
 }

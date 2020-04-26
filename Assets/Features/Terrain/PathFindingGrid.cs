@@ -9,18 +9,20 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Debug = UnityEngine.Debug;
 
 namespace Features.Terrain {
 public class PathFindingGrid : MonoBehaviour {
-    public int FindPathJobCount = 20;
-    public bool Schedule;
-    public bool DrawGizmos;
+    public int findPathJobCount = 20;
+    public bool schedule;
+    public bool drawGizmos;
     public float cellSize;
     public float sizeX;
     public float sizeZ;
     public NativeArray<GridNode> map;
     public LayerMask terrainLayer;
+    public int DiagonalCost = 1;
 
     public int GrassPenalty {
         get => _grassPenalty;
@@ -30,15 +32,14 @@ public class PathFindingGrid : MonoBehaviour {
         }
     }
 
-    public int DiagonalCost = 1;
-
 
     private int _cellCountZ;
     private int _cellCountX;
+    private List<int> visitedIndices = new List<int>();
+
     private List<int[]> paths = new List<int[]>();
     private UnityEngine.Camera _camera;
     [SerializeField] private int _grassPenalty;
-
 
     private void Start() {
         _camera = UnityEngine.Camera.main;
@@ -53,7 +54,7 @@ public class PathFindingGrid : MonoBehaviour {
                 X = x,
                 Z = z,
                 IsWalkable = true,
-                Penalty = (x == 15 || x == 16) ? 0 : GrassPenalty,
+                Penalty = (x != 15 && x != 16) ? 0 : GrassPenalty,
             };
         });
     }
@@ -86,10 +87,12 @@ public class PathFindingGrid : MonoBehaviour {
         } else if (rightClick) {
             var sw = new Stopwatch();
             sw.Start();
-            var jobHandleArray = new NativeArray<JobHandle>(FindPathJobCount, Allocator.TempJob);
-            var newPath = new NativeList<FindPathJob.PathNode>[FindPathJobCount];
-            for (var i = 0; i < FindPathJobCount; i++) {
-                newPath[i] = new NativeList<FindPathJob.PathNode>(Allocator.TempJob);
+            var jobHandleArray = new NativeArray<JobHandle>(findPathJobCount, Allocator.TempJob);
+            var newPaths = new NativeList<PathNode>[findPathJobCount];
+            var visited = new NativeList<int>[findPathJobCount];
+            for (var i = 0; i < findPathJobCount; i++) {
+                newPaths[i] = new NativeList<PathNode>(Allocator.TempJob);
+                visited[i] = new NativeList<int>(Allocator.TempJob);
                 var findPathJob = new FindPathJob {
                     Map = map,
                     StartPosition = new int2(0, 0),
@@ -97,9 +100,10 @@ public class PathFindingGrid : MonoBehaviour {
                     MoveDiagonalCost = DiagonalCost,
                     MoveStraightCost = 11,
                     MapSize = new int2(_cellCountX, _cellCountZ),
-                    Path = newPath[i]
+                    Path = newPaths[i],
+                    visited = visited[i]
                 };
-                if (Schedule) {
+                if (schedule) {
                     jobHandleArray[i] = findPathJob.Schedule();
                 } else {
                     findPathJob.Execute();
@@ -107,7 +111,17 @@ public class PathFindingGrid : MonoBehaviour {
             }
 
             JobHandle.CompleteAll(jobHandleArray);
-            foreach (var nativeList in newPath) {
+
+            visitedIndices.Clear();
+            foreach (var visitedByPath in visited) {
+                foreach (var i in visitedByPath) {
+                    visitedIndices.Add(i);
+                }
+
+                visitedByPath.Dispose();
+            }
+
+            foreach (var nativeList in newPaths) {
                 paths.Clear();
                 paths.Add(nativeList.ToArray().Select(node => node.Index).ToArray());
                 nativeList.Dispose();
@@ -115,7 +129,7 @@ public class PathFindingGrid : MonoBehaviour {
 
             jobHandleArray.Dispose();
             sw.Stop();
-            Debug.Log(sw.ElapsedMilliseconds);
+            Debug.Log("Total time: " + sw.ElapsedMilliseconds + "ms");
         }
     }
 
@@ -130,7 +144,7 @@ public class PathFindingGrid : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        if (!DrawGizmos) return;
+        if (!drawGizmos) return;
         Gizmos.DrawWireCube(transform.position, new Vector3(sizeX, 1, sizeZ));
         var size = cellSize * .9f;
         foreach (var gridNode in map) {
@@ -140,6 +154,10 @@ public class PathFindingGrid : MonoBehaviour {
 
             if (Math.Abs(gridNode.Penalty) < 0.1) {
                 Gizmos.color = Color.grey;
+            }
+
+            if (visitedIndices.Contains(gridNode.Index)) {
+                Gizmos.color = Color.yellow;
             }
 
             if (paths.Any(indices => indices.Contains(gridNode.Index))) {

@@ -550,16 +550,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 535ac81408df4a559f2c8fcfa71bf27e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FindPathJobCount: 100
+  FindPathJobCount: 1
   Schedule: 1
   DrawGizmos: 1
-  cellSize: 2
-  sizeX: 50
+  cellSize: 5
+  sizeX: 100
   sizeZ: 100
   terrainLayer:
     serializedVersion: 2
     m_Bits: 256
-  GrassPenalty: 0
+  DiagonalCost: 14
+  _grassPenalty: 0
 --- !u!1 &1091702557
 GameObject:
   m_ObjectHideFlags: 0
