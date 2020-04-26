@@ -28,6 +28,8 @@
     <explicitExcludes>
       <Path>.git</Path>
       <Path>.idea</Path>
+      <Path>Assets/Ludiq</Path>
+      <Path>Assets/Ludiq.Generated</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
       <Path>Temp</Path>

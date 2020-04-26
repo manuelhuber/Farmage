@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Grimity.Collections;
 using Grimity.GameObjects;
+using MonKey.Extensions;
 using UnityEngine;
 
 namespace Features.Building.Placement {
@@ -97,7 +98,7 @@ public class Placeable : MonoBehaviour {
         var collisionVertices = CollisionVertices();
         if (collisionVertices.Count == 0) return;
         var heights = collisionVertices.SelectMany(pair => pair.Value).Select(tuple => tuple.Item2.y).ToArray();
-        var dif = heights.Max() - heights.Min();
+        var dif = heights.IsEmpty() ? 0 : heights.Max() - heights.Min();
 
         var terrainIsGood = dif < settings.placementThreshold;
         var updateNeeded = terrainIsGood != _terrainIsGood;
