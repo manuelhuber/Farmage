@@ -23,7 +23,7 @@ public class HarvestBehaviour : UnitBehaviourBase {
     }
 
     public override void Behave() {
-        if (!(_movementAgent.hasArrived)) return;
+        if (!(_movementAgent.HasArrived)) return;
         var harvest = target.GetComponent<WheatField>().harvest();
         _resourceManager.Add(harvest);
         CompleteTask();

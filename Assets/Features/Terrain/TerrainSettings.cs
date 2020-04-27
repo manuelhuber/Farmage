@@ -1,4 +1,5 @@
 using Grimity.Data;
+using Grimity.ScriptableObject;
 using UnityEngine;
 
 namespace Features.Terrain {

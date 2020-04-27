@@ -244,6 +244,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 15
   stoppingDistance: 1
+  turnSpeed: 10
+  _hasArrived: 0
 --- !u!114 &2607298129412826994
 MonoBehaviour:
   m_ObjectHideFlags: 0

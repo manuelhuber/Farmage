@@ -23,7 +23,7 @@ public class BuildingInput : MonoBehaviour {
     public GameObject iconPrefab;
     public PlacementSettings placementSettings;
     public LayerMask terrainLayer;
-    private int _multiple = 4;
+    private int _gridSize = 4;
 
     private void Start() {
         _resourceManager = ResourceManager.Instance;
@@ -37,8 +37,8 @@ public class BuildingInput : MonoBehaviour {
         if (_dragObject) {
             var pos = MouseToTerrain().point;
             var size = _selected.buildingPrefab.GetComponent<Structures.Building>().size;
-            pos.x = RoundToMultiple(pos.x, _multiple, size.x.isEven());
-            pos.z = RoundToMultiple(pos.z, _multiple, size.y.isEven());
+            pos.x = RoundToMultiple(pos.x, _gridSize, size.x.isEven());
+            pos.z = RoundToMultiple(pos.z, _gridSize, size.y.isEven());
             _placeable.transform.position = pos;
         }
 
@@ -86,12 +86,11 @@ public class BuildingInput : MonoBehaviour {
             button.transform.localPosition = new Vector3(offset, 0, 0);
             offset += button.GetComponent<RectTransform>().rect.width;
 
-            void UpdateThisButton(bool playable) {
-                UpdateButton(playable, entry, button);
+            void UpdateThisButton() {
+                UpdateButton(_resourceManager.CanBePayed(entry.cost), entry, button);
             }
 
-            var canBePayed = _resourceManager.subscribe(entry.cost, UpdateThisButton);
-            UpdateThisButton(canBePayed);
+            _resourceManager.Have.OnChange(cost => UpdateThisButton());
         }
 
         _uiCore.SetActive(false);

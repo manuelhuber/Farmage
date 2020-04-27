@@ -22,9 +22,14 @@ public class Workerbot : MonoBehaviour {
 
     // Start is called before the first frame update
     private void Awake() {
+        // When duplicating a object during play the active behaviour isn't null on Awake...
+        activeBehaviour = null;
         _behaviours[TaskType.Loot] = gameObject.GetComponent<LootGatherer>();
         _behaviours[TaskType.Harvest] = gameObject.GetComponent<HarvestBehaviour>();
         _behaviours[TaskType.Repair] = gameObject.GetComponent<RepairBehaviour>();
+        foreach (var unitBehaviourBase in _behaviours.Values) {
+            unitBehaviourBase.enabled = false;
+        }
 
         _resetBehaviour = requeue => () => {
             if (activeBehaviour != null) {
