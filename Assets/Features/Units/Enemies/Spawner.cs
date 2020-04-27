@@ -1,5 +1,6 @@
-﻿using Features.Enemies;
+﻿using Features.Units.Enemies;
 using Grimity.Collections;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour {
@@ -7,6 +8,7 @@ public class Spawner : MonoBehaviour {
 
     private float _lastSpawn;
     public GameObject enemyPrefab;
+    [InfoBox("Min/Max number of enemies spawned per wave")]
     public RangeInt spawnCount = new RangeInt(1, 1);
     public GameObject[] spawnPoints;
     public float waveInterval = 5f;

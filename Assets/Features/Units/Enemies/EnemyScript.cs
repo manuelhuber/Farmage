@@ -1,28 +1,31 @@
-﻿using System.Linq;
-using Features.Units;
+﻿using System;
+using System.Linq;
+using Features.Units.Common;
 using Grimity.Actions;
 using Grimity.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 
-namespace Features.Enemies {
+namespace Features.Units.Enemies {
 public class EnemyScript : MonoBehaviour {
     private IntervaledAction _attack;
-    private NavMeshAgent _navMeshAgent;
+    private MovementAgent _movementAgent;
     private GameObject[] _targets = new GameObject[0];
     private Mortal _victim;
     public float attackSpeed;
     public int damage = 5;
 
 
-    private void Start() {
-        _navMeshAgent = GetComponent<NavMeshAgent>();
+    private void Awake() {
+        _movementAgent = GetComponent<MovementAgent>();
         _attack = gameObject.AddComponent<IntervaledAction>();
         _attack.interval = attackSpeed;
         _attack.action = () => {
             _victim.TakeDamage(damage);
             return true;
         };
+    }
+
+    private void Start() {
         FindNewTarget();
     }
 
@@ -34,14 +37,14 @@ public class EnemyScript : MonoBehaviour {
         if (_victim == null) return;
         if (other.gameObject != _victim.gameObject) return;
         StopAttack();
-        _navMeshAgent.SetDestination(_victim.transform.position);
+        _movementAgent.SetDestination(_victim.transform.position, true);
     }
 
     private void OnTriggerEnter(Collider other) {
         var destructible = other.gameObject.GetComponent<Mortal>();
         if (destructible == null || destructible.team == Team.Aliens) return;
         transform.LookAt(destructible.transform);
-        _navMeshAgent.isStopped = true;
+        _movementAgent.isStopped = true;
         _victim = destructible;
         _attack.IsRunning = true;
         _victim.onDeath.AddListener(StopAttack);
@@ -49,7 +52,7 @@ public class EnemyScript : MonoBehaviour {
 
     private void StopAttack() {
         _attack.IsRunning = false;
-        _navMeshAgent.isStopped = false;
+        _movementAgent.isStopped = false;
         FindNewTarget();
     }
 
@@ -57,7 +60,7 @@ public class EnemyScript : MonoBehaviour {
         if (_targets.Length == 0) return;
         if (_targets.All(t => t == null)) return;
         var target = _targets.GetRandomElement();
-        _navMeshAgent.SetDestination(target.transform.position);
+        _movementAgent.SetDestination(target.transform.position, true);
     }
 }
 }

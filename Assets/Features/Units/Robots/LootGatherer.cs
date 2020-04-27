@@ -2,6 +2,7 @@
 using Features.Building.Structures.Warehouse;
 using Features.Items;
 using Features.Queue;
+using Features.Units.Common;
 using Grimity.ScriptableObject;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,25 +10,25 @@ using UnityEngine.AI;
 namespace Features.Units.Robots {
 public class LootGatherer : UnitBehaviourBase {
     private GameObject _loot;
-    private NavMeshAgent _navMeshAgent;
+    private MovementAgent _movementAgent;
     private Storage _targetStorage;
     public RuntimeGameObjectSet buildings;
 
-    private void Start() {
-        _navMeshAgent = GetComponent<NavMeshAgent>();
+    private void Awake() {
+        _movementAgent = GetComponent<MovementAgent>();
     }
 
     public override bool Init(Task task) {
-        Start();
         var item = task.payload.GetComponent<Storable>();
         var target = buildings.Items.Select(o => o.GetComponent<Storage>())
-            .Where(storage => storage != null).FirstOrDefault(storage => item.isType(storage._type));
+            .Where(storage => storage != null)
+            .FirstOrDefault(storage => item.isType(storage._type));
         if (target == null) return false;
 
         _loot = task.payload;
         _targetStorage = target;
-        _navMeshAgent.SetDestination(_loot.transform.position);
-        _navMeshAgent.isStopped = false;
+        _movementAgent.SetDestination(_loot.transform.position);
+        _movementAgent.isStopped = false;
         return true;
     }
 
@@ -41,19 +42,19 @@ public class LootGatherer : UnitBehaviourBase {
     private void DeliverLoot() {
         _loot.transform.parent = null;
         _targetStorage.Deliver(_loot.GetComponent<Storable>());
-        _navMeshAgent.isStopped = true;
+        _movementAgent.isStopped = true;
         _loot = null;
         CompleteTask();
     }
 
     private void PickupLoot() {
         _loot.transform.parent = transform;
-        _navMeshAgent.SetDestination(_targetStorage.transform.position);
+        _movementAgent.SetDestination(_targetStorage.transform.position);
     }
 
     public override void AbandonTask() {
         DropLoot();
-        _navMeshAgent.isStopped = true;
+        _movementAgent.isStopped = true;
         base.AbandonTask();
     }
 

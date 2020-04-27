@@ -1,19 +1,19 @@
 using Features.Queue;
 using Features.Resources;
+using Features.Units.Common;
 using Grimity.Actions;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Features.Units.Robots {
 public class RepairBehaviour : UnitBehaviourBase {
-    private NavMeshAgent _navMeshAgent;
+    private MovementAgent _movementAgent;
     private IntervaledAction _repairAction;
     private ResourceManager _resourceManager;
     private Mortal _target;
 
-    private void Start() {
+    private void Awake() {
         _resourceManager = ResourceManager.Instance;
-        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _movementAgent = GetComponent<MovementAgent>();
         if (_repairAction == null) _repairAction = gameObject.AddComponent<IntervaledAction>();
 
         _repairAction.interval = 1;
@@ -32,11 +32,10 @@ public class RepairBehaviour : UnitBehaviourBase {
     }
 
     public override bool Init(Task task) {
-        Start();
         _target = task.payload.GetComponent<Mortal>();
         _target.onDeath.AddListener(Complete);
-        _navMeshAgent.SetDestination(_target.transform.position);
-        _navMeshAgent.isStopped = false;
+        _movementAgent.SetDestination(_target.transform.position);
+        _movementAgent.isStopped = false;
         return true;
     }
 
@@ -52,13 +51,13 @@ public class RepairBehaviour : UnitBehaviourBase {
     private void OnTriggerEnter(Collider other) {
         if (_target == null || _target.gameObject != other.gameObject) return;
         _repairAction.IsRunning = true;
-        _navMeshAgent.isStopped = true;
+        _movementAgent.isStopped = true;
     }
 
     private void OnTriggerExit(Collider other) {
         if (_target == null || _target.gameObject != other.gameObject) return;
         _repairAction.IsRunning = false;
-        _navMeshAgent.isStopped = false;
+        _movementAgent.isStopped = false;
     }
 }
 }

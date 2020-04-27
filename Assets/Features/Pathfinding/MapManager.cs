@@ -65,11 +65,13 @@ public class MapManager : GrimitySingleton<MapManager> {
 
     private void Update() {
         var requestsCount = _requests.Count;
+        if (requestsCount == 0) return;
         var jobHandleArray = new NativeArray<JobHandle>(requestsCount, Allocator.TempJob);
         var newPaths = new NativeList<PathNode>[requestsCount];
         var callbacks = new Action<Vector3[]>[requestsCount];
 
-        for (int i = 0; i < requestsCount; i++) {
+        Debug.Log($"Scheduling {requestsCount} pathFindingJobs");
+        for (var i = 0; i < requestsCount; i++) {
             var pathRequest = _requests.Dequeue();
             newPaths[i] = new NativeList<PathNode>(Allocator.TempJob);
             jobHandleArray[i] = new PathfindingJob {
@@ -156,7 +158,8 @@ public class MapManager : GrimitySingleton<MapManager> {
 
         var percentageX = Mathf.Clamp01((pos.x - start.x - cellSize / 2) / (end.x - start.x));
         var percentageZ = Mathf.Clamp01((pos.z - start.z - cellSize / 2) / (end.z - start.z));
-        return new int2(Mathf.RoundToInt(percentageX * _cellCountX), Mathf.RoundToInt(percentageZ * _cellCountZ));
+        return new int2(Mathf.RoundToInt(percentageX * _cellCountX),
+            Mathf.RoundToInt(percentageZ * _cellCountZ));
     }
 }
 }

@@ -21,15 +21,10 @@ public class Workerbot : MonoBehaviour {
     [SerializeField] private RuntimeGameObjectSet buildings;
 
     // Start is called before the first frame update
-    private void Start() {
-        var lootGatherer = gameObject.AddComponent<LootGatherer>();
-        lootGatherer.buildings = buildings;
-        _behaviours[TaskType.Loot] = lootGatherer;
-        _behaviours[TaskType.Harvest] = gameObject.AddComponent<HarvestBehaviour>();
-        _behaviours[TaskType.Repair] = gameObject.AddComponent<RepairBehaviour>();
-        foreach (var unitBehaviourBase in _behaviours.Values
-        ) // TODO disable them in the next frame so their "start" code runs?
-            unitBehaviourBase.enabled = false;
+    private void Awake() {
+        _behaviours[TaskType.Loot] = gameObject.GetComponent<LootGatherer>();
+        _behaviours[TaskType.Harvest] = gameObject.GetComponent<HarvestBehaviour>();
+        _behaviours[TaskType.Repair] = gameObject.GetComponent<RepairBehaviour>();
 
         _resetBehaviour = requeue => () => {
             if (activeBehaviour != null) {
@@ -43,7 +38,10 @@ public class Workerbot : MonoBehaviour {
 
             StartCoroutine(GetNewTask());
         };
-        _resetBehaviour(false)();
+    }
+
+    private void Start() {
+        StartCoroutine(GetNewTask());
     }
 
     // Update is called once per frame
@@ -55,10 +53,12 @@ public class Workerbot : MonoBehaviour {
         while (activeBehaviour == null) {
             var position = transform.position;
             foreach (var type in _typePriority) {
-                var task = _jobQueue.Dequeue(type, t => Vector3.Distance(t.payload.transform.position, position));
+                var task = _jobQueue.Dequeue(type,
+                    t => Vector3.Distance(t.payload.transform.position, position));
 
                 var newBehaviour = _behaviours[type];
                 if (task == null) continue;
+                Debug.Log($"{transform.name} dequeued task {task}");
 
                 if (!newBehaviour.Init(task.Value)) continue;
                 _currentTask = task.Value;

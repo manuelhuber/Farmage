@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Features.Units.Common;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Features.Units {

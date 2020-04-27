@@ -1,30 +1,30 @@
 using Features.Building.Structures.WheatField;
 using Features.Queue;
 using Features.Resources;
+using Features.Units.Common;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Features.Units.Robots {
 public class HarvestBehaviour : UnitBehaviourBase {
-    private NavMeshAgent _navMeshAgent;
+    private MovementAgent _movementAgent;
     private ResourceManager _resourceManager;
     private GameObject target;
 
-    private void Start() {
+    private void Awake() {
         _resourceManager = ResourceManager.Instance;
-        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _movementAgent = GetComponent<MovementAgent>();
     }
 
     public override bool Init(Task task) {
-        Start();
         target = task.payload;
-        _navMeshAgent.SetDestination(target.transform.position);
-        _navMeshAgent.isStopped = false;
+        _movementAgent.SetDestination(target.transform.position);
+        _movementAgent.isStopped = false;
         return true;
     }
 
     public override void Behave() {
-        if (!(_navMeshAgent.remainingDistance < _navMeshAgent.stoppingDistance)) return;
+        if (!(_movementAgent.hasArrived)) return;
         var harvest = target.GetComponent<WheatField>().harvest();
         _resourceManager.Add(new Cost {cash = harvest});
         CompleteTask();

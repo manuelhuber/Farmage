@@ -26,7 +26,9 @@ public class Placeable : MonoBehaviour {
     private readonly Dictionary<int, TerrainContainer> _terrains = new Dictionary<int, TerrainContainer>();
 
     // Previously visited terrain - saved for reuse
-    private readonly Dictionary<int, TerrainContainer> _terrainsArchive = new Dictionary<int, TerrainContainer>();
+    private readonly Dictionary<int, TerrainContainer> _terrainsArchive =
+        new Dictionary<int, TerrainContainer>();
+
     private Bounds _bounds;
     private List<GameObject> _debugCubes = new List<GameObject>();
     private BoxCollider _floorChecker;
@@ -34,7 +36,7 @@ public class Placeable : MonoBehaviour {
 
     private MeshRenderer[] _renderer;
 
-    private bool _terrainIsGood;
+    private bool _terrainIsGood = true;
     public Vector3 lowerCenter;
     public PlacementSettings settings;
     public LayerMask terrainLayer;
@@ -94,7 +96,9 @@ public class Placeable : MonoBehaviour {
         _lastPosition = transform.position;
         var collisionVertices = CollisionVertices();
         if (collisionVertices.Count == 0) return;
-        var heights = collisionVertices.SelectMany(pair => pair.Value).Select(tuple => tuple.Item2.y).ToArray();
+        var heights = collisionVertices.SelectMany(pair => pair.Value)
+            .Select(tuple => tuple.Item2.y)
+            .ToArray();
         var dif = heights.IsEmpty() ? 0 : heights.Max() - heights.Min();
 
         var terrainIsGood = dif < settings.placementThreshold;
@@ -124,7 +128,9 @@ public class Placeable : MonoBehaviour {
         var collisionVertices = CollisionVertices();
         if (collisionVertices.Count == 0) return;
 
-        var vertices = collisionVertices.SelectMany(pair => pair.Value).Select(tuple => tuple.Item2.y).ToList();
+        var vertices = collisionVertices.SelectMany(pair => pair.Value)
+            .Select(tuple => tuple.Item2.y)
+            .ToList();
         var avg = vertices.Aggregate((sum, value) => sum + value) / vertices.Count;
 
 
@@ -154,7 +160,8 @@ public class Placeable : MonoBehaviour {
             if (container.terrainVertices == null) return _collisionVertices;
             for (var i = 0; i < container.terrainVertices.Count; i++) {
                 if (!_floorChecker.bounds.Contains(container.terrainVerticesWorldSpace[i])) continue;
-                var vertices = _collisionVertices.GetOrCompute(entry.Key, i1 => new List<Tuple<int, Vector3>>());
+                var vertices =
+                    _collisionVertices.GetOrCompute(entry.Key, i1 => new List<Tuple<int, Vector3>>());
                 vertices.Add(new Tuple<int, Vector3>(i, container.terrainVertices[i]));
             }
         }

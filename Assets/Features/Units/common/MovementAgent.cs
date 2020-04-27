@@ -1,44 +1,69 @@
 using System;
+using System.Linq;
 using Features.Pathfinding;
-using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Features.Units {
+namespace Features.Units.Common {
 public class MovementAgent : MonoBehaviour {
-    public float Speed = 3f;
-    public float _stoppingDistance = 1f;
+    public float speed = 3f;
+    public float stoppingDistance = 1f;
+    public float turnSpeed = 10f;
+
+    public bool hasArrived;
+
+    public bool isStopped {
+        get => _isStopped;
+        set => _isStopped = value;
+    }
 
     private Vector3[] _path = new Vector3[0];
     private int _currentNode = -1;
     private MapManager _mapManager;
     private Action _cancelPath;
+    private bool _isStopped;
 
-    private void Start() {
+    private void OnDrawGizmos() {
+        var prev = transform.position;
+        foreach (var pathPos in _path) {
+            Gizmos.DrawLine(prev, pathPos);
+            Gizmos.DrawSphere(pathPos, 1);
+            prev = pathPos;
+        }
+    }
+
+    private void Awake() {
         _mapManager = MapManager.Instance;
     }
 
     private void Update() {
-        if (_currentNode < 1) return;
+        if (_isStopped || _currentNode < 0) return;
         var nextTarget = _path[_currentNode];
-        var position = transform.position;
-        var moveDir = Vector3.Normalize(nextTarget - position);
-        var newPos = position + moveDir * (Speed * Time.deltaTime);
-        transform.position = newPos;
-        if (math.distance(position, nextTarget) < _stoppingDistance) {
-            _currentNode--;
-        }
+        var trans = transform;
+        var position = trans.position;
+        nextTarget.y = position.y;
+        var neededRotation = Quaternion.LookRotation((nextTarget - position));
+        trans.rotation =
+            Quaternion.RotateTowards(trans.rotation, neededRotation, Time.deltaTime * turnSpeed * 100);
+        // var moveDir = Vector3.Normalize(nextTarget - position);
+        var newPos = position + trans.forward * (speed * Time.deltaTime);
+        trans.position = newPos;
+        if (!(math.distance(position, nextTarget) < stoppingDistance)) return;
+        _currentNode--;
+        if (_currentNode == -1) hasArrived = true;
     }
 
-    public void SetDestination(Vector3 pos) {
+    public void SetDestination(Vector3 pos, bool bruteMove = false) {
+        hasArrived = false;
         _cancelPath?.Invoke();
         _cancelPath = _mapManager.RequestPath(new PathRequest {
             From = transform.position,
             To = pos,
             Movement = transform,
             Callback = path => {
-                _path = path;
-                _currentNode = path.Length - 1;
+                var legitPath = path;
+                _path = bruteMove ? legitPath.Prepend(pos).ToArray() : legitPath;
+                _currentNode = _path.Length - 1;
             }
         });
     }

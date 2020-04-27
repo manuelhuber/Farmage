@@ -4,6 +4,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace Features.Pathfinding {
 [BurstCompile]
@@ -161,6 +162,7 @@ public struct PathfindingJob : IJob {
     }
 
     private int HeuristicCost(int fromX, int fromZ, int toX, int toZ) {
+        return Mathf.RoundToInt(PathFindingUtils.EuclideanDistance(fromX, fromZ, toX, toZ)) * MoveStraightCost;
         return PathFindingUtils.ManhattanDistanceDiagonal(fromX, fromZ, toX, toZ, MoveStraightCost, MoveDiagonalCost);
     }
 
@@ -181,14 +183,16 @@ public struct PathfindingJob : IJob {
     /// <summary>
     ///     Finds the best valid end node for the path finding
     ///     If the requested end node is walkable returns the end node
-    ///     If the requested end is not walkable it will find the best closest alternative (based on starting position)
+    ///     If the requested end is not walkable it will find the best closest alternative
     ///     DOES NOT FIX ISLAND PROBLEM! If the end node is walkable but has no path this will NOT be detected here!
     /// </summary>
-    /// <param name="endIndex">The index of the proposed end node</param>
-    /// <param name="startIndex">The index of the starting node</param>
-    /// <param name="map">A list of all nmodes</param>
+    /// <param name="endIndex">The index of the request path end node</param>
+    /// <param name="startIndex">The index of the path starting node</param>
+    /// <param name="map">A list of all nodes</param>
     /// <returns>The index of the best end node</returns>
     private int FindBestEnd(int endIndex, int startIndex, NativeArray<GridNode> map) {
+        // This behaves weird on certain cases (like buildings next to walls)
+        // Maybe a simple breadth-first search would be more natural
         var startNode = map[startIndex];
         var node = map[endIndex];
         while (!node.IsWalkable && node.Index != startIndex) {

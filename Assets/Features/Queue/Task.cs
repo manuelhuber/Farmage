@@ -6,6 +6,10 @@ namespace Features.Queue {
 public struct Task {
     public TaskType type;
     public GameObject payload;
+
+    public override string ToString() {
+        return $"type={type} payload={payload.name}";
+    }
 }
 
 [Serializable]
