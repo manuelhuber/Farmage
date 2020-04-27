@@ -7,13 +7,14 @@ using Unity.Mathematics;
 
 namespace Features.Pathfinding {
 [BurstCompile]
-public struct FindPathJob : IJob {
+public struct PathfindingJob : IJob {
     [ReadOnly] public NativeArray<GridNode> Map;
     public int2 MapSize;
     public int2 StartPosition;
     public int2 EndPosition;
+
     public NativeList<PathNode> Path;
-    public NativeList<int>? visited;
+    // public NativeList<int>? visited;
 
     public int MoveDiagonalCost;
     public int MoveStraightCost;
@@ -82,11 +83,12 @@ public struct FindPathJob : IJob {
             alreadyChecked.Add(currentNodeIndex);
         }
 
-        if (visited != null)
-            for (var index = 0; index < alreadyChecked.Length; index++) {
-                var i = alreadyChecked[index];
-                visited.Value.Add(i);
-            }
+        // if (visited != null) {
+        //     for (var index = 0; index < alreadyChecked.Length; index++) {
+        //         var i = alreadyChecked[index];
+        //         visited.Value.Add(i);
+        //     }
+        // }
 
         openList.Dispose();
         alreadyChecked.Dispose();
@@ -104,6 +106,7 @@ public struct FindPathJob : IJob {
     /// <param name="pathNodes">A list of all nodes</param>
     /// <param name="endIndex"></param>
     private void WritePath(NativeArray<PathNode> pathNodes, int endIndex) {
+        if (endIndex == -1) return;
         var node = pathNodes[endIndex];
         while (node.CameFromNodeIndex != -1) {
             Path.Add(node);

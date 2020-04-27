@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Features.Terrain;
 using Grimity.Layer;
 using Grimity.Loops;
 using Grimity.NativeCollections;
 using Grimity.Singleton;
 using Sirenix.OdinInspector;
 using Unity.Collections;
+using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -16,36 +16,39 @@ namespace Features.Pathfinding {
 public struct PathRequest {
     public Vector3 From;
     public Vector3 To;
+    public Transform Movement;
     public Action<Vector3[]> Callback;
 }
 
 public class MapManager : GrimitySingleton<MapManager> {
-    private int _cellCountX;
-
-    private int _cellCountZ;
     private readonly Queue<PathRequest> _requests = new Queue<PathRequest>();
+    private int _cellCountX;
+    private int _cellCountZ;
+    private NativeArray<GridNode> _map;
+
+    public int nodeScansPerFrame;
+    public float cellSize;
+    public float sizeX;
+    public float sizeZ;
 
     [InfoBox("Layers that block pathfinding")]
     public LayerMask blockingLayer;
 
-    public float cellSize;
-    public NativeArray<GridNode> map;
-
-    public int nodeScansPerFrame;
-    public float sizeX;
-    public float sizeZ;
-
     [InfoBox("All layers (incl blocking) that count as terrain")]
     public LayerMask terrainLayer;
+
+    private int2 _mapSize;
+    private List<PathRequest> _activeRequests = new List<PathRequest>();
 
     private void Start() {
         _cellCountX = Mathf.RoundToInt(sizeX / cellSize);
         _cellCountZ = Mathf.RoundToInt(sizeZ / cellSize);
+        _mapSize = new int2(_cellCountX, _cellCountZ);
 
-        map = new NativeArray<GridNode>(_cellCountX * _cellCountZ, Allocator.Persistent);
+        _map = new NativeArray<GridNode>(_cellCountX * _cellCountZ, Allocator.Persistent);
         new Loop2D(_cellCountX, _cellCountZ).loopY((x, z) => {
             var index = x + _cellCountX * z;
-            map[index] = new GridNode {
+            _map[index] = new GridNode {
                 Index = index,
                 X = x,
                 Z = z,
@@ -57,10 +60,44 @@ public class MapManager : GrimitySingleton<MapManager> {
     }
 
     private void OnDestroy() {
-        map.Dispose();
+        _map.Dispose();
     }
 
     private void Update() {
+        var requestsCount = _requests.Count;
+        var jobHandleArray = new NativeArray<JobHandle>(requestsCount, Allocator.TempJob);
+        var newPaths = new NativeList<PathNode>[requestsCount];
+        var callbacks = new Action<Vector3[]>[requestsCount];
+
+        for (int i = 0; i < requestsCount; i++) {
+            var pathRequest = _requests.Dequeue();
+            newPaths[i] = new NativeList<PathNode>(Allocator.TempJob);
+            jobHandleArray[i] = new PathfindingJob {
+                Map = _map,
+                StartPosition = WorldPositionToNode(pathRequest.From),
+                EndPosition = WorldPositionToNode(pathRequest.To),
+                MoveDiagonalCost = 14,
+                MoveStraightCost = 11,
+                MapSize = _mapSize,
+                Path = newPaths[i],
+            }.Schedule();
+            callbacks[i] = pathRequest.Callback;
+            _activeRequests.Add(pathRequest);
+        }
+
+        JobHandle.CompleteAll(jobHandleArray);
+
+        for (var i = 0; i < requestsCount; i++) {
+            var gridPath = newPaths[i];
+            var worldPath = gridPath.ToArray()
+                .Select(node => _map[node.Index])
+                .Select(node => GridToWorldPosition(node.X, node.Z))
+                .ToArray();
+            callbacks[i].Invoke(worldPath);
+            gridPath.Dispose();
+        }
+
+        jobHandleArray.Dispose();
     }
 
     private IEnumerator ScanMap() {
@@ -81,19 +118,24 @@ public class MapManager : GrimitySingleton<MapManager> {
         origin.y = 50;
         var ray = new Ray(origin, Vector3.down * 100);
         if (!Physics.Raycast(ray, out var hit, 100, terrainLayer)) return;
-        var gridNode = map.Get2D(z, x, _cellCountX);
+        var gridNode = _map.Get2D(z, x, _cellCountX);
         gridNode.IsWalkable = !blockingLayer.Contains(hit.collider.gameObject.layer);
-        map.Put2D(gridNode, z, x, _cellCountX);
+        _map.Put2D(gridNode, z, x, _cellCountX);
     }
 
-    public void RequestPath(PathRequest request) {
+    public Action RequestPath(PathRequest request) {
         _requests.Enqueue(request);
+        return () => {
+            if (!_activeRequests.Remove(request)) {
+                Debug.Log("Canceled requests before it got calculated");
+            }
+        };
     }
 
     private void OnDrawGizmos() {
         Gizmos.DrawWireCube(transform.position, new Vector3(sizeX, 1, sizeZ));
         var size = cellSize * .9f;
-        foreach (var gridNode in map.Where(gridNode => !gridNode.IsWalkable)) {
+        foreach (var gridNode in _map.Where(gridNode => !gridNode.IsWalkable)) {
             Gizmos.color = Color.red;
             Gizmos.DrawCube(
                 GridToWorldPosition(gridNode.X, gridNode.Z),

@@ -71,10 +71,6 @@ public class PathFindingGrid : MonoBehaviour {
         }
     }
 
-    private void OnDestroy() {
-        map.Dispose();
-    }
-
     private void Update() {
         var leftClick = Input.GetMouseButton(0);
         var rightClick = Input.GetMouseButtonDown(1);
@@ -96,7 +92,7 @@ public class PathFindingGrid : MonoBehaviour {
             for (var i = 0; i < findPathJobCount; i++) {
                 newPaths[i] = new NativeList<PathNode>(Allocator.TempJob);
                 visited[i] = new NativeList<int>(Allocator.TempJob);
-                var findPathJob = new FindPathJob {
+                var findPathJob = new PathfindingJob {
                     Map = map,
                     StartPosition = new int2(0, 0),
                     EndPosition = clickedNode,
@@ -104,7 +100,7 @@ public class PathFindingGrid : MonoBehaviour {
                     MoveStraightCost = 11,
                     MapSize = new int2(_cellCountX, _cellCountZ),
                     Path = newPaths[i],
-                    visited = visited[i]
+                    // visited = visited[i]
                 };
                 if (schedule)
                     jobHandleArray[i] = findPathJob.Schedule();
