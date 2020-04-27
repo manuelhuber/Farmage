@@ -3,7 +3,6 @@ using Features.Queue;
 using Features.Resources;
 using Features.Units.Common;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Features.Units.Robots {
 public class HarvestBehaviour : UnitBehaviourBase {
@@ -26,7 +25,7 @@ public class HarvestBehaviour : UnitBehaviourBase {
     public override void Behave() {
         if (!(_movementAgent.hasArrived)) return;
         var harvest = target.GetComponent<WheatField>().harvest();
-        _resourceManager.Add(new Cost {cash = harvest});
+        _resourceManager.Add(harvest);
         CompleteTask();
     }
 }

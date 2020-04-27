@@ -63,6 +63,15 @@ public class MapManager : GrimitySingleton<MapManager> {
         _map.Dispose();
     }
 
+    public Action RequestPath(PathRequest request) {
+        _requests.Enqueue(request);
+        return () => {
+            if (!_activeRequests.Remove(request)) {
+                Debug.Log("Canceled requests before it got calculated");
+            }
+        };
+    }
+
     private void Update() {
         var requestsCount = _requests.Count;
         if (requestsCount == 0) return;
@@ -125,26 +134,6 @@ public class MapManager : GrimitySingleton<MapManager> {
         _map.Put2D(gridNode, z, x, _cellCountX);
     }
 
-    public Action RequestPath(PathRequest request) {
-        _requests.Enqueue(request);
-        return () => {
-            if (!_activeRequests.Remove(request)) {
-                Debug.Log("Canceled requests before it got calculated");
-            }
-        };
-    }
-
-    private void OnDrawGizmos() {
-        Gizmos.DrawWireCube(transform.position, new Vector3(sizeX, 1, sizeZ));
-        var size = cellSize * .9f;
-        foreach (var gridNode in _map.Where(gridNode => !gridNode.IsWalkable)) {
-            Gizmos.color = Color.red;
-            Gizmos.DrawCube(
-                GridToWorldPosition(gridNode.X, gridNode.Z),
-                new Vector3(size, .1f, size));
-        }
-    }
-
     private Vector3 GridToWorldPosition(int x, int z) {
         return new Vector3(x * cellSize - sizeX / 2 + cellSize / 2,
             0,
@@ -160,6 +149,17 @@ public class MapManager : GrimitySingleton<MapManager> {
         var percentageZ = Mathf.Clamp01((pos.z - start.z - cellSize / 2) / (end.z - start.z));
         return new int2(Mathf.RoundToInt(percentageX * _cellCountX),
             Mathf.RoundToInt(percentageZ * _cellCountZ));
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.DrawWireCube(transform.position, new Vector3(sizeX, 1, sizeZ));
+        var size = cellSize * .9f;
+        foreach (var gridNode in _map.Where(gridNode => !gridNode.IsWalkable)) {
+            Gizmos.color = Color.red;
+            Gizmos.DrawCube(
+                GridToWorldPosition(gridNode.X, gridNode.Z),
+                new Vector3(size, .1f, size));
+        }
     }
 }
 }

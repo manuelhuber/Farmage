@@ -14,6 +14,7 @@ public class Mortal : MonoBehaviour {
     private void Start() {
         Hitpoints = MaxHitpoints;
         _hitpointBar = GetComponentInChildren<Slider>();
+
         if (_hitpointBar == null) return;
         _hitpointBar.maxValue = Hitpoints;
         _hitpointBar.value = Hitpoints;

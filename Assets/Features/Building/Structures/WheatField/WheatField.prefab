@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff87c52125c76dc4aa2d9e43a0802b0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  growthDurationS: 10
+  harvestValue:
+    cash: 10
   _queue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
+  growthDurationS: 10
 --- !u!1 &7337434563519314927
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,7 +106,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}

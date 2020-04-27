@@ -47,6 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12e8f5f4af17cd9488a4fc760e4a021d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  size:
+    x: 1
+    y: 1
   _queue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
 --- !u!114 &5979417897398919871
 MonoBehaviour:
@@ -73,16 +76,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a80c88de8082f4eb1b6efc5d4af31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <MaxHitpoints>k__BackingField: 100
-  <Hitpoints>k__BackingField: 100
   _hitpointBar: {fileID: 0}
-  team: 0
-  onDeath:
-    m_PersistentCalls:
-      m_Calls: []
   onDamage:
     m_PersistentCalls:
       m_Calls: []
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  team: 0
+  <MaxHitpoints>k__BackingField: 100
+  <Hitpoints>k__BackingField: 100
 --- !u!54 &1815534174163732130
 Rigidbody:
   m_ObjectHideFlags: 0

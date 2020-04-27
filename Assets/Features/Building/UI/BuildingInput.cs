@@ -1,8 +1,10 @@
+using System;
 using Common.Settings;
 using Features.Building.BuildMenu;
 using Features.Building.Placement;
 using Features.Resources;
 using Grimity.Cursor;
+using Grimity.Math;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +23,7 @@ public class BuildingInput : MonoBehaviour {
     public GameObject iconPrefab;
     public PlacementSettings placementSettings;
     public LayerMask terrainLayer;
+    private int _multiple = 4;
 
     private void Start() {
         _resourceManager = ResourceManager.Instance;
@@ -31,7 +34,13 @@ public class BuildingInput : MonoBehaviour {
     }
 
     private void Update() {
-        if (_dragObject) _placeable.transform.position = MouseToTerrain().point;
+        if (_dragObject) {
+            var pos = MouseToTerrain().point;
+            var size = _selected.buildingPrefab.GetComponent<Structures.Building>().size;
+            pos.x = RoundToMultiple(pos.x, _multiple, size.x.isEven());
+            pos.z = RoundToMultiple(pos.z, _multiple, size.y.isEven());
+            _placeable.transform.position = pos;
+        }
 
         if (Input.GetKeyDown(_hotkeys.buildings)) {
             _uiCore.SetActive(true);
@@ -46,6 +55,23 @@ public class BuildingInput : MonoBehaviour {
         }
 
         if (Input.GetMouseButtonDown(0) && _dragObject) PlaceBuilding();
+    }
+
+    private int RoundToMultiple(float numberRaw, int multiple, bool offsetByHalf) {
+        var negative = numberRaw < 0;
+        var number = Math.Abs(numberRaw);
+        var modulo = number % multiple;
+        float x;
+        if (offsetByHalf) {
+            var roundDown = modulo > multiple * .5f;
+            var half = multiple / 2f;
+            x = roundDown ? number - (modulo - half) : number + (half - modulo);
+        } else {
+            var roundDown = modulo < multiple * .5f;
+            x = roundDown ? number - modulo : number + (multiple - modulo);
+        }
+
+        return (negative ? -1 : 1) * Mathf.RoundToInt(x);
     }
 
     private void InitUi() {
@@ -99,7 +125,9 @@ public class BuildingInput : MonoBehaviour {
         if (!_placeable.CanBePlaced) return;
         if (_resourceManager.Pay(_selected.cost)) {
             // _placeable.FlattenFloor();
-            Instantiate(_selected.buildingPrefab, _placeable.transform.position, _placeable.transform.rotation);
+            Instantiate(_selected.buildingPrefab,
+                _placeable.transform.position,
+                _placeable.transform.rotation);
             if (!Input.GetKey(KeyCode.LeftShift)) {
                 _dragObject = false;
                 Destroy(_placeable.gameObject);

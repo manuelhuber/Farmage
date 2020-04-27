@@ -1,10 +1,12 @@
 ﻿using Features.Queue;
 using Features.Units;
+using Unity.Mathematics;
 using UnityEngine;
 
+namespace Features.Building.Structures {
 public class Building : MonoBehaviour {
+    public int2 size;
     [SerializeField] private JobMultiQueue _queue;
-
     private bool waitingForRepair;
 
     // Start is called before the first frame update
@@ -21,4 +23,5 @@ public class Building : MonoBehaviour {
             waitingForRepair = true;
         });
     }
+}
 }
