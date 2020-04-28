@@ -7,8 +7,8 @@ namespace Features.Building.BuildMenu {
 [CreateAssetMenu(menuName = "buildings/building menu entry")]
 public class BuildingMenuEntry : ScriptableObject {
     public GameObject buildingPrefab;
+    public GameObject previewPrefab;
     public Cost cost;
     public Sprite image;
-    public GameObject previewPrefab;
 }
 }

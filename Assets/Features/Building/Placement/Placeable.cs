@@ -40,7 +40,8 @@ public class Placeable : MonoBehaviour {
     public Vector3 lowerCenter;
     public PlacementSettings settings;
     public LayerMask terrainLayer;
-    public bool CanBePlaced => _terrainIsGood && _collisions.Count == 0;
+    public bool CanBePlaced => _terrainIsGood && _collisions.Count == 0 && CanBePayedFor;
+    public bool CanBePayedFor { get; set; }
 
     private void Start() {
         _renderer = GetComponentsInChildren<MeshRenderer>();

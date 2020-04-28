@@ -10,7 +10,10 @@ public class MovementAgent : MonoBehaviour {
     public float stoppingDistance = 1f;
     public float turnSpeed = 10f;
 
-    public bool hasArrived;
+    public bool HasArrived {
+        get => _hasArrived;
+        set => _hasArrived = value;
+    }
 
     public bool isStopped {
         get => _isStopped;
@@ -22,6 +25,7 @@ public class MovementAgent : MonoBehaviour {
     private MapManager _mapManager;
     private Action _cancelPath;
     private bool _isStopped;
+    [SerializeField] private bool _hasArrived;
 
     private void OnDrawGizmos() {
         var prev = transform.position;
@@ -50,11 +54,11 @@ public class MovementAgent : MonoBehaviour {
         trans.position = newPos;
         if (!(math.distance(position, nextTarget) < stoppingDistance)) return;
         _currentNode--;
-        if (_currentNode == -1) hasArrived = true;
+        if (_currentNode == -1) HasArrived = true;
     }
 
     public void SetDestination(Vector3 pos, bool bruteMove = false) {
-        hasArrived = false;
+        HasArrived = false;
         _cancelPath?.Invoke();
         _cancelPath = _mapManager.RequestPath(new PathRequest {
             From = transform.position,
@@ -64,6 +68,7 @@ public class MovementAgent : MonoBehaviour {
                 var legitPath = path;
                 _path = bruteMove ? legitPath.Prepend(pos).ToArray() : legitPath;
                 _currentNode = _path.Length - 1;
+                if (_currentNode == -1) _hasArrived = true;
             }
         });
     }
