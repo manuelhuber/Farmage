@@ -8,17 +8,10 @@ public class BuildingGui : MonoBehaviour {
     public GameObject iconPrefab;
 
     [SerializeField] private BuildingManager buildingManager;
-    [SerializeField] private Hotkeys hotkeys;
     [SerializeField] private GameObject root;
 
     private void Start() {
         buildingManager.BuildingOptions.OnChange(BuildUi);
-    }
-
-    private void Update() {
-        if (Input.GetKeyDown(hotkeys.buildings)) {
-            root.SetActive(true);
-        }
     }
 
     private void BuildUi(BuildingOption[] buildingOptions) {

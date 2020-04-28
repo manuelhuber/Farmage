@@ -18,9 +18,9 @@ public struct BuildingOption {
 public class BuildingManager : MonoBehaviour {
     public Grimity.Data.IObservable<BuildingOption[]> BuildingOptions => buildingOptions;
 
-    [SerializeField] private PlacementSettings placementSettings;
-    [SerializeField] private LayerMask terrainLayer;
-    [SerializeField] private BuildMenu.BuildMenu buildMenu;
+    [SerializeField] private PlacementSettings placementSettings = null;
+    [SerializeField] private LayerMask terrainLayer = 0;
+    [SerializeField] private BuildMenu.BuildMenu buildMenu = null;
     [SerializeField] private int gridSize = 4;
 
     private UnityEngine.Camera _camera;

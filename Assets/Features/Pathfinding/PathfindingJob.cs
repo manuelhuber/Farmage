@@ -162,7 +162,6 @@ public struct PathfindingJob : IJob {
     }
 
     private int HeuristicCost(int fromX, int fromZ, int toX, int toZ) {
-        return Mathf.RoundToInt(PathFindingUtils.EuclideanDistance(fromX, fromZ, toX, toZ)) * MoveStraightCost;
         return PathFindingUtils.ManhattanDistanceDiagonal(fromX, fromZ, toX, toZ, MoveStraightCost, MoveDiagonalCost);
     }
 

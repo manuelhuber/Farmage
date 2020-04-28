@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace Features.Resources {
 public class ResourceGui : MonoBehaviour {
     private ResourceManager _resourceManager;
-    [SerializeField] private Text _text;
+    [SerializeField] private Text text;
 
     private void Awake() {
         _resourceManager = ResourceManager.Instance;
@@ -15,7 +15,7 @@ public class ResourceGui : MonoBehaviour {
     }
 
     private void UpdateUI(Cost cost) {
-        _text.text = $"{cost.cash}$";
+        text.text = $"{cost.cash}$";
     }
 }
 }
