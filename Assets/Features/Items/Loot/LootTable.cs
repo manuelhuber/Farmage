@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Features.Units.common {
+namespace Features.Items.Loot {
 [Serializable]
 public struct Loot {
     public GameObject prefab;

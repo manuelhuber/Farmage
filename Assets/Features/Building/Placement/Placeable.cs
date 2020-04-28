@@ -8,11 +8,11 @@ using UnityEngine;
 
 namespace Features.Building.Placement {
 internal struct TerrainContainer {
-    public List<Vector3> terrainVertices;
-    public List<Vector3> terrainVerticesWorldSpace;
-    public Mesh terrainMesh;
-    public MeshCollider terrainCollider;
-    public GameObject terrain;
+    public List<Vector3> TerrainVertices;
+    public List<Vector3> TerrainVerticesWorldSpace;
+    public Mesh TerrainMesh;
+    public MeshCollider TerrainCollider;
+    public GameObject Terrain;
 }
 
 public class Placeable : MonoBehaviour {
@@ -83,11 +83,11 @@ public class Placeable : MonoBehaviour {
         var terrainVerticesWorldSpace =
             terrainVertices.Select(vector3 => localToWorld.MultiplyPoint3x4(vector3)).ToList();
         var container = new TerrainContainer {
-            terrainMesh = terrainMesh,
-            terrainCollider = terrainCollider,
-            terrain = terrain,
-            terrainVertices = terrainVertices,
-            terrainVerticesWorldSpace = terrainVerticesWorldSpace
+            TerrainMesh = terrainMesh,
+            TerrainCollider = terrainCollider,
+            Terrain = terrain,
+            TerrainVertices = terrainVertices,
+            TerrainVerticesWorldSpace = terrainVerticesWorldSpace
         };
         _terrains.Add(terrainId, container);
     }
@@ -138,13 +138,13 @@ public class Placeable : MonoBehaviour {
         foreach (var entry in collisionVertices) {
             if (!_terrains.TryGetValue(entry.Key, out var terrain)) continue;
             foreach (var (index, pos) in entry.Value) {
-                terrain.terrainVertices.RemoveAt(index);
-                terrain.terrainVertices.Insert(index, new Vector3(pos.x, avg, pos.z));
+                terrain.TerrainVertices.RemoveAt(index);
+                terrain.TerrainVertices.Insert(index, new Vector3(pos.x, avg, pos.z));
             }
 
-            terrain.terrainMesh.SetVertices(terrain.terrainVertices);
-            terrain.terrainCollider.sharedMesh = null;
-            terrain.terrainCollider.sharedMesh = terrain.terrainMesh;
+            terrain.TerrainMesh.SetVertices(terrain.TerrainVertices);
+            terrain.TerrainCollider.sharedMesh = null;
+            terrain.TerrainCollider.sharedMesh = terrain.TerrainMesh;
         }
     }
 
@@ -158,12 +158,12 @@ public class Placeable : MonoBehaviour {
 
         foreach (var entry in _terrains) {
             var container = entry.Value;
-            if (container.terrainVertices == null) return _collisionVertices;
-            for (var i = 0; i < container.terrainVertices.Count; i++) {
-                if (!_floorChecker.bounds.Contains(container.terrainVerticesWorldSpace[i])) continue;
+            if (container.TerrainVertices == null) return _collisionVertices;
+            for (var i = 0; i < container.TerrainVertices.Count; i++) {
+                if (!_floorChecker.bounds.Contains(container.TerrainVerticesWorldSpace[i])) continue;
                 var vertices =
                     _collisionVertices.GetOrCompute(entry.Key, i1 => new List<Tuple<int, Vector3>>());
-                vertices.Add(new Tuple<int, Vector3>(i, container.terrainVertices[i]));
+                vertices.Add(new Tuple<int, Vector3>(i, container.TerrainVertices[i]));
             }
         }
 

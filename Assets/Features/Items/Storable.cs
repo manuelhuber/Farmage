@@ -8,7 +8,7 @@ public enum ItemType {
 public class Storable : MonoBehaviour {
     [SerializeField] public ItemType type;
 
-    public bool isType(ItemType test) {
+    public bool IsType(ItemType test) {
         return type == test;
     }
 }

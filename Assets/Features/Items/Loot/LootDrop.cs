@@ -2,7 +2,7 @@ using Features.Queue;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Features.Units.common {
+namespace Features.Items.Loot {
 public class LootDrop : MonoBehaviour {
     [CanBeNull] public JobMultiQueue lootQueue;
     public LootTable lootTable;

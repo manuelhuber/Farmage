@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using MonKey.Extensions;
 using UnityEngine;
 using UnityEngine.UI;

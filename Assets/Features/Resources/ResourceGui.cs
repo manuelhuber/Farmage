@@ -11,10 +11,10 @@ public class ResourceGui : MonoBehaviour {
     }
 
     private void Start() {
-        _resourceManager.Have.OnChange(UpdateUI);
+        _resourceManager.Have.OnChange(UpdateUi);
     }
 
-    private void UpdateUI(Cost cost) {
+    private void UpdateUi(Cost cost) {
         text.text = $"{cost.cash}$";
     }
 }

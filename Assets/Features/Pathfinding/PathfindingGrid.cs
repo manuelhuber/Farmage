@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Features.Terrain;
 using Grimity.Cursor;
 using Grimity.Loops;
 using Sirenix.OdinInspector;
@@ -22,24 +21,24 @@ public class PathFindingGrid : MonoBehaviour {
 
 
     private int _cellCountZ;
-    [SerializeField] private int _grassPenalty;
+    [SerializeField] private int grassPenalty;
     public float cellSize;
-    public int DiagonalCost = 1;
+    public int diagonalCost = 1;
     public bool drawGizmos;
     public int findPathJobCount = 20;
     public NativeArray<GridNode> map;
 
-    private readonly List<int[]> paths = new List<int[]>();
+    private readonly List<int[]> _paths = new List<int[]>();
     public bool schedule;
     public float sizeX;
     public float sizeZ;
     public LayerMask terrainLayer;
-    private readonly List<int> visitedIndices = new List<int>();
+    private readonly List<int> _visitedIndices = new List<int>();
 
     public int GrassPenalty {
-        get => _grassPenalty;
+        get => grassPenalty;
         set {
-            _grassPenalty = value;
+            grassPenalty = value;
             UpdatePenalty();
         }
     }
@@ -50,7 +49,7 @@ public class PathFindingGrid : MonoBehaviour {
         _cellCountZ = Mathf.RoundToInt(sizeZ / cellSize);
 
         map = new NativeArray<GridNode>(_cellCountX * _cellCountZ, Allocator.Persistent);
-        new Loop2D(_cellCountX, _cellCountZ).loopY((x, z) => {
+        new Loop2D(_cellCountX, _cellCountZ).LoopY((x, z) => {
             var index = x + _cellCountX * z;
             map[index] = new GridNode {
                 Index = index,
@@ -96,7 +95,7 @@ public class PathFindingGrid : MonoBehaviour {
                     Map = map,
                     StartPosition = new int2(0, 0),
                     EndPosition = clickedNode,
-                    MoveDiagonalCost = DiagonalCost,
+                    MoveDiagonalCost = diagonalCost,
                     MoveStraightCost = 11,
                     MapSize = new int2(_cellCountX, _cellCountZ),
                     Path = newPaths[i],
@@ -110,16 +109,16 @@ public class PathFindingGrid : MonoBehaviour {
 
             JobHandle.CompleteAll(jobHandleArray);
 
-            visitedIndices.Clear();
+            _visitedIndices.Clear();
             foreach (var visitedByPath in visited) {
-                foreach (var i in visitedByPath) visitedIndices.Add(i);
+                foreach (var i in visitedByPath) _visitedIndices.Add(i);
 
                 visitedByPath.Dispose();
             }
 
             foreach (var nativeList in newPaths) {
-                paths.Clear();
-                paths.Add(nativeList.ToArray().Select(node => node.Index).ToArray());
+                _paths.Clear();
+                _paths.Add(nativeList.ToArray().Select(node => node.Index).ToArray());
                 nativeList.Dispose();
             }
 
@@ -136,7 +135,8 @@ public class PathFindingGrid : MonoBehaviour {
 
         var percentageX = Mathf.Clamp01((pos.x - start.x - cellSize / 2) / (end.x - start.x));
         var percentageZ = Mathf.Clamp01((pos.z - start.z - cellSize / 2) / (end.z - start.z));
-        return new int2(Mathf.RoundToInt(percentageX * _cellCountX), Mathf.RoundToInt(percentageZ * _cellCountZ));
+        return new int2(Mathf.RoundToInt(percentageX * _cellCountX),
+            Mathf.RoundToInt(percentageZ * _cellCountZ));
     }
 
     private void OnDrawGizmos() {
@@ -148,9 +148,9 @@ public class PathFindingGrid : MonoBehaviour {
 
             if (Math.Abs(gridNode.Penalty) < 0.1) Gizmos.color = Color.grey;
 
-            if (visitedIndices.Contains(gridNode.Index)) Gizmos.color = Color.yellow;
+            if (_visitedIndices.Contains(gridNode.Index)) Gizmos.color = Color.yellow;
 
-            if (paths.Any(indices => indices.Contains(gridNode.Index))) Gizmos.color = Color.blue;
+            if (_paths.Any(indices => indices.Contains(gridNode.Index))) Gizmos.color = Color.blue;
 
             if (!gridNode.IsWalkable) Gizmos.color = Color.red;
 

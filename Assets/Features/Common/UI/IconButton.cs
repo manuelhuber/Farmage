@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Common.UI {
+namespace Features.Common.UI {
 public struct IconButton {
     public Sprite Icon;
     public string Hotkey;

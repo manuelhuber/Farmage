@@ -1,7 +1,7 @@
 using Grimity.Singleton;
 using UnityEngine;
 
-namespace Common.Settings {
+namespace Features.Common.Settings {
 public class Settings : GrimitySingleton<Settings> {
     [SerializeField] private Control control;
     [SerializeField] private Hotkeys hotkeys;

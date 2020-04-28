@@ -16,9 +16,10 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
+namespace DOTS_Pathfinding.Scripts {
 public class CodeMonkeyPathfinding : MonoBehaviour {
-    private const int MOVE_STRAIGHT_COST = 10;
-    private const int MOVE_DIAGONAL_COST = 14;
+    private const int MoveStraightCost = 10;
+    private const int MoveDiagonalCost = 14;
 
     private void Start() {
         // FunctionPeriodic.Create(() => {
@@ -29,8 +30,8 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
 
         for (var i = 0; i < findPathJobCount; i++) {
             var findPathJob = new FindPathJob {
-                startPosition = new int2(0, 0),
-                endPosition = new int2(99, 99)
+                StartPosition = new int2(0, 0),
+                EndPosition = new int2(99, 99)
             };
             jobHandleArray[i] = findPathJob.Schedule();
         }
@@ -44,8 +45,8 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
 
     [BurstCompile]
     private struct FindPathJob : IJob {
-        public int2 startPosition;
-        public int2 endPosition;
+        public int2 StartPosition;
+        public int2 EndPosition;
 
         public void Execute() {
             var gridSize = new int2(100, 100);
@@ -55,18 +56,18 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
             for (var x = 0; x < gridSize.x; x++)
             for (var y = 0; y < gridSize.y; y++) {
                 var pathNode = new PathNode();
-                pathNode.x = x;
-                pathNode.y = y;
-                pathNode.index = CalculateIndex(x, y, gridSize.x);
+                pathNode.X = x;
+                pathNode.Y = y;
+                pathNode.Index = CalculateIndex(x, y, gridSize.x);
 
-                pathNode.gCost = int.MaxValue;
-                pathNode.hCost = CalculateDistanceCost(new int2(x, y), endPosition);
+                pathNode.GCost = int.MaxValue;
+                pathNode.HCost = CalculateDistanceCost(new int2(x, y), EndPosition);
                 pathNode.CalculateFCost();
 
-                pathNode.isWalkable = true;
-                pathNode.cameFromNodeIndex = -1;
+                pathNode.IsWalkable = true;
+                pathNode.CameFromNodeIndex = -1;
 
-                pathNodeArray[pathNode.index] = pathNode;
+                pathNodeArray[pathNode.Index] = pathNode;
             }
 
             /*
@@ -96,17 +97,17 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
             neighbourOffsetArray[6] = new int2(+1, -1); // Right Down
             neighbourOffsetArray[7] = new int2(+1, +1); // Right Up
 
-            var endNodeIndex = CalculateIndex(endPosition.x, endPosition.y, gridSize.x);
+            var endNodeIndex = CalculateIndex(EndPosition.x, EndPosition.y, gridSize.x);
 
-            var startNode = pathNodeArray[CalculateIndex(startPosition.x, startPosition.y, gridSize.x)];
-            startNode.gCost = 0;
+            var startNode = pathNodeArray[CalculateIndex(StartPosition.x, StartPosition.y, gridSize.x)];
+            startNode.GCost = 0;
             startNode.CalculateFCost();
-            pathNodeArray[startNode.index] = startNode;
+            pathNodeArray[startNode.Index] = startNode;
 
             var openList = new NativeList<int>(Allocator.Temp);
             var closedList = new NativeList<int>(Allocator.Temp);
 
-            openList.Add(startNode.index);
+            openList.Add(startNode.Index);
 
             while (openList.Length > 0) {
                 var currentNodeIndex = GetLowestCostFNodeIndex(openList, pathNodeArray);
@@ -127,7 +128,7 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
                 for (var i = 0; i < neighbourOffsetArray.Length; i++) {
                     var neighbourOffset = neighbourOffsetArray[i];
                     var neighbourPosition =
-                        new int2(currentNode.x + neighbourOffset.x, currentNode.y + neighbourOffset.y);
+                        new int2(currentNode.X + neighbourOffset.x, currentNode.Y + neighbourOffset.y);
 
                     if (!IsPositionInsideGrid(neighbourPosition, gridSize)) // Neighbour not valid position
                         continue;
@@ -138,26 +139,26 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
                         continue;
 
                     var neighbourNode = pathNodeArray[neighbourNodeIndex];
-                    if (!neighbourNode.isWalkable) // Not walkable
+                    if (!neighbourNode.IsWalkable) // Not walkable
                         continue;
 
-                    var currentNodePosition = new int2(currentNode.x, currentNode.y);
+                    var currentNodePosition = new int2(currentNode.X, currentNode.Y);
 
                     var tentativeGCost =
-                        currentNode.gCost + CalculateDistanceCost(currentNodePosition, neighbourPosition);
-                    if (tentativeGCost < neighbourNode.gCost) {
-                        neighbourNode.cameFromNodeIndex = currentNodeIndex;
-                        neighbourNode.gCost = tentativeGCost;
+                        currentNode.GCost + CalculateDistanceCost(currentNodePosition, neighbourPosition);
+                    if (tentativeGCost < neighbourNode.GCost) {
+                        neighbourNode.CameFromNodeIndex = currentNodeIndex;
+                        neighbourNode.GCost = tentativeGCost;
                         neighbourNode.CalculateFCost();
                         pathNodeArray[neighbourNodeIndex] = neighbourNode;
 
-                        if (!openList.Contains(neighbourNode.index)) openList.Add(neighbourNode.index);
+                        if (!openList.Contains(neighbourNode.Index)) openList.Add(neighbourNode.Index);
                     }
                 }
             }
 
             var endNode = pathNodeArray[endNodeIndex];
-            if (endNode.cameFromNodeIndex == -1) {
+            if (endNode.CameFromNodeIndex == -1) {
                 // Didn't find a path!
                 //Debug.Log("Didn't find a path!");
             } else {
@@ -178,17 +179,17 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
         }
 
         private NativeList<int2> CalculatePath(NativeArray<PathNode> pathNodeArray, PathNode endNode) {
-            if (endNode.cameFromNodeIndex == -1) // Couldn't find a path!
+            if (endNode.CameFromNodeIndex == -1) // Couldn't find a path!
                 return new NativeList<int2>(Allocator.Temp);
 
             // Found a path
             var path = new NativeList<int2>(Allocator.Temp);
-            path.Add(new int2(endNode.x, endNode.y));
+            path.Add(new int2(endNode.X, endNode.Y));
 
             var currentNode = endNode;
-            while (currentNode.cameFromNodeIndex != -1) {
-                var cameFromNode = pathNodeArray[currentNode.cameFromNodeIndex];
-                path.Add(new int2(cameFromNode.x, cameFromNode.y));
+            while (currentNode.CameFromNodeIndex != -1) {
+                var cameFromNode = pathNodeArray[currentNode.CameFromNodeIndex];
+                path.Add(new int2(cameFromNode.X, cameFromNode.Y));
                 currentNode = cameFromNode;
             }
 
@@ -211,7 +212,7 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
             var xDistance = math.abs(aPosition.x - bPosition.x);
             var yDistance = math.abs(aPosition.y - bPosition.y);
             var remaining = math.abs(xDistance - yDistance);
-            return MOVE_DIAGONAL_COST * math.min(xDistance, yDistance) + MOVE_STRAIGHT_COST * remaining;
+            return MoveDiagonalCost * math.min(xDistance, yDistance) + MoveStraightCost * remaining;
         }
 
 
@@ -219,33 +220,34 @@ public class CodeMonkeyPathfinding : MonoBehaviour {
             var lowestCostPathNode = pathNodeArray[openList[0]];
             for (var i = 1; i < openList.Length; i++) {
                 var testPathNode = pathNodeArray[openList[i]];
-                if (testPathNode.fCost < lowestCostPathNode.fCost) lowestCostPathNode = testPathNode;
+                if (testPathNode.FCost < lowestCostPathNode.FCost) lowestCostPathNode = testPathNode;
             }
 
-            return lowestCostPathNode.index;
+            return lowestCostPathNode.Index;
         }
 
         private struct PathNode {
-            public int x;
-            public int y;
+            public int X;
+            public int Y;
 
-            public int index;
+            public int Index;
 
-            public int gCost;
-            public int hCost;
-            public int fCost;
+            public int GCost;
+            public int HCost;
+            public int FCost;
 
-            public bool isWalkable;
+            public bool IsWalkable;
 
-            public int cameFromNodeIndex;
+            public int CameFromNodeIndex;
 
             public void CalculateFCost() {
-                fCost = gCost + hCost;
+                FCost = GCost + HCost;
             }
 
             public void SetIsWalkable(bool isWalkable) {
-                this.isWalkable = isWalkable;
+                this.IsWalkable = isWalkable;
             }
         }
     }
+}
 }

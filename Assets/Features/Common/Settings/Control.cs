@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Common.Settings {
+namespace Features.Common.Settings {
 [CreateAssetMenu(menuName = "Settings/Control")]
 public class Control : ScriptableObject {
     public float cameraMovementSpeed = 1f;

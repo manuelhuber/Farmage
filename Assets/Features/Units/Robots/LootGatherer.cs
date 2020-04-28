@@ -5,7 +5,6 @@ using Features.Queue;
 using Features.Units.Common;
 using Grimity.ScriptableObject;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Features.Units.Robots {
 public class LootGatherer : UnitBehaviourBase {
@@ -22,13 +21,13 @@ public class LootGatherer : UnitBehaviourBase {
         var item = task.payload.GetComponent<Storable>();
         var target = buildings.Items.Select(o => o.GetComponent<Storage>())
             .Where(storage => storage != null)
-            .FirstOrDefault(storage => item.isType(storage._type));
+            .FirstOrDefault(storage => item.IsType(storage.type));
         if (target == null) return false;
 
         _loot = task.payload;
         _targetStorage = target;
         _movementAgent.SetDestination(_loot.transform.position);
-        _movementAgent.isStopped = false;
+        _movementAgent.IsStopped = false;
         return true;
     }
 
@@ -42,7 +41,7 @@ public class LootGatherer : UnitBehaviourBase {
     private void DeliverLoot() {
         _loot.transform.parent = null;
         _targetStorage.Deliver(_loot.GetComponent<Storable>());
-        _movementAgent.isStopped = true;
+        _movementAgent.IsStopped = true;
         _loot = null;
         CompleteTask();
     }
@@ -54,7 +53,7 @@ public class LootGatherer : UnitBehaviourBase {
 
     public override void AbandonTask() {
         DropLoot();
-        _movementAgent.isStopped = true;
+        _movementAgent.IsStopped = true;
         base.AbandonTask();
     }
 

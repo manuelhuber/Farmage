@@ -3,7 +3,7 @@ using Grimity.Singleton;
 using UnityEngine;
 using static Grimity.Cursor.CursorUtil;
 
-namespace Features.Units {
+namespace Features.Units.Common {
 public class UnitControl : GrimitySingleton<UnitControl> {
     private readonly HashSet<Unit> _all = new HashSet<Unit>();
     private readonly HashSet<Unit> _selection = new HashSet<Unit>();
@@ -32,7 +32,7 @@ public class UnitControl : GrimitySingleton<UnitControl> {
         if (rightClick) {
             var target = MouseToTerrain();
             if (_selection.Count == 0) return;
-            foreach (var unit in _selection) unit.setTarget(target.point);
+            foreach (var unit in _selection) unit.SetTarget(target.point);
         } else if (leftClickDown) {
             GetCursorLocation(out var target, _camera);
             var unit = target.transform.gameObject.GetComponent<Unit>();

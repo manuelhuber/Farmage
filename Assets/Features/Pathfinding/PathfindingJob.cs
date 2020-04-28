@@ -4,7 +4,8 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
-using UnityEngine;
+
+// ReSharper disable ForCanBeConvertedToForeach
 
 namespace Features.Pathfinding {
 [BurstCompile]
@@ -72,7 +73,8 @@ public struct PathfindingJob : IJob {
                 if (alreadyChecked.Contains(neighbourIndex) || !Map[neighbourIndex].IsWalkable) continue;
 
                 var neighbour = pathNodes[neighbourIndex];
-                var newArrivalCost = currentNode.ArrivalCost + TransitionCost(currentNodeIndex, neighbourIndex);
+                var newArrivalCost =
+                    currentNode.ArrivalCost + TransitionCost(currentNodeIndex, neighbourIndex);
                 if (newArrivalCost >= neighbour.ArrivalCost) continue;
                 neighbour.ArrivalCost = newArrivalCost;
                 neighbour.UpdateTotalCost();
@@ -162,7 +164,12 @@ public struct PathfindingJob : IJob {
     }
 
     private int HeuristicCost(int fromX, int fromZ, int toX, int toZ) {
-        return PathFindingUtils.ManhattanDistanceDiagonal(fromX, fromZ, toX, toZ, MoveStraightCost, MoveDiagonalCost);
+        return PathFindingUtils.ManhattanDistanceDiagonal(fromX,
+            fromZ,
+            toX,
+            toZ,
+            MoveStraightCost,
+            MoveDiagonalCost);
     }
 
     private int FindLowestTotalCost(NativeList<int> openList, NativeArray<PathNode> pathNodes) {

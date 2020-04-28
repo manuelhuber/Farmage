@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Features.Units.Common {
+namespace Features.Health {
 public class Mortal : MonoBehaviour {
     public UnityEvent onDeath;
     public Team team;

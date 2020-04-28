@@ -11,7 +11,7 @@ public class FarmageTerrain : MonoBehaviour {
 
     private float RealWorldChunkLength => (settings.size - 1) * settings.meshScale;
 
-    public void generateTerrain() {
+    public void GenerateTerrain() {
         foreach (var child in GetComponentsInChildren<Transform>()) {
             if (child.gameObject == gameObject) continue;
             EditorApplication.delayCall += () => {
@@ -20,10 +20,10 @@ public class FarmageTerrain : MonoBehaviour {
             };
         }
 
-        new Loop2D(yMax).loopX((x, y) => generateChunk(new Vector2Int(x, y)));
+        new Loop2D(yMax).LoopX((x, y) => GenerateChunk(new Vector2Int(x, y)));
     }
 
-    public void generateChunk(Vector2Int pos) {
+    public void GenerateChunk(Vector2Int pos) {
         var chunk = new GameObject {name = "Terrain", layer = 8};
         var xOffset = -(RealWorldChunkLength / 2) + RealWorldChunkLength * pos.x;
         var yOffset = -(RealWorldChunkLength / 2) + RealWorldChunkLength * pos.y;
@@ -47,10 +47,11 @@ public class FarmageTerrain : MonoBehaviour {
 
         renderer.material = settings.material;
         var mesh = MeshGenerator.GenerateMesh(
-            noise,
-            settings.heightAmplifier,
-            settings.heightCurve,
-            scale: settings.meshScale).generateMesh();
+                noise,
+                settings.heightAmplifier,
+                settings.heightCurve,
+                scale: settings.meshScale)
+            .GenerateMesh();
         meshFilter.sharedMesh = mesh;
         collider.sharedMesh = mesh;
     }
@@ -58,8 +59,8 @@ public class FarmageTerrain : MonoBehaviour {
 
     private void OnValidate() {
         if (settings == null) return;
-        settings.OnValuesUpdated -= generateTerrain;
-        settings.OnValuesUpdated += generateTerrain;
+        settings.OnValuesUpdated -= GenerateTerrain;
+        settings.OnValuesUpdated += GenerateTerrain;
     }
 }
 }

@@ -7,7 +7,7 @@ public class TerrainInspector : UnityEditor.Editor {
     public override void OnInspectorGUI() {
         var generator = (FarmageTerrain) target;
         base.OnInspectorGUI();
-        if (GUILayout.Button("Generate")) generator.generateTerrain();
+        if (GUILayout.Button("Generate")) generator.GenerateTerrain();
     }
 }
 }

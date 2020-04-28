@@ -1,8 +1,6 @@
-﻿using Features.Units.Common;
-using UnityEngine;
-using UnityEngine.AI;
+﻿using UnityEngine;
 
-namespace Features.Units {
+namespace Features.Units.Common {
 public class Unit : MonoBehaviour {
     private MovementAgent _agent;
 
@@ -12,7 +10,7 @@ public class Unit : MonoBehaviour {
         UnitControl.Instance.Register(this);
     }
 
-    public void setTarget(Vector3 destination) {
+    public void SetTarget(Vector3 destination) {
         _agent.SetDestination(destination);
     }
 }

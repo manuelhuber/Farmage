@@ -8,7 +8,7 @@ namespace Features.Units.Robots {
 public class HarvestBehaviour : UnitBehaviourBase {
     private MovementAgent _movementAgent;
     private ResourceManager _resourceManager;
-    private GameObject target;
+    private GameObject _target;
 
     private void Awake() {
         _resourceManager = ResourceManager.Instance;
@@ -16,15 +16,15 @@ public class HarvestBehaviour : UnitBehaviourBase {
     }
 
     public override bool Init(Task task) {
-        target = task.payload;
-        _movementAgent.SetDestination(target.transform.position);
-        _movementAgent.isStopped = false;
+        _target = task.payload;
+        _movementAgent.SetDestination(_target.transform.position);
+        _movementAgent.IsStopped = false;
         return true;
     }
 
     public override void Behave() {
         if (!(_movementAgent.HasArrived)) return;
-        var harvest = target.GetComponent<WheatField>().harvest();
+        var harvest = _target.GetComponent<WheatField>().Harvest();
         _resourceManager.Add(harvest);
         CompleteTask();
     }

@@ -46,7 +46,7 @@ public class MapManager : GrimitySingleton<MapManager> {
         _mapSize = new int2(_cellCountX, _cellCountZ);
 
         _map = new NativeArray<GridNode>(_cellCountX * _cellCountZ, Allocator.Persistent);
-        new Loop2D(_cellCountX, _cellCountZ).loopY((x, z) => {
+        new Loop2D(_cellCountX, _cellCountZ).LoopY((x, z) => {
             var index = x + _cellCountX * z;
             _map[index] = new GridNode {
                 Index = index,

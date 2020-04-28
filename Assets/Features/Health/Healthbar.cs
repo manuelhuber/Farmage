@@ -2,7 +2,7 @@ using Grimity.Math;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Features.Units.Common {
+namespace Features.Health {
 public class Healthbar : MonoBehaviour {
     public GameObject hpBarPrefab;
     public float hpBarOffset = 2f;

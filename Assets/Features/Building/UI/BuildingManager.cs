@@ -16,7 +16,7 @@ public struct BuildingOption {
 }
 
 public class BuildingManager : MonoBehaviour {
-    public Grimity.Data.IObservable<BuildingOption[]> BuildingOptions => buildingOptions;
+    public Grimity.Data.IObservable<BuildingOption[]> BuildingOptions => _buildingOptions;
 
     [SerializeField] private PlacementSettings placementSettings = null;
     [SerializeField] private LayerMask terrainLayer = 0;
@@ -29,7 +29,7 @@ public class BuildingManager : MonoBehaviour {
     private ResourceManager _resourceManager;
     private BuildingMenuEntry _selected;
 
-    private readonly Observable<BuildingOption[]> buildingOptions =
+    private readonly Observable<BuildingOption[]> _buildingOptions =
         new Observable<BuildingOption[]>(new BuildingOption[0]);
 
     private void Awake() {
@@ -49,8 +49,8 @@ public class BuildingManager : MonoBehaviour {
         if (_dragObject) {
             var pos = MouseToTerrain().point;
             var size = _selected.buildingPrefab.GetComponent<Structures.Building>().size;
-            pos.x = MathUtils.RoundToMultiple(pos.x, gridSize, size.x.isEven());
-            pos.z = MathUtils.RoundToMultiple(pos.z, gridSize, size.y.isEven());
+            pos.x = MathUtils.RoundToMultiple(pos.x, gridSize, size.x.IsEven());
+            pos.z = MathUtils.RoundToMultiple(pos.z, gridSize, size.y.IsEven());
             _placeable.transform.position = pos;
         }
 
@@ -71,7 +71,7 @@ public class BuildingManager : MonoBehaviour {
     }
 
     private void UpdateBuildingOptions() {
-        buildingOptions.Set(buildMenu.entries.Select(menuEntry => new BuildingOption {
+        _buildingOptions.Set(buildMenu.entries.Select(menuEntry => new BuildingOption {
                 Entry = menuEntry, Buildable = _resourceManager.CanBePayed(menuEntry.cost),
                 OnSelect = () => SelectBuilding(menuEntry)
             })

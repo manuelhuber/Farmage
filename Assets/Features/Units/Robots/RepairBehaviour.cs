@@ -1,3 +1,4 @@
+using Features.Health;
 using Features.Queue;
 using Features.Resources;
 using Features.Units.Common;
@@ -35,7 +36,7 @@ public class RepairBehaviour : UnitBehaviourBase {
         _target = task.payload.GetComponent<Mortal>();
         _target.onDeath.AddListener(Complete);
         _movementAgent.SetDestination(_target.transform.position);
-        _movementAgent.isStopped = false;
+        _movementAgent.IsStopped = false;
         return true;
     }
 
@@ -51,13 +52,13 @@ public class RepairBehaviour : UnitBehaviourBase {
     private void OnTriggerEnter(Collider other) {
         if (_target == null || _target.gameObject != other.gameObject) return;
         _repairAction.IsRunning = true;
-        _movementAgent.isStopped = true;
+        _movementAgent.IsStopped = true;
     }
 
     private void OnTriggerExit(Collider other) {
         if (_target == null || _target.gameObject != other.gameObject) return;
         _repairAction.IsRunning = false;
-        _movementAgent.isStopped = false;
+        _movementAgent.IsStopped = false;
     }
 }
 }

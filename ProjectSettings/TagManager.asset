@@ -10,6 +10,7 @@ TagManager:
   - ResourceText
   - MainUI
   - AttackRangeCollider
+  - HitpointCanvas
   layers:
   - Default
   - TransparentFX

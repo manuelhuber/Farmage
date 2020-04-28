@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+namespace Features.Common.Settings {
 [CreateAssetMenu(menuName = "Settings/Hotkeys")]
 public class Hotkeys : ScriptableObject {
     public KeyCode buildings = KeyCode.B;
@@ -9,4 +10,5 @@ public class Hotkeys : ScriptableObject {
     public KeyCode moveCameraUp = KeyCode.W;
     public KeyCode turnCameraLeft = KeyCode.Q;
     public KeyCode turnCameraRight = KeyCode.E;
+}
 }

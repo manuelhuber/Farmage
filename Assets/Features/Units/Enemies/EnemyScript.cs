@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using Features.Health;
 using Features.Units.Common;
 using Grimity.Actions;
 using Grimity.Collections;
@@ -29,7 +29,7 @@ public class EnemyScript : MonoBehaviour {
         FindNewTarget();
     }
 
-    public void setTargets(GameObject[] targets) {
+    public void SetTargets(GameObject[] targets) {
         _targets = targets;
     }
 
@@ -44,7 +44,7 @@ public class EnemyScript : MonoBehaviour {
         var destructible = other.gameObject.GetComponent<Mortal>();
         if (destructible == null || destructible.team == Team.Aliens) return;
         transform.LookAt(destructible.transform);
-        _movementAgent.isStopped = true;
+        _movementAgent.IsStopped = true;
         _victim = destructible;
         _attack.IsRunning = true;
         _victim.onDeath.AddListener(StopAttack);
@@ -52,7 +52,7 @@ public class EnemyScript : MonoBehaviour {
 
     private void StopAttack() {
         _attack.IsRunning = false;
-        _movementAgent.isStopped = false;
+        _movementAgent.IsStopped = false;
         FindNewTarget();
     }
 

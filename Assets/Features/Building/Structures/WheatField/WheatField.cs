@@ -7,7 +7,7 @@ namespace Features.Building.Structures.WheatField {
 public class WheatField : MonoBehaviour {
     public Cost harvestValue;
     private float _progress;
-    [Required] [SerializeField] private JobMultiQueue _queue;
+    [Required] [SerializeField] private JobMultiQueue queue;
     private bool _waitingForHarvest;
     public int growthDurationS;
 
@@ -25,10 +25,10 @@ public class WheatField : MonoBehaviour {
 
     private void FinishGrowth() {
         _waitingForHarvest = true;
-        _queue.Enqueue(new Task {payload = gameObject, type = TaskType.Harvest});
+        queue.Enqueue(new Task {payload = gameObject, type = TaskType.Harvest});
     }
 
-    public Cost harvest() {
+    public Cost Harvest() {
         if (!_waitingForHarvest) return new Cost();
         _waitingForHarvest = false;
         _progress = 0;
