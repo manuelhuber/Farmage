@@ -1,5 +1,5 @@
 ﻿using Features.Queue;
-using Features.Units;
+using Features.Units.Common;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -12,8 +12,8 @@ public class Building : MonoBehaviour {
     // Start is called before the first frame update
     private void Start() {
         var mortal = GetComponent<Mortal>();
-        mortal.onDamage.AddListener(() => {
-            if (mortal.Hitpoints == mortal.MaxHitpoints) {
+        mortal.Hitpoints.OnChange(hitpoints => {
+            if (hitpoints == mortal.MaxHitpoints) {
                 _waitingForRepair = false;
                 return;
             }

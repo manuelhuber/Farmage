@@ -40,7 +40,7 @@ public class RepairBehaviour : UnitBehaviourBase {
     }
 
     public override void Behave() {
-        if (_target.Hitpoints == _target.MaxHitpoints) Complete();
+        if (_target.Hitpoints.Value == _target.MaxHitpoints) Complete();
     }
 
     private void Complete() {

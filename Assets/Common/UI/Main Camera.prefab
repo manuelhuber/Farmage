@@ -58,7 +58,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 25
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -96,10 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f90c93c604f2b14c96b827e184e0e7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildMenu: {fileID: 11400000, guid: c975020b41911e540b445c852674023a, type: 2}
   placementSettings: {fileID: 11400000, guid: 9d585bd98fba38942bbaf3813b5eaf1d, type: 2}
   terrainLayer:
     serializedVersion: 2
     m_Bits: 256
-  iconPrefab: {fileID: 5929076519522368955, guid: cd7bb5675dae9c048aff5b08651ad14f,
-    type: 3}
+  buildMenu: {fileID: 11400000, guid: c975020b41911e540b445c852674023a, type: 2}
+  gridSize: 4
