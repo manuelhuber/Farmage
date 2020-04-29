@@ -2,6 +2,8 @@
 
 namespace Features.Units.Common {
 public class Unit : MonoBehaviour {
+    public Sprite icon;
+    public string displayName;
     private MovementAgent _agent;
 
     // Start is called before the first frame update

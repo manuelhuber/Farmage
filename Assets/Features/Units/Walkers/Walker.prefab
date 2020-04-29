@@ -65,15 +65,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a80c88de8082f4eb1b6efc5d4af31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onDamage:
-    m_PersistentCalls:
-      m_Calls: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
   team: 1
-  <MaxHitpoints>k__BackingField: 0
-  <Hitpoints>k__BackingField: 0
+  <MaxHitpoints>k__BackingField: 500
 --- !u!65 &6315537318990094504
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -99,6 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d562c74e0235d248be570d6ab038c13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: a08d84d23793881499ab9126df5840b0, type: 3}
+  displayName: Cowboy Joe
 --- !u!114 &7966996125411664316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +112,6 @@ MonoBehaviour:
   speed: 3
   stoppingDistance: 1
   turnSpeed: 10
-  _hasArrived: 0
 --- !u!114 &1529997821547828744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpBarPrefab: {fileID: 211962310666974151, guid: 0363b05f9d394f74a8f9c5f67672091b,
     type: 3}
-  _hitpointBar: {fileID: 0}
+  hpBarOffset: 2
 --- !u!1 &3515414720273852194
 GameObject:
   m_ObjectHideFlags: 0
