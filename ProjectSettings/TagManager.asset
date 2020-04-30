@@ -7,10 +7,10 @@ TagManager:
   - Settings
   - HQ
   - Canvas
-  - ResourceText
   - MainUI
   - AttackRangeCollider
   - HitpointCanvas
+  - ForceSphere
   layers:
   - Default
   - TransparentFX

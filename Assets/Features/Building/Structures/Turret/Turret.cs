@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Features.Building.Structures.Turret {
 public class Turret : MonoBehaviour {
     private readonly List<Mortal> _targets = new List<Mortal>();
-    private IntervaledAction _attack;
+    private PeriodicalAction _attack;
     private Mortal _currentTarget;
     private SphereCollider _sphereCollider;
     public float attackSpeed;
@@ -21,7 +21,7 @@ public class Turret : MonoBehaviour {
         _sphereCollider = gameObject.AddComponent<SphereCollider>();
         _sphereCollider.isTrigger = true;
         _sphereCollider.radius = range;
-        _attack = gameObject.AddComponent<IntervaledAction>();
+        _attack = gameObject.AddComponent<PeriodicalAction>();
         _attack.action = Shoot;
         _attack.interval = attackSpeed;
     }

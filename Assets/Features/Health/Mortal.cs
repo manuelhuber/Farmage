@@ -4,10 +4,10 @@ using UnityEngine.Events;
 
 namespace Features.Health {
 public class Mortal : MonoBehaviour {
-    public UnityEvent onDeath;
+    public UnityEvent onDeath = new UnityEvent();
     public Team team;
 
-    [field: SerializeField] public int MaxHitpoints { get; private set; }
+    [field: SerializeField] public int MaxHitpoints { get; set; }
 
     public IObservable<int> Hitpoints => _hitpoints;
     private Observable<int> _hitpoints = new Observable<int>(0);
@@ -22,7 +22,7 @@ public class Mortal : MonoBehaviour {
     }
 
     public void TakeDamage(int amount) {
-        _hitpoints.Set(_hitpoints.Value - amount);
+        _hitpoints.Set(Mathf.Min(_hitpoints.Value - amount, MaxHitpoints));
         if (_hitpoints.Value <= 0) {
             Die();
         }

@@ -1,4 +1,6 @@
-﻿using Grimity.Collections;
+﻿using System.Linq;
+using Features.Health;
+using Grimity.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -20,10 +22,14 @@ public class Spawner : MonoBehaviour {
         _hqs = GameObject.FindGameObjectsWithTag("HQ");
         _lastSpawn = Time.time;
         var count = Random.Range(spawnCount.start, spawnCount.end);
+        var offset = 0;
         for (var i = 0; i < count; i++) {
             var spawnLocation = spawnPoints.GetRandomElement().transform;
-            var enemy = Instantiate(enemyPrefab, spawnLocation.position, spawnLocation.rotation, transform);
-            enemy.GetComponent<EnemyScript>().SetTargets(_hqs);
+            var offsetLocation = spawnLocation.position + new Vector3(0, 0, offset);
+            var enemy = Instantiate(enemyPrefab, offsetLocation, spawnLocation.rotation, transform);
+            enemy.GetComponent<EnemyScript>()
+                .SetTargets(_hqs.Select(go => go.GetComponent<Mortal>()).ToList());
+            offset += 10;
         }
     }
 }

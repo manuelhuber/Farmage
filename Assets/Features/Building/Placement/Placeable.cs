@@ -60,7 +60,8 @@ public class Placeable : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if (!IsTerrainLayer(other)) {
-            if (other.gameObject.tag.Equals("AttackRangeCollider")) return;
+            var tag = other.gameObject.tag;
+            if (tag.Equals("AttackRangeCollider") || tag.Equals("ForceSphere")) return;
 
             _collisions.Add(other);
             UpdateMaterial();

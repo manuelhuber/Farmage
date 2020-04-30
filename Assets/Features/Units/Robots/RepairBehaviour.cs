@@ -8,14 +8,14 @@ using UnityEngine;
 namespace Features.Units.Robots {
 public class RepairBehaviour : UnitBehaviourBase {
     private MovementAgent _movementAgent;
-    private IntervaledAction _repairAction;
+    private PeriodicalAction _repairAction;
     private ResourceManager _resourceManager;
     private Mortal _target;
 
     private void Awake() {
         _resourceManager = ResourceManager.Instance;
         _movementAgent = GetComponent<MovementAgent>();
-        if (_repairAction == null) _repairAction = gameObject.AddComponent<IntervaledAction>();
+        if (_repairAction == null) _repairAction = gameObject.AddComponent<PeriodicalAction>();
 
         _repairAction.interval = 1;
         _repairAction.initialDelay = true;
@@ -35,7 +35,7 @@ public class RepairBehaviour : UnitBehaviourBase {
     public override bool Init(Task task) {
         _target = task.payload.GetComponent<Mortal>();
         _target.onDeath.AddListener(Complete);
-        _movementAgent.SetDestination(_target.transform.position);
+        _movementAgent.SetDestination(_target.transform.position, true);
         _movementAgent.IsStopped = false;
         return true;
     }

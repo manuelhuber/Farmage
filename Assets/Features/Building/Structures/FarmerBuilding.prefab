@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -6387577232689518829}
   - component: {fileID: 1815534174163732130}
   - component: {fileID: 9017454968372554380}
+  - component: {fileID: 2744936451345570462}
   m_Layer: 9
   m_Name: FarmerBuilding
   m_TagString: Untagged
@@ -63,7 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 247310d720d1459c89d085263d46ebe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RuntimeSet: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376, type: 2}
+  runtimeSet: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376, type: 2}
 --- !u!114 &-6387577232689518829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,16 +77,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a80c88de8082f4eb1b6efc5d4af31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitpointBar: {fileID: 0}
-  onDamage:
-    m_PersistentCalls:
-      m_Calls: []
   onDeath:
     m_PersistentCalls:
       m_Calls: []
   team: 0
   <MaxHitpoints>k__BackingField: 100
-  <Hitpoints>k__BackingField: 100
 --- !u!54 &1815534174163732130
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -115,3 +111,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2744936451345570462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990117219375781617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d562c74e0235d248be570d6ab038c13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon: {fileID: 0}
+  displayName: // TODO

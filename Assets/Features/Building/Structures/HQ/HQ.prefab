@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 737647600490876462}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 8, y: 4, z: 8}
   m_Children: []
   m_Father: {fileID: 770371645470792347}
@@ -110,6 +110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpBarPrefab: {fileID: 211962310666974151, guid: 0363b05f9d394f74a8f9c5f67672091b,
     type: 3}
+  hpBarOffset: 2
 --- !u!1001 &8248414273927810312
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -136,6 +137,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: HQ
+      objectReference: {fileID: 0}
+    - target: {fileID: 2744936451345570462, guid: 367f8f4e80502e14a8ef8a46497b32b7,
+        type: 3}
+      propertyPath: displayName
+      value: Headquarters
       objectReference: {fileID: 0}
     - target: {fileID: 5890649793366211811, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}

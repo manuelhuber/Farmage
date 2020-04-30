@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Features.Health;
 using Features.Units.Common;
 using Grimity.Actions;
@@ -7,9 +8,9 @@ using UnityEngine;
 
 namespace Features.Units.Enemies {
 public class EnemyScript : MonoBehaviour {
-    private IntervaledAction _attack;
+    private PeriodicalAction _attack;
     private MovementAgent _movementAgent;
-    private GameObject[] _targets = new GameObject[0];
+    private List<Mortal> _targets = new List<Mortal>();
     private Mortal _victim;
     public float attackSpeed;
     public int damage = 5;
@@ -17,7 +18,7 @@ public class EnemyScript : MonoBehaviour {
 
     private void Awake() {
         _movementAgent = GetComponent<MovementAgent>();
-        _attack = gameObject.AddComponent<IntervaledAction>();
+        _attack = gameObject.AddComponent<PeriodicalAction>();
         _attack.interval = attackSpeed;
         _attack.action = () => {
             _victim.TakeDamage(damage);
@@ -29,8 +30,11 @@ public class EnemyScript : MonoBehaviour {
         FindNewTarget();
     }
 
-    public void SetTargets(GameObject[] targets) {
+    public void SetTargets(List<Mortal> targets) {
         _targets = targets;
+        foreach (var target in _targets) {
+            target.onDeath.AddListener(() => _targets.Remove(target));
+        }
     }
 
     private void OnTriggerExit(Collider other) {
@@ -47,7 +51,10 @@ public class EnemyScript : MonoBehaviour {
         _movementAgent.IsStopped = true;
         _victim = destructible;
         _attack.IsRunning = true;
-        _victim.onDeath.AddListener(StopAttack);
+        _victim.onDeath.AddListener(() => {
+            _victim = null;
+            StopAttack();
+        });
     }
 
     private void StopAttack() {
@@ -57,7 +64,7 @@ public class EnemyScript : MonoBehaviour {
     }
 
     private void FindNewTarget() {
-        if (_targets.Length == 0) return;
+        if (_targets.Count == 0) return;
         if (_targets.All(t => t == null)) return;
         var target = _targets.GetRandomElement();
         _movementAgent.SetDestination(target.transform.position, true);

@@ -32,7 +32,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3895268208643040504}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.6, y: 23.74, z: 8.3}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8749694147761891986}
@@ -51,9 +51,9 @@ Rigidbody:
   m_Drag: 1
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!136 &6445876538445215118
 CapsuleCollider:
@@ -65,10 +65,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.25
+  m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &-299588837507417560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,9 +95,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a80c88de8082f4eb1b6efc5d4af31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onDamage:
-    m_PersistentCalls:
-      m_Calls: []
   onDeath:
     m_PersistentCalls:
       m_Calls:
@@ -125,7 +122,6 @@ MonoBehaviour:
         m_CallState: 2
   team: 1
   <MaxHitpoints>k__BackingField: 25
-  <Hitpoints>k__BackingField: 0
 --- !u!114 &6714567697864151312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,7 +148,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1.2
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!114 &6531610023188834774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,7 +164,6 @@ MonoBehaviour:
   speed: 6
   stoppingDistance: 1
   turnSpeed: 10
-  _hasArrived: 0
 --- !u!114 &1489985236975754127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,6 +178,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpBarPrefab: {fileID: 211962310666974151, guid: 0363b05f9d394f74a8f9c5f67672091b,
     type: 3}
+  hpBarOffset: 2
 --- !u!1 &5511030855311296878
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,8 +205,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5511030855311296878}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 215742062677165939}
   m_RootOrder: 0

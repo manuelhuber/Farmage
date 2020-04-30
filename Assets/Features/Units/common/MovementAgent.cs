@@ -17,6 +17,7 @@ public class MovementAgent : MonoBehaviour {
     private int _currentNode = -1;
     private MapManager _mapManager;
     private Action _cancelPath;
+    private Rigidbody _rigidbody;
 
     private void OnDrawGizmos() {
         var prev = transform.position;
@@ -29,9 +30,10 @@ public class MovementAgent : MonoBehaviour {
 
     private void Awake() {
         _mapManager = MapManager.Instance;
+        _rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void Update() {
+    private void FixedUpdate() {
         if (IsStopped || _currentNode < 0) return;
         var nextTarget = _path[_currentNode];
         var trans = transform;
@@ -40,9 +42,8 @@ public class MovementAgent : MonoBehaviour {
         var neededRotation = Quaternion.LookRotation((nextTarget - position));
         trans.rotation =
             Quaternion.RotateTowards(trans.rotation, neededRotation, Time.deltaTime * turnSpeed * 100);
-        // var moveDir = Vector3.Normalize(nextTarget - position);
-        var newPos = position + trans.forward * (speed * Time.deltaTime);
-        trans.position = newPos;
+        var newPos = position + trans.forward * (speed * Time.fixedDeltaTime);
+        _rigidbody.MovePosition(newPos);
         if (!(math.distance(position, nextTarget) < stoppingDistance)) return;
         _currentNode--;
         if (_currentNode == -1) HasArrived = true;

@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2581871720530791490}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
   m_LocalScale: {x: 1, y: 0.75, z: 2}
   m_Children: []
   m_Father: {fileID: 1331183209462515297}
@@ -147,8 +147,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jobQueue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
   typePriority: 020000000100000000000000
-  activeBehaviour: {fileID: 0}
-  buildings: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376, type: 2}
 --- !u!54 &-5885053916378252448
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -245,7 +243,6 @@ MonoBehaviour:
   speed: 15
   stoppingDistance: 1
   turnSpeed: 10
-  _hasArrived: 0
 --- !u!114 &2607298129412826994
 MonoBehaviour:
   m_ObjectHideFlags: 0
