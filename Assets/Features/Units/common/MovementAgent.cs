@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Features.Pathfinding;
+using Features.Time;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ public class MovementAgent : MonoBehaviour {
     private MapManager _mapManager;
     private Action _cancelPath;
     private Rigidbody _rigidbody;
+    private GameTime _time;
 
     private void OnDrawGizmos() {
         var prev = transform.position;
@@ -30,6 +32,7 @@ public class MovementAgent : MonoBehaviour {
 
     private void Awake() {
         _mapManager = MapManager.Instance;
+        _time = GameTime.Instance;
         _rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -41,8 +44,8 @@ public class MovementAgent : MonoBehaviour {
         nextTarget.y = position.y;
         var neededRotation = Quaternion.LookRotation((nextTarget - position));
         trans.rotation =
-            Quaternion.RotateTowards(trans.rotation, neededRotation, Time.deltaTime * turnSpeed * 100);
-        var newPos = position + trans.forward * (speed * Time.fixedDeltaTime);
+            Quaternion.RotateTowards(trans.rotation, neededRotation, _time.FixedDeltaTime * turnSpeed * 100);
+        var newPos = position + trans.forward * (speed * _time.FixedDeltaTime);
         _rigidbody.MovePosition(newPos);
         if (!(math.distance(position, nextTarget) < stoppingDistance)) return;
         _currentNode--;

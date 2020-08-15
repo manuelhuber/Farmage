@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Features.Health;
+using Features.Time;
 using Features.Units.Common;
 using Grimity.Actions;
 using UnityEngine;
@@ -14,16 +16,18 @@ public class Turret : MonoBehaviour {
     public float attackSpeed;
     public int damage;
     public int range;
+    private GameTime _time;
 
 
-    // Start is called before the first frame update
-    private void Start() {
+    private void Awake() {
+        _time = GameTime.Instance;
         _sphereCollider = gameObject.AddComponent<SphereCollider>();
         _sphereCollider.isTrigger = true;
         _sphereCollider.radius = range;
         _attack = gameObject.AddComponent<PeriodicalAction>();
         _attack.action = Shoot;
         _attack.interval = attackSpeed;
+        _attack.getTime = () => _time.Time;
     }
 
     private bool Shoot() {

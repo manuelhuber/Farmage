@@ -1,6 +1,7 @@
 using Features.Health;
 using Features.Queue;
 using Features.Resources;
+using Features.Time;
 using Features.Units.Common;
 using Grimity.Actions;
 using UnityEngine;
@@ -11,14 +12,17 @@ public class RepairBehaviour : UnitBehaviourBase {
     private PeriodicalAction _repairAction;
     private ResourceManager _resourceManager;
     private Mortal _target;
+    private GameTime _time;
 
     private void Awake() {
+        _time = GameTime.Instance;
         _resourceManager = ResourceManager.Instance;
         _movementAgent = GetComponent<MovementAgent>();
         if (_repairAction == null) _repairAction = gameObject.AddComponent<PeriodicalAction>();
 
         _repairAction.interval = 1;
         _repairAction.initialDelay = true;
+        _repairAction.getTime = () => _time.Time;
         _repairAction.action = () => {
             if (!_resourceManager.Pay(new Cost {cash = 10})) return false;
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Features.Health;
+using Features.Time;
 using Features.Units.Common;
 using Grimity.Actions;
 using Grimity.Collections;
@@ -14,12 +15,15 @@ public class EnemyScript : MonoBehaviour {
     private Mortal _victim;
     public float attackSpeed;
     public int damage = 5;
+    private GameTime _time;
 
 
     private void Awake() {
+        _time = GameTime.Instance;
         _movementAgent = GetComponent<MovementAgent>();
         _attack = gameObject.AddComponent<PeriodicalAction>();
         _attack.interval = attackSpeed;
+        _attack.getTime = () => _time.Time;
         _attack.action = () => {
             _victim.TakeDamage(damage);
             return true;

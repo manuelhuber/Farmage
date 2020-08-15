@@ -1,5 +1,7 @@
-﻿using Features.Queue;
+﻿using System;
+using Features.Queue;
 using Features.Resources;
+using Features.Time;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,6 +12,7 @@ public class WheatField : MonoBehaviour {
     [Required] [SerializeField] private JobMultiQueue queue;
     private bool _waitingForHarvest;
     public int growthDurationS;
+    private GameTime _time;
 
     private void Update() {
         if (_waitingForHarvest) return;
@@ -19,8 +22,12 @@ public class WheatField : MonoBehaviour {
             UpdateProgress();
     }
 
+    private void Awake() {
+        _time = GameTime.Instance;
+    }
+
     private void UpdateProgress() {
-        _progress += Time.deltaTime;
+        _progress += _time.DeltaTime;
     }
 
     private void FinishGrowth() {

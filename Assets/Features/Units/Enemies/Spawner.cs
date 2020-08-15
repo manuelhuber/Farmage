@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Features.Health;
+using Features.Time;
 using Grimity.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Features.Units.Enemies {
 public class Spawner : MonoBehaviour {
@@ -10,6 +13,7 @@ public class Spawner : MonoBehaviour {
 
     private float _lastSpawn;
     public GameObject enemyPrefab;
+    private GameTime _time;
 
     [InfoBox("Min/Max number of enemies spawned per wave")]
     public RangeInt spawnCount = new RangeInt(1, 1);
@@ -17,10 +21,14 @@ public class Spawner : MonoBehaviour {
     public GameObject[] spawnPoints;
     public float waveInterval = 5f;
 
+    private void Awake() {
+        _time = GameTime.Instance;
+    }
+
     private void Update() {
-        if (Time.time - _lastSpawn < waveInterval) return;
+        if (_time.Time - _lastSpawn < waveInterval) return;
         _hqs = GameObject.FindGameObjectsWithTag("HQ");
-        _lastSpawn = Time.time;
+        _lastSpawn = _time.Time;
         var count = Random.Range(spawnCount.start, spawnCount.end);
         var offset = 0;
         for (var i = 0; i < count; i++) {

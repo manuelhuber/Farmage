@@ -1,5 +1,6 @@
 using System;
 using Features.Health;
+using Features.Time;
 using Grimity.Actions;
 using UnityEngine;
 
@@ -11,9 +12,12 @@ public class FieldTower : MonoBehaviour {
 
     private PeriodicalAction _shieldRegeneration;
     public int SphereHp;
+    private GameTime _time;
 
     private void Awake() {
+        _time = GameTime.Instance;
         _shieldRegeneration = gameObject.AddComponent<PeriodicalAction>();
+        _shieldRegeneration.getTime = () => _time.Time;
         _shieldRegeneration.interval = 1;
     }
 
