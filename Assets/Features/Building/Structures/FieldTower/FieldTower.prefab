@@ -342,6 +342,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FieldTower
       objectReference: {fileID: 0}
+    - target: {fileID: 2211836723595585756, guid: 367f8f4e80502e14a8ef8a46497b32b7,
+        type: 3}
+      propertyPath: PrefabName
+      value: FieldTower
+      objectReference: {fileID: 0}
     - target: {fileID: 8703393173598853011, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: m_LocalPosition.x

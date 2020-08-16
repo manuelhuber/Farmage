@@ -122,6 +122,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: WheatField
       objectReference: {fileID: 0}
+    - target: {fileID: 2211836723595585756, guid: 367f8f4e80502e14a8ef8a46497b32b7,
+        type: 3}
+      propertyPath: PrefabName
+      value: WheatField
+      objectReference: {fileID: 0}
     - target: {fileID: 2744936451345570462, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: displayName

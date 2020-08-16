@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Features.Common;
 using Features.Pathfinding;
+using Features.Save;
 using Features.Time;
+using Ludiq.PeekCore.TinyJson;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace Features.Units.Common {
-public class MovementAgent : MonoBehaviour {
+public class MovementAgent : MonoBehaviour, ISavableComponent {
     public float speed = 3f;
     public float stoppingDistance = 1f;
     public float turnSpeed = 10f;
@@ -67,5 +71,24 @@ public class MovementAgent : MonoBehaviour {
             }
         });
     }
+
+    public string SaveKey => "MovementAgent";
+    
+    public string Save() {
+        var movementData = new MovementData {destination = SerialisableVector3.From(_path[0])};
+        Debug.Log("Saving destination");
+        Debug.Log(_path[0]);
+        return movementData.ToJson();
+    }
+
+    public void Load(string data, IReadOnlyDictionary<string, GameObject> objects) {
+        var movementData = data.FromJson<MovementData>();
+        SetDestination(movementData.destination.To());
+    }
+}
+
+[Serializable]
+struct MovementData {
+    public SerialisableVector3 destination;
 }
 }
