@@ -23,7 +23,7 @@ public struct Cost {
     }
 
     public static bool operator >=(Cost a, Cost b) {
-        return a.cash >= b.cash;
+        return b <= a;
     }
 
     public override string ToString() {

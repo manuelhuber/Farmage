@@ -1,16 +1,12 @@
-﻿using System;
-using Boo.Lang;
-using Grimity.Data;
+﻿using Grimity.Data;
 using Grimity.Singleton;
 using UnityEngine.UI;
 
 namespace Features.Resources {
 public class ResourceManager : GrimitySingleton<ResourceManager> {
-    private readonly List<Tuple<Cost, Action<bool>>> _callbacks = new List<Tuple<Cost, Action<bool>>>();
-
     private Text _text;
     private Observable<Cost> _have = new Observable<Cost>(new Cost());
-    public Grimity.Data.IObservable<Cost> Have => _have;
+    public IObservable<Cost> Have => _have;
 
     private void Start() {
         Add(new Cost {cash = 100});

@@ -1,5 +1,4 @@
-﻿using System;
-using Features.Queue;
+﻿using Features.Queue;
 using Features.Resources;
 using Features.Time;
 using Sirenix.OdinInspector;
