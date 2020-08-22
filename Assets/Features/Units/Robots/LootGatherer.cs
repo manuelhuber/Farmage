@@ -16,39 +16,53 @@ public class LootGatherer : UnitBehaviourBase, ISavableComponent {
     private MovementAgent _movementAgent;
     private Storage _targetStorage;
     public RuntimeGameObjectSet buildings;
+    private bool _isCarryingLoot;
 
     private void Awake() {
         _movementAgent = GetComponent<MovementAgent>();
     }
 
     public override bool Init(Task task) {
-        return StartGathering(task.payload);
+        var target = FindStorage(task.payload);
+        if (target == null) return false;
+        StartGathering(task.payload, target);
+        return true;
     }
 
-    private bool StartGathering(GameObject loot) {
-        var item = loot.GetComponent<Storable>();
-        var target = buildings.Items.Select(o => o.GetComponent<Storage>())
+    private Storage FindStorage(GameObject loot) {
+        var storable = loot.GetComponent<Storable>();
+        return buildings.Items.Select(o => o.GetComponent<Storage>())
             .Where(storage => storage != null)
-            .FirstOrDefault(storage => item.IsType(storage.type));
-        if (target == null) return false;
+            .FirstOrDefault(storage => storable.IsType(storage.type));
+    }
 
+    private void StartGathering(GameObject loot, Storage storage) {
         _loot = loot;
-        _targetStorage = target;
+        _isCarryingLoot = false;
+        _targetStorage = storage;
         _movementAgent.SetDestination(_loot.transform.position);
         _movementAgent.IsStopped = false;
-        return true;
     }
 
     private void OnTriggerEnter(Collider other) {
         if (_loot == null) return;
-        if (other.gameObject == _loot.gameObject)
+        var o = other.gameObject;
+        var isLoot = o == _loot.gameObject;
+        var isStorage = o == _targetStorage.gameObject;
+        if (isLoot) {
             PickupLoot();
-        else if (other.gameObject == _targetStorage.gameObject) DeliverLoot();
+        } else if (_isCarryingLoot && isStorage) {
+            DeliverLoot();
+        }
     }
 
     private void DeliverLoot() {
-        _loot.transform.parent = null;
-        _targetStorage.Deliver(_loot.GetComponent<Storable>());
+        if (!_targetStorage.Deliver(_loot.GetComponent<Storable>())) {
+            Debug.LogWarning("Couldn't deliver item - code a solution for this problem!");
+            return;
+        }
+
+        _isCarryingLoot = false;
         _movementAgent.IsStopped = true;
         _loot = null;
         CompleteTask();
@@ -56,6 +70,7 @@ public class LootGatherer : UnitBehaviourBase, ISavableComponent {
 
     private void PickupLoot() {
         _loot.transform.parent = transform;
+        _isCarryingLoot = true;
         _movementAgent.SetDestination(_targetStorage.transform.position);
     }
 
@@ -74,20 +89,27 @@ public class LootGatherer : UnitBehaviourBase, ISavableComponent {
     public string SaveKey => "LootGatherer";
 
     public string Save() {
-        return new LootGathererData {loot = _loot.getSaveID()}.ToJson();
+        return new LootGathererData {
+            loot = _loot.getSaveID(), isCarryingLoot = _isCarryingLoot,
+            targetStorage = _targetStorage.getSaveID()
+        }.ToJson();
     }
 
     public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
         var data = rawData.FromJson<LootGathererData>();
         var loot = objects.getBySaveID(data.loot);
-        if (loot != null) {
-            StartGathering(loot);
-        }
+        var targetStorage = objects.getBySaveID(data.targetStorage);
+        if (loot == null) return;
+        StartGathering(loot, targetStorage.GetComponent<Storage>());
+        if (!data.isCarryingLoot) return;
+        PickupLoot();
     }
 }
 
 [Serializable]
 internal struct LootGathererData {
     public string loot;
+    public string targetStorage;
+    public bool isCarryingLoot;
 }
 }

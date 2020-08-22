@@ -32,6 +32,7 @@ public class SavableObject : SavableData {
         trans.rotX = rotation.x;
         trans.rotZ = rotation.z;
         trans.rotY = rotation.y;
+        trans.rotW = rotation.w;
 
         saveData["transform"] = trans.ToJson();
     }
@@ -44,6 +45,13 @@ public class SavableObject : SavableData {
             trans.posZ
         );
         transform.position = pos;
+        var rot = new Quaternion(
+            trans.rotX,
+            trans.rotY,
+            trans.rotZ,
+            trans.rotW
+        );
+        transform.rotation = rot;
     }
 }
 
@@ -56,5 +64,6 @@ public struct TransformData {
     public float rotX;
     public float rotZ;
     public float rotY;
+    public float rotW;
 }
 }
