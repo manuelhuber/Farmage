@@ -81,15 +81,16 @@ public class Turret : MonoBehaviour, ISavableComponent {
 
     public string Save() {
         return new TurretData {
-            currentTarget = _currentTarget.GetInstanceID().ToString(),
+            currentTarget = _currentTarget.getSaveID(),
             nextAttack = _attack.NextExecution
         }.ToJson();
     }
 
-    public void Load(string data, IReadOnlyDictionary<string, GameObject> objects) {
-        var turretData = data.FromJson<TurretData>();
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        var turretData = rawData.FromJson<TurretData>();
         _currentTarget = objects[turretData.currentTarget].GetComponent<Mortal>();
         _attack.SetNextExecution(turretData.nextAttack);
+        _attack.IsRunning = true;
     }
 }
 

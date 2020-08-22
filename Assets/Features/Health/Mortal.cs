@@ -1,15 +1,19 @@
-﻿using Grimity.Data;
+﻿using System;
+using System.Collections.Generic;
+using Features.Save;
+using Grimity.Data;
+using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Features.Health {
-public class Mortal : MonoBehaviour {
+public class Mortal : MonoBehaviour, ISavableComponent {
     public UnityEvent onDeath = new UnityEvent();
     public Team team;
 
     [field: SerializeField] public int MaxHitpoints { get; set; }
 
-    public IObservable<int> Hitpoints => _hitpoints;
+    public Grimity.Data.IObservable<int> Hitpoints => _hitpoints;
     private Observable<int> _hitpoints = new Observable<int>(0);
 
     private void Awake() {
@@ -27,6 +31,21 @@ public class Mortal : MonoBehaviour {
             Die();
         }
     }
+
+    public string SaveKey => "Mortal";
+
+    public string Save() {
+        return new MortalData {hp = _hitpoints.Value}.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        _hitpoints.Set(rawData.FromJson<MortalData>().hp);
+    }
+}
+
+[Serializable]
+struct MortalData {
+    public int hp;
 }
 
 public enum Team {

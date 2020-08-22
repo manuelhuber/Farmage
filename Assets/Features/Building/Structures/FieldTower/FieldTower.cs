@@ -59,8 +59,8 @@ public class FieldTower : MonoBehaviour, ISavableComponent {
         return data.ToJson();
     }
 
-    public void Load(string jsonData, IReadOnlyDictionary<string, GameObject> objects) {
-        var data = jsonData.FromJson<FieldTowerData>();
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        var data = rawData.FromJson<FieldTowerData>();
         if (data.shieldRebuildTimestamp >= 0) {
             this.Do(() => BuildSphere(sphereHp)).withTime(_time.getTime).At(data.shieldRebuildTimestamp);
         } else {

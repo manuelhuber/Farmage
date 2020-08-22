@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 5920640029651094403}
   - component: {fileID: 6531610023188834774}
   - component: {fileID: 1489985236975754127}
+  - component: {fileID: 6723573975505299911}
   m_Layer: 0
   m_Name: Bobling
   m_TagString: Untagged
@@ -179,6 +180,19 @@ MonoBehaviour:
   hpBarPrefab: {fileID: 211962310666974151, guid: 0363b05f9d394f74a8f9c5f67672091b,
     type: 3}
   hpBarOffset: 2
+--- !u!114 &6723573975505299911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3895268208643040504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 858e061d5a2e4ce09cf2a299e739793e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PrefabName: Bobling
 --- !u!1 &5511030855311296878
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,6 @@ namespace Features.Save {
 public interface ISavableComponent {
     string SaveKey { get; }
     string Save();
-    void Load(string data, IReadOnlyDictionary<string, GameObject> objects);
+    void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects);
 }
 }

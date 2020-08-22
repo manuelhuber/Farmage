@@ -31,8 +31,8 @@ public class GameTime : GrimitySingleton<GameTime>, ISavableComponent {
         return Time.ToString();
     }
 
-    public void Load(string data, IReadOnlyDictionary<string, GameObject> objects) {
-        Time = float.Parse(data);
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        Time = float.Parse(rawData);
     }
 }
 }

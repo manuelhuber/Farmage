@@ -85,9 +85,9 @@ public class MovementAgent : MonoBehaviour, ISavableComponent {
         return movementData.ToJson();
     }
 
-    public void Load(string data, IReadOnlyDictionary<string, GameObject> objects) {
-        if (data.Length < 1) return;
-        var movementData = data.FromJson<MovementData>();
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        if (rawData.Length < 1) return;
+        var movementData = rawData.FromJson<MovementData>();
         SetDestination(movementData.destination.To());
     }
 }

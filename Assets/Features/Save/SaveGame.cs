@@ -19,7 +19,7 @@ public class SaveGame : MonoBehaviour {
 
         var saveObjects = new Dictionary<string, Dictionary<string, string>>();
         foreach (var savableData in FindObjectsOfType<SavableObject>()) {
-            saveObjects[savableData.GetInstanceID().ToString()] = savableData.Save();
+            saveObjects[savableData.getSaveID()] = savableData.Save();
         }
 
         save.Data = saveData;
