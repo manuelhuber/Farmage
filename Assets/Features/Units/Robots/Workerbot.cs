@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Features.Queue;
+using Features.Save;
+using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Units.Robots {
-public class Workerbot : MonoBehaviour {
-    [SerializeField] private JobMultiQueue jobQueue = null;
+public class Workerbot : MonoBehaviour, ISavableComponent {
+    [SerializeField] private JobMultiQueue jobQueue;
     [SerializeField] private TaskType[] typePriority = new TaskType[0];
 
     private Task _currentTask;
@@ -24,9 +28,13 @@ public class Workerbot : MonoBehaviour {
         foreach (var unitBehaviourBase in _behaviours.Values) {
             unitBehaviourBase.enabled = false;
         }
+
+        Debug.Log("AWAKE");
     }
 
     private void Start() {
+        Debug.Log("START");
+
         StartCoroutine(GetNewTask());
     }
 
@@ -41,12 +49,15 @@ public class Workerbot : MonoBehaviour {
             foreach (var type in typePriority) {
                 var task = jobQueue.Dequeue(type,
                     t => Vector3.Distance(t.payload.transform.position, position));
+                if (!task.HasValue) continue;
 
                 var newBehaviour = _behaviours[type];
-                if (task == null) continue;
                 Debug.Log($"{transform.name} dequeued task {task}");
+                if (!newBehaviour.Init(task.Value)) {
+                    jobQueue.Enqueue(task.Value);
+                    continue;
+                }
 
-                if (!newBehaviour.Init(task.Value)) continue;
                 _currentTask = task.Value;
                 _activeBehaviour = newBehaviour;
                 _activeBehaviour.enabled = true;
@@ -60,7 +71,7 @@ public class Workerbot : MonoBehaviour {
     }
 
 
-    private void ResetBehaviour(bool requeue) {
+    private void ResetBehaviour(bool requeueCurrentTask) {
         if (_activeBehaviour != null) {
             _activeBehaviour.TaskCompleted.RemoveAllListeners();
             _activeBehaviour.TaskAbandoned.RemoveAllListeners();
@@ -68,9 +79,27 @@ public class Workerbot : MonoBehaviour {
             _activeBehaviour = null;
         }
 
-        if (requeue) jobQueue.Enqueue(_currentTask);
+        if (requeueCurrentTask) jobQueue.Enqueue(_currentTask);
 
         StartCoroutine(GetNewTask());
     }
+
+    public string SaveKey => "workerbot";
+
+    public string Save() {
+        var activeType = _behaviours.FirstOrDefault(pair => pair.Value == _activeBehaviour).Key;
+
+        return new WorkerbotData {active = activeType}.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        var data = rawData.FromJson<WorkerbotData>();
+        _activeBehaviour = _behaviours[data.active];
+    }
+}
+
+[Serializable]
+internal struct WorkerbotData {
+    public TaskType active;
 }
 }

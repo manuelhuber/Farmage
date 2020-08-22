@@ -97,13 +97,17 @@ public class EnemyScript : MonoBehaviour, ISavableComponent {
     public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
         var data = rawData.FromJson<EnemyData>();
         _attack.SetNextExecution(data.nextAttack);
-        SetTarget(objects[data.target].GetComponent<Mortal>());
         _targets = data.targets.Select(t => objects[t].GetComponent<Mortal>()).ToList();
+
+        var target = objects.getBySaveID(data.target);
+        if (target != null) {
+            SetTarget(target.GetComponent<Mortal>());
+        }
     }
 }
 
 [Serializable]
-struct EnemyData {
+internal struct EnemyData {
     public string target;
     public string[] targets;
     public float nextAttack;

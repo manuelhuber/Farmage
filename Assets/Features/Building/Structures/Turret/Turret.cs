@@ -51,7 +51,11 @@ public class Turret : MonoBehaviour, ISavableComponent {
             return;
         }
 
-        _currentTarget = _targets.First();
+        SetTarget(_targets.First());
+    }
+
+    private void SetTarget(Mortal newTarget) {
+        _currentTarget = newTarget;
         _attack.IsRunning = true;
     }
 
@@ -88,9 +92,11 @@ public class Turret : MonoBehaviour, ISavableComponent {
 
     public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
         var turretData = rawData.FromJson<TurretData>();
-        _currentTarget = objects[turretData.currentTarget].GetComponent<Mortal>();
         _attack.SetNextExecution(turretData.nextAttack);
-        _attack.IsRunning = true;
+        var target = objects.getBySaveID(turretData.currentTarget)?.GetComponent<Mortal>();
+        if (target != null) {
+            SetTarget(target);
+        }
     }
 }
 

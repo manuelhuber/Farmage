@@ -18,7 +18,7 @@ public class JobMultiQueue : ScriptableObject {
     }
 
     public Task? Dequeue(TaskType type, Func<Task, float> prioritisation = null) {
-        if (!Tasks.TryGetValue(type, out var tasks) || tasks.Count == 0) return null;
+        if (!Tasks.TryGetValue(type, out var tasks) || tasks.Count == 0) return new Task?();
         var task = prioritisation == null ? tasks[0] : tasks.OrderBy(prioritisation).First();
         tasks.Remove(task);
         return task;

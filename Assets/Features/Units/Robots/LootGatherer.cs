@@ -1,13 +1,17 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Features.Building.Structures.Warehouse;
 using Features.Items;
 using Features.Queue;
+using Features.Save;
 using Features.Units.Common;
 using Grimity.ScriptableObject;
+using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Units.Robots {
-public class LootGatherer : UnitBehaviourBase {
+public class LootGatherer : UnitBehaviourBase, ISavableComponent {
     private GameObject _loot;
     private MovementAgent _movementAgent;
     private Storage _targetStorage;
@@ -18,13 +22,17 @@ public class LootGatherer : UnitBehaviourBase {
     }
 
     public override bool Init(Task task) {
-        var item = task.payload.GetComponent<Storable>();
+        return StartGathering(task.payload);
+    }
+
+    private bool StartGathering(GameObject loot) {
+        var item = loot.GetComponent<Storable>();
         var target = buildings.Items.Select(o => o.GetComponent<Storage>())
             .Where(storage => storage != null)
             .FirstOrDefault(storage => item.IsType(storage.type));
         if (target == null) return false;
 
-        _loot = task.payload;
+        _loot = loot;
         _targetStorage = target;
         _movementAgent.SetDestination(_loot.transform.position);
         _movementAgent.IsStopped = false;
@@ -62,5 +70,24 @@ public class LootGatherer : UnitBehaviourBase {
         _loot.transform.parent = null;
         _loot = null;
     }
+
+    public string SaveKey => "LootGatherer";
+
+    public string Save() {
+        return new LootGathererData {loot = _loot.getSaveID()}.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        var data = rawData.FromJson<LootGathererData>();
+        var loot = objects.getBySaveID(data.loot);
+        if (loot != null) {
+            StartGathering(loot);
+        }
+    }
+}
+
+[Serializable]
+internal struct LootGathererData {
+    public string loot;
 }
 }

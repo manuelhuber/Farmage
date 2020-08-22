@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4803615821640408873}
   - component: {fileID: 216447116440646007}
   - component: {fileID: 4559078122192643616}
+  - component: {fileID: -6654236955291886222}
   m_Layer: 0
   m_Name: MeatLoot
   m_TagString: Untagged
@@ -76,6 +77,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-6654236955291886222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2944708649086578826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 858e061d5a2e4ce09cf2a299e739793e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PrefabName: MeatCube
 --- !u!1 &8373831559297018435
 GameObject:
   m_ObjectHideFlags: 0

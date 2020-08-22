@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 2607298129412826994}
   - component: {fileID: -6767163819383056807}
   - component: {fileID: -7586454728064880000}
+  - component: {fileID: 6758092825325677999}
   m_Layer: 0
   m_Name: Workerbot
   m_TagString: Untagged
@@ -280,3 +281,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc52df5253aa42abbddc2d122917734d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6758092825325677999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7329494047211502047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 858e061d5a2e4ce09cf2a299e739793e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PrefabName: WorkerBot

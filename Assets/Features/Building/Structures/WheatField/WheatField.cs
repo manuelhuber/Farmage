@@ -1,11 +1,15 @@
-﻿using Features.Queue;
+﻿using System;
+using System.Collections.Generic;
+using Features.Queue;
 using Features.Resources;
+using Features.Save;
 using Features.Time;
+using Ludiq.PeekCore.TinyJson;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Features.Building.Structures.WheatField {
-public class WheatField : MonoBehaviour {
+public class WheatField : MonoBehaviour, ISavableComponent {
     public Cost harvestValue;
     private float _progress;
     [Required] [SerializeField] private JobMultiQueue queue;
@@ -40,5 +44,23 @@ public class WheatField : MonoBehaviour {
         _progress = 0;
         return harvestValue;
     }
+
+    public string SaveKey => "WheatField";
+
+    public string Save() {
+        return new WheatFieldData {progress = _progress, waitingForHarvest = _waitingForHarvest}.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        var data = rawData.FromJson<WheatFieldData>();
+        _progress = data.progress;
+        _waitingForHarvest = data.waitingForHarvest;
+    }
+}
+
+[Serializable]
+internal struct WheatFieldData {
+    public float progress;
+    public bool waitingForHarvest;
 }
 }
