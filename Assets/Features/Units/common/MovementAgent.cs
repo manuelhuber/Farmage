@@ -73,8 +73,12 @@ public class MovementAgent : MonoBehaviour, ISavableComponent {
     }
 
     public string SaveKey => "MovementAgent";
-    
+
     public string Save() {
+        if (_path.Length < 1) {
+            return "";
+        }
+
         var movementData = new MovementData {destination = SerialisableVector3.From(_path[0])};
         Debug.Log("Saving destination");
         Debug.Log(_path[0]);
@@ -82,6 +86,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent {
     }
 
     public void Load(string data, IReadOnlyDictionary<string, GameObject> objects) {
+        if (data.Length < 1) return;
         var movementData = data.FromJson<MovementData>();
         SetDestination(movementData.destination.To());
     }

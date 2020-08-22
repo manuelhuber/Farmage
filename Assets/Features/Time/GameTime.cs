@@ -23,6 +23,10 @@ public class GameTime : GrimitySingleton<GameTime>, ISavableComponent {
 
     public string SaveKey => "GameTime";
 
+    public float getTime() {
+        return Time;
+    }
+
     public string Save() {
         return Time.ToString();
     }

@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Features.Common;
 using Features.Health;
+using Features.Save;
 using Features.Time;
-using Features.Units.Common;
 using Grimity.Actions;
+using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Building.Structures.Turret {
-public class Turret : MonoBehaviour {
+public class Turret : MonoBehaviour, ISavableComponent {
     private readonly List<Mortal> _targets = new List<Mortal>();
     private PeriodicalAction _attack;
     private Mortal _currentTarget;
-    private SphereCollider _sphereCollider;
     public float attackSpeed;
     public int damage;
     public int range;
@@ -21,13 +22,22 @@ public class Turret : MonoBehaviour {
 
     private void Awake() {
         _time = GameTime.Instance;
-        _sphereCollider = gameObject.AddComponent<SphereCollider>();
-        _sphereCollider.isTrigger = true;
-        _sphereCollider.radius = range;
         _attack = gameObject.AddComponent<PeriodicalAction>();
+        _attack.initialDelay = true;
         _attack.action = Shoot;
         _attack.interval = attackSpeed;
         _attack.getTime = () => _time.Time;
+        CreateRangeCollider();
+    }
+
+    private void CreateRangeCollider() {
+        var rangeObject = new GameObject("Range");
+        rangeObject.transform.SetParent(transform);
+        rangeObject.transform.localPosition = Vector3.zero;
+        var rangeCollider = rangeObject.AddComponent<RangeCollider>();
+        rangeCollider.Range = range;
+        rangeCollider.OnEnter(OnEnterRange);
+        rangeCollider.OnExit(OnLeaveRange);
     }
 
     private bool Shoot() {
@@ -46,7 +56,7 @@ public class Turret : MonoBehaviour {
     }
 
 
-    private void OnTriggerEnter(Collider other) {
+    private void OnEnterRange(Collider other) {
         var target = other.gameObject.GetComponent<Mortal>();
         if (target == null || target.team != Team.Aliens) return;
 
@@ -62,9 +72,30 @@ public class Turret : MonoBehaviour {
         if (_currentTarget == target) GetNewTarget();
     }
 
-    private void OnTriggerExit(Collider other) {
+    private void OnLeaveRange(Collider other) {
         var target = other.gameObject.GetComponent<Mortal>();
         RemoveTarget(target);
     }
+
+    public string SaveKey => "Turret";
+
+    public string Save() {
+        return new TurretData {
+            currentTarget = _currentTarget.GetInstanceID().ToString(),
+            nextAttack = _attack.NextExecution
+        }.ToJson();
+    }
+
+    public void Load(string data, IReadOnlyDictionary<string, GameObject> objects) {
+        var turretData = data.FromJson<TurretData>();
+        _currentTarget = objects[turretData.currentTarget].GetComponent<Mortal>();
+        _attack.SetNextExecution(turretData.nextAttack);
+    }
+}
+
+[Serializable]
+internal struct TurretData {
+    public string currentTarget;
+    public float nextAttack;
 }
 }
