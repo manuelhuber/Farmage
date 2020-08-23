@@ -3,10 +3,10 @@ using System.Linq;
 using Features.Building.BuildMenu;
 using Features.Building.Placement;
 using Features.Resources;
-using Grimity.Cursor;
 using Grimity.Data;
-using Grimity.Math;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Features.Building.UI {
 public struct BuildingOption {
@@ -18,13 +18,12 @@ public struct BuildingOption {
 public class BuildingManager : MonoBehaviour {
     public Grimity.Data.IObservable<BuildingOption[]> BuildingOptions => _buildingOptions;
 
-    [SerializeField] private PlacementSettings placementSettings = null;
+    [SerializeField] private PlacementSettings placementSettings;
     [SerializeField] private LayerMask terrainLayer = 0;
-    [SerializeField] private BuildMenu.BuildMenu buildMenu = null;
+    [SerializeField] private BuildMenu.BuildMenu buildMenu;
     [SerializeField] private int gridSize = 4;
 
-    private UnityEngine.Camera _camera;
-    private bool _dragObject;
+    private bool _hasActivePlaceable;
     private Placeable _placeable;
     private ResourceManager _resourceManager;
     private BuildingMenuEntry _selected;
@@ -34,8 +33,6 @@ public class BuildingManager : MonoBehaviour {
 
     private void Awake() {
         _resourceManager = ResourceManager.Instance;
-        _camera = GetComponent<UnityEngine.Camera>();
-        if (_camera == null) _camera = UnityEngine.Camera.main;
     }
 
     private void Start() {
@@ -46,28 +43,18 @@ public class BuildingManager : MonoBehaviour {
     }
 
     private void Update() {
-        if (_dragObject) {
-            var pos = MouseToTerrain().point;
-            var size = _selected.buildingPrefab.GetComponent<Structures.Building>().size;
-            pos.x = MathUtils.RoundToMultiple(pos.x, gridSize, size.x.IsEven());
-            pos.z = MathUtils.RoundToMultiple(pos.z, gridSize, size.y.IsEven());
-            _placeable.transform.position = pos;
-        }
-
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            _dragObject = false;
-            if (_placeable != null) {
-                Destroy(_placeable.gameObject);
-                _placeable = null;
-            }
+            DetachFromCursor();
         }
 
-        if (Input.GetMouseButtonDown(0) && _dragObject) PlaceBuilding();
+        var clickedOnUi = EventSystem.current.IsPointerOverGameObject();
+        if (_hasActivePlaceable && Input.GetMouseButtonDown(0) && !clickedOnUi)
+            PlaceBuilding();
     }
 
     private void UpdateSelectedBuilding() {
-        if (!_dragObject) return;
-        _placeable.CanBePayedFor = _resourceManager.CanBePayed(_selected.cost);
+        if (!_hasActivePlaceable) return;
+        _placeable.MayBePlaced.Set(_resourceManager.CanBePayed(_selected.cost));
     }
 
     private void UpdateBuildingOptions() {
@@ -79,46 +66,50 @@ public class BuildingManager : MonoBehaviour {
     }
 
     private void SelectBuilding(BuildingMenuEntry menuEntry) {
-        if (_dragObject) {
-            DettachFromCursor();
+        if (_hasActivePlaceable) {
+            DetachFromCursor();
         }
 
         _selected = menuEntry;
-        AttachToCursor(menuEntry.previewPrefab);
+        AttachToCursor(menuEntry.previewPrefab,
+            menuEntry.buildingPrefab.GetComponent<Structures.Building>().size);
     }
 
-    private void AttachToCursor(GameObject prefab) {
+    private void AttachToCursor(GameObject prefab, int2 buildingSize) {
         var building = Instantiate(prefab);
         _placeable = building.AddComponent<Placeable>();
-        _placeable.CanBePayedFor = true;
-        _placeable.terrainLayer = terrainLayer;
-        _placeable.settings = placementSettings;
-        _dragObject = true;
+        _placeable.Init(placementSettings,
+            terrainLayer,
+            buildingSize,
+            gridSize);
+
+        _placeable.MayBePlaced.Set(true);
+        _hasActivePlaceable = true;
     }
 
     private void PlaceBuilding() {
-        if (!_placeable.CanBePlaced) return;
+        if (!_placeable.CanBePlaced) {
+            Debug.Log("Can't build here!");
+            return;
+        }
+
         if (_resourceManager.Pay(_selected.cost)) {
-            // _placeable.FlattenFloor();
             Instantiate(_selected.buildingPrefab,
                 _placeable.transform.position,
                 _placeable.transform.rotation);
             if (Input.GetKey(KeyCode.LeftShift)) return;
-            DettachFromCursor();
+            DetachFromCursor();
         } else {
             // TODO handle error case
             Debug.Log("Can't pay!");
         }
     }
 
-    private void DettachFromCursor() {
-        _dragObject = false;
-        Destroy(_placeable.gameObject);
-    }
-
-    private RaycastHit MouseToTerrain() {
-        CursorUtil.GetCursorLocation(out var terrainHit, _camera, terrainLayer);
-        return terrainHit;
+    private void DetachFromCursor() {
+        _hasActivePlaceable = false;
+        if (_placeable != null) {
+            Destroy(_placeable.gameObject);
+        }
     }
 }
 }

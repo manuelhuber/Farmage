@@ -129,18 +129,18 @@ public class MapManager : GrimitySingleton<MapManager> {
         origin.y = 50;
         var ray = new Ray(origin, Vector3.down * 100);
         if (!Physics.Raycast(ray, out var hit, 100, terrainLayer)) return;
-        var gridNode = _map.Get2D(z, x, _cellCountX);
+        var gridNode = GetNode(x, z);
         gridNode.IsWalkable = !blockingLayer.Contains(hit.collider.gameObject.layer);
         _map.Put2D(gridNode, z, x, _cellCountX);
     }
 
-    private Vector3 GridToWorldPosition(int x, int z) {
+    public Vector3 GridToWorldPosition(int x, int z) {
         return new Vector3(x * cellSize - sizeX / 2 + cellSize / 2,
             0,
             z * cellSize - sizeZ / 2 + cellSize / 2);
     }
 
-    private int2 WorldPositionToNode(Vector3 pos) {
+    public int2 WorldPositionToNode(Vector3 pos) {
         var transformPosition = transform.position;
         var start = transformPosition - new Vector3(sizeX / 2, 0, sizeZ / 2);
         var end = transformPosition + new Vector3(sizeX / 2, 0, sizeZ / 2);
@@ -149,6 +149,10 @@ public class MapManager : GrimitySingleton<MapManager> {
         var percentageZ = Mathf.Clamp01((pos.z - start.z - cellSize / 2) / (end.z - start.z));
         return new int2(Mathf.RoundToInt(percentageX * _cellCountX),
             Mathf.RoundToInt(percentageZ * _cellCountZ));
+    }
+
+    public GridNode GetNode(int x, int z) {
+        return _map.Get2D(z, x, _cellCountX);
     }
 
     private void OnDrawGizmos() {

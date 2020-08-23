@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Features.Common {
 public class RangeCollider : MonoBehaviour {
+    public const string RangeColliderTag = "RangeCollider";
     private SphereCollider _sphereCollider;
 
     public float Range {
@@ -21,6 +22,7 @@ public class RangeCollider : MonoBehaviour {
     private void Awake() {
         _sphereCollider = gameObject.AddComponent<SphereCollider>();
         _sphereCollider.isTrigger = true;
+        gameObject.tag = RangeColliderTag;
     }
 
     public void OnEnter(Action<Collider> callback) {

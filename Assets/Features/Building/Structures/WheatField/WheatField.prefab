@@ -132,6 +132,16 @@ PrefabInstance:
       propertyPath: displayName
       value: Field
       objectReference: {fileID: 0}
+    - target: {fileID: 5890649793366211811, guid: 367f8f4e80502e14a8ef8a46497b32b7,
+        type: 3}
+      propertyPath: size.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5890649793366211811, guid: 367f8f4e80502e14a8ef8a46497b32b7,
+        type: 3}
+      propertyPath: size.y
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8703393173598853011, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -9,6 +9,8 @@ using UnityEngine;
 
 namespace Features.Building.Structures.FieldTower {
 public class FieldTower : MonoBehaviour, ISavableComponent {
+    public const string SphereTag = "ForceSphere";
+
     public GameObject spherePrefab;
     public int regenPerSecond;
     public float sphereRebuildDelay = 1f;
@@ -37,6 +39,7 @@ public class FieldTower : MonoBehaviour, ISavableComponent {
     private void BuildSphere(int initialHp) {
         _rebuildAction = null;
         var sphere = Instantiate(spherePrefab, transform).AddComponent<Mortal>();
+        sphere.tag = SphereTag;
         sphere.MaxHitpoints = this.sphereHp;
         sphere.TakeDamage(-initialHp);
         sphere.onDeath.AddListener(() => {

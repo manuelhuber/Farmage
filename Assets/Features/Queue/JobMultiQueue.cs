@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Features.Save;
 using Grimity.Collections;
+using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Queue {
 [CreateAssetMenu(menuName = "queue/multi queue")]
-public class JobMultiQueue : ScriptableObject {
+public class JobMultiQueue : ScriptableObject, ISavableComponent {
     public readonly Dictionary<TaskType, List<Task>> Tasks = new Dictionary<TaskType, List<Task>>();
 
     public int Count(TaskType type) {
@@ -22,6 +24,16 @@ public class JobMultiQueue : ScriptableObject {
         var task = prioritisation == null ? tasks[0] : tasks.OrderBy(prioritisation).First();
         tasks.Remove(task);
         return task;
+    }
+
+    public string SaveKey => "JobMultiQueue";
+
+    public string Save() {
+        return Tasks.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        throw new NotImplementedException();
     }
 }
 }

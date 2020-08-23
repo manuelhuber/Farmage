@@ -25,16 +25,9 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
         _behaviours[TaskType.Loot] = gameObject.GetComponent<LootGatherer>();
         _behaviours[TaskType.Harvest] = gameObject.GetComponent<HarvestBehaviour>();
         _behaviours[TaskType.Repair] = gameObject.GetComponent<RepairBehaviour>();
-        foreach (var unitBehaviourBase in _behaviours.Values) {
-            unitBehaviourBase.enabled = false;
-        }
-
-        Debug.Log("AWAKE");
     }
 
     private void Start() {
-        Debug.Log("START");
-
         StartCoroutine(GetNewTask());
     }
 
@@ -60,7 +53,6 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
 
                 _currentTask = task.Value;
                 _activeBehaviour = newBehaviour;
-                _activeBehaviour.enabled = true;
                 _activeBehaviour.TaskCompleted.AddListener(() => ResetBehaviour(false));
                 _activeBehaviour.TaskAbandoned.AddListener(() => ResetBehaviour(true));
                 yield break;
@@ -75,12 +67,10 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
         if (_activeBehaviour != null) {
             _activeBehaviour.TaskCompleted.RemoveAllListeners();
             _activeBehaviour.TaskAbandoned.RemoveAllListeners();
-            _activeBehaviour.enabled = false;
             _activeBehaviour = null;
         }
 
         if (requeueCurrentTask) jobQueue.Enqueue(_currentTask);
-
         StartCoroutine(GetNewTask());
     }
 
@@ -88,7 +78,6 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
 
     public string Save() {
         var activeType = _behaviours.FirstOrDefault(pair => pair.Value == _activeBehaviour).Key;
-
         return new WorkerbotData {active = activeType}.ToJson();
     }
 

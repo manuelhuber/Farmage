@@ -8,9 +8,9 @@ TagManager:
   - HQ
   - Canvas
   - MainUI
-  - AttackRangeCollider
   - HitpointCanvas
   - ForceSphere
+  - RangeCollider
   layers:
   - Default
   - TransparentFX
