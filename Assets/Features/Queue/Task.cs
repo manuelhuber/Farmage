@@ -16,6 +16,7 @@ public struct Task {
 public enum TaskType {
     Loot,
     Harvest,
-    Repair
+    Repair,
+    Build
 }
 }

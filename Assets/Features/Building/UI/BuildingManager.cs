@@ -1,12 +1,18 @@
 using System;
 using System.Linq;
 using Features.Building.BuildMenu;
+using Features.Building.Construction;
 using Features.Building.Placement;
+using Features.Health;
+using Features.Queue;
 using Features.Resources;
 using Grimity.Data;
+using Grimity.GameObjects;
+using Ludiq.PeekCore;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Task = Features.Queue.Task;
 
 namespace Features.Building.UI {
 public struct BuildingOption {
@@ -18,6 +24,7 @@ public struct BuildingOption {
 public class BuildingManager : MonoBehaviour {
     public Grimity.Data.IObservable<BuildingOption[]> BuildingOptions => _buildingOptions;
 
+    [SerializeField] private JobMultiQueue farmerQueue;
     [SerializeField] private PlacementSettings placementSettings;
     [SerializeField] private LayerMask terrainLayer = 0;
     [SerializeField] private BuildMenu.BuildMenu buildMenu;
@@ -71,12 +78,12 @@ public class BuildingManager : MonoBehaviour {
         }
 
         _selected = menuEntry;
-        AttachToCursor(menuEntry.previewPrefab,
-            menuEntry.buildingPrefab.GetComponent<Structures.Building>().size);
+        AttachSelectionToCursor();
     }
 
-    private void AttachToCursor(GameObject prefab, int2 buildingSize) {
-        var building = Instantiate(prefab);
+    private void AttachSelectionToCursor() {
+        var buildingSize = _selected.buildingPrefab.GetComponent<Structures.Building>().size;
+        var building = Instantiate(_selected.previewPrefab);
         _placeable = building.AddComponent<Placeable>();
         _placeable.Init(placementSettings,
             terrainLayer,
@@ -94,15 +101,21 @@ public class BuildingManager : MonoBehaviour {
         }
 
         if (_resourceManager.Pay(_selected.cost)) {
-            Instantiate(_selected.buildingPrefab,
-                _placeable.transform.position,
-                _placeable.transform.rotation);
-            if (Input.GetKey(KeyCode.LeftShift)) return;
-            DetachFromCursor();
+            CreateConstructionSite();
         } else {
             // TODO handle error case
             Debug.Log("Can't pay!");
         }
+    }
+
+    private void CreateConstructionSite() {
+        var constructionSite = _placeable.gameObject.AddComponent<ConstructionSite>();
+        constructionSite.progressTarget = _selected.buildingPrefab.GetComponent<Mortal>().MaxHitpoints;
+        constructionSite.finalBuildingPrefab = _selected.buildingPrefab;
+        farmerQueue.Enqueue(new Task {type = TaskType.Build, payload = constructionSite.gameObject});
+        Destroy(_placeable);
+        _placeable = null;
+        _hasActivePlaceable = false;
     }
 
     private void DetachFromCursor() {

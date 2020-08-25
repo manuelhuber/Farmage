@@ -852,17 +852,17 @@ PrefabInstance:
     - target: {fileID: 1526782565727457535, guid: 5e2b2aeef4d02a14eb2c63265af78a7a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -37.38
+      value: -36
       objectReference: {fileID: 0}
     - target: {fileID: 1526782565727457535, guid: 5e2b2aeef4d02a14eb2c63265af78a7a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: -1.7102388e-18
       objectReference: {fileID: 0}
     - target: {fileID: 1526782565727457535, guid: 5e2b2aeef4d02a14eb2c63265af78a7a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.34
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1526782565727457535, guid: 5e2b2aeef4d02a14eb2c63265af78a7a,
         type: 3}
@@ -908,6 +908,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Turret
+      objectReference: {fileID: 0}
+    - target: {fileID: 6936962898103013789, guid: 5e2b2aeef4d02a14eb2c63265af78a7a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e2b2aeef4d02a14eb2c63265af78a7a, type: 3}
@@ -2837,6 +2842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f90c93c604f2b14c96b827e184e0e7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  farmerQueue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
   placementSettings: {fileID: 11400000, guid: 9d585bd98fba38942bbaf3813b5eaf1d, type: 2}
   terrainLayer:
     serializedVersion: 2
@@ -4042,7 +4048,7 @@ PrefabInstance:
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -37.95
+      value: -36.6
       objectReference: {fileID: 0}
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
@@ -4052,7 +4058,7 @@ PrefabInstance:
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.83
+      value: 1.43
       objectReference: {fileID: 0}
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
@@ -4098,6 +4104,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}

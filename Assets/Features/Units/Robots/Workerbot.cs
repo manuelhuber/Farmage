@@ -25,6 +25,7 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
         _behaviours[TaskType.Loot] = gameObject.GetComponent<LootGatherer>();
         _behaviours[TaskType.Harvest] = gameObject.GetComponent<HarvestBehaviour>();
         _behaviours[TaskType.Repair] = gameObject.GetComponent<RepairBehaviour>();
+        _behaviours[TaskType.Build] = gameObject.GetComponent<BuildBehaviour>();
     }
 
     private void Start() {

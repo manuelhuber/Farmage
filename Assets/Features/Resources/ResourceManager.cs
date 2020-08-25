@@ -13,7 +13,7 @@ public class ResourceManager : GrimitySingleton<ResourceManager>, ISavableCompon
     public IObservable<Cost> Have => _have;
 
     private void Start() {
-        Add(new Cost {cash = 100});
+        Add(new Cost {cash = 1000});
     }
 
     public Cost Add(Cost change) {

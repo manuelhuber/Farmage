@@ -112,6 +112,7 @@ GameObject:
   - component: {fileID: -6767163819383056807}
   - component: {fileID: -7586454728064880000}
   - component: {fileID: 6758092825325677999}
+  - component: {fileID: -7684090239413587853}
   m_Layer: 0
   m_Name: Workerbot
   m_TagString: Untagged
@@ -147,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jobQueue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
-  typePriority: 020000000100000000000000
+  typePriority: 02000000010000000300000000000000
 --- !u!54 &-5885053916378252448
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -294,3 +295,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PrefabName: WorkerBot
+--- !u!114 &-7684090239413587853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7329494047211502047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5451c48bcc0e4d18ab8618d5c3d8ce48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

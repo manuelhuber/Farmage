@@ -30,6 +30,7 @@ public class Placeable : MonoBehaviour {
     private readonly List<Collider> _collisions = new List<Collider>();
     private MeshRenderer[] _renderer = { };
     private MapManager _mapManager;
+    private BoxCollider _collider;
     private readonly Observable<bool> _isTerrainGood = new Observable<bool>(false);
 
     public void Init(
@@ -41,6 +42,9 @@ public class Placeable : MonoBehaviour {
         terrainLayer = newTerrainLayer;
         size = newSize;
         gridSize = newGridSize;
+        _collider.center = new Vector3(0, -0.5f, 0);
+        _collider.isTrigger = true;
+        _collider.size = new Vector3(size.x, 1, size.y) * gridSize;
     }
 
     private void Awake() {
@@ -49,6 +53,7 @@ public class Placeable : MonoBehaviour {
         _mapManager = MapManager.Instance;
         _isTerrainGood.OnChange(b => { UpdateMaterial(); }, false);
         MayBePlaced.OnChange(b => { UpdateMaterial(); }, false);
+        _collider = gameObject.AddComponent<BoxCollider>();
     }
 
     private void Start() {

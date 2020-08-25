@@ -32,7 +32,7 @@ public class RepairBehaviour : UnitBehaviourBase {
     }
 
     public override void AbandonTask() {
-        Destroy(_repairAction);
+        _repairAction.IsRunning = false;
         base.AbandonTask();
     }
 
@@ -49,7 +49,7 @@ public class RepairBehaviour : UnitBehaviourBase {
     }
 
     private void Complete() {
-        Destroy(_repairAction);
+        _repairAction.IsRunning = false;
         CompleteTask();
     }
 

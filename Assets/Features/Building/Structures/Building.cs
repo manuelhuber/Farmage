@@ -12,7 +12,6 @@ public class Building : MonoBehaviour, ISavableComponent {
     [SerializeField] private JobMultiQueue queue;
     private bool _waitingForRepair;
 
-    // Start is called before the first frame update
     private void Start() {
         var mortal = GetComponent<Mortal>();
         mortal.Hitpoints.OnChange(hitpoints => {
