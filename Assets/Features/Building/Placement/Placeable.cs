@@ -15,7 +15,6 @@ public class Placeable : MonoBehaviour {
     private static readonly string[] IgnoredColliderTags =
         {RangeCollider.RangeColliderTag, FieldTower.SphereTag};
 
-
     public bool CanBePlaced => _isTerrainGood.Value && _collisions.Count == 0 && MayBePlaced.Value;
     public PlacementSettings settings;
     public LayerMask terrainLayer;
@@ -65,10 +64,10 @@ public class Placeable : MonoBehaviour {
         pos.x = MathUtils.RoundToMultiple(pos.x, gridSize, size.x.IsEven());
         pos.z = MathUtils.RoundToMultiple(pos.z, gridSize, size.y.IsEven());
         transform.position = pos;
-        checkTerrain();
+        CheckTerrain();
     }
 
-    private void checkTerrain() {
+    private void CheckTerrain() {
         var pos = transform.position;
         var center = _mapManager.WorldPositionToNode(pos);
         var occupiedNodes = new List<int2>();

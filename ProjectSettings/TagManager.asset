@@ -11,6 +11,7 @@ TagManager:
   - HitpointCanvas
   - ForceSphere
   - RangeCollider
+  - Terrain
   layers:
   - Default
   - TransparentFX

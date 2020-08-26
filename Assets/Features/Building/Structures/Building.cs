@@ -3,12 +3,10 @@ using Features.Health;
 using Features.Queue;
 using Features.Save;
 using Ludiq.PeekCore.TinyJson;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Features.Building.Structures {
 public class Building : MonoBehaviour, ISavableComponent {
-    public int2 size;
     [SerializeField] private JobMultiQueue queue;
     private bool _waitingForRepair;
 

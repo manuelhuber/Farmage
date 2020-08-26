@@ -7,12 +7,9 @@ using Features.Health;
 using Features.Queue;
 using Features.Resources;
 using Grimity.Data;
-using Grimity.GameObjects;
-using Ludiq.PeekCore;
-using Unity.Mathematics;
+using Grimity.Layer;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Task = Features.Queue.Task;
 
 namespace Features.Building.UI {
 public struct BuildingOption {
@@ -29,6 +26,7 @@ public class BuildingManager : MonoBehaviour {
     [SerializeField] private LayerMask terrainLayer = 0;
     [SerializeField] private BuildMenu.BuildMenu buildMenu;
     [SerializeField] private int gridSize = 4;
+    [SerializeField] private LayerMask previewLayer;
 
     private bool _hasActivePlaceable;
     private Placeable _placeable;
@@ -54,9 +52,10 @@ public class BuildingManager : MonoBehaviour {
             DetachFromCursor();
         }
 
+        if (!_hasActivePlaceable || !Input.GetMouseButtonDown(0)) return;
         var clickedOnUi = EventSystem.current.IsPointerOverGameObject();
-        if (_hasActivePlaceable && Input.GetMouseButtonDown(0) && !clickedOnUi)
-            PlaceBuilding();
+        if (clickedOnUi) return;
+        PlaceBuilding();
     }
 
     private void UpdateSelectedBuilding() {
@@ -82,14 +81,12 @@ public class BuildingManager : MonoBehaviour {
     }
 
     private void AttachSelectionToCursor() {
-        var buildingSize = _selected.buildingPrefab.GetComponent<Structures.Building>().size;
-        var building = Instantiate(_selected.previewPrefab);
-        _placeable = building.AddComponent<Placeable>();
+        var preview = Instantiate(_selected.modelPrefab);
+        _placeable = preview.AddComponent<Placeable>();
         _placeable.Init(placementSettings,
             terrainLayer,
-            buildingSize,
+            _selected.size,
             gridSize);
-
         _placeable.MayBePlaced.Set(true);
         _hasActivePlaceable = true;
     }
@@ -112,7 +109,13 @@ public class BuildingManager : MonoBehaviour {
         var constructionSite = _placeable.gameObject.AddComponent<ConstructionSite>();
         constructionSite.progressTarget = _selected.buildingPrefab.GetComponent<Mortal>().MaxHitpoints;
         constructionSite.finalBuildingPrefab = _selected.buildingPrefab;
-        farmerQueue.Enqueue(new Task {type = TaskType.Build, payload = constructionSite.gameObject});
+
+        var constructionSiteGameObject = constructionSite.gameObject;
+        constructionSiteGameObject.layer = LayerUtil.LayerMaskToLayer(previewLayer);
+        constructionSiteGameObject.GetComponent<Collider>().isTrigger = false;
+        constructionSiteGameObject.AddComponent<Rigidbody>().isKinematic = true;
+
+        farmerQueue.Enqueue(new Task {type = TaskType.Build, payload = constructionSiteGameObject});
         Destroy(_placeable);
         _placeable = null;
         _hasActivePlaceable = false;

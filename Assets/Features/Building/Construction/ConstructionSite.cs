@@ -7,13 +7,6 @@ public class ConstructionSite : MonoBehaviour {
     public float progressTarget;
     private float _progress;
 
-    private void Start() {
-        var col = GetComponent<Collider>();
-        col.isTrigger = false;
-        var body = gameObject.AddComponent<Rigidbody>();
-        body.isKinematic = true;
-    }
-
     public bool Build(float effort) {
         _progress += effort;
         if (_progress < progressTarget) return false;
