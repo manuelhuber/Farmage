@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Features.Units.Common {
+namespace Features.Units.Common.Ui {
 public class SingleUnitGui : MonoBehaviour {
+    public Transform detailSection;
     [SerializeField] private Text displayNameText;
     [SerializeField] private Text hpText;
     [SerializeField] private Image icon;

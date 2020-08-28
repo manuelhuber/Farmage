@@ -4,6 +4,7 @@ using Features.Queue;
 using Features.Resources;
 using Features.Save;
 using Features.Time;
+using Grimity.Data;
 using Ludiq.PeekCore.TinyJson;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,15 +12,17 @@ using UnityEngine;
 namespace Features.Building.Structures.WheatField {
 public class WheatField : MonoBehaviour, ISavableComponent {
     public Cost harvestValue;
-    private float _progress;
+    public Grimity.Data.IObservable<float> Progress => _progress;
+
+    private readonly Observable<float> _progress = new Observable<float>(0);
     [Required] [SerializeField] private JobMultiQueue queue;
     private bool _waitingForHarvest;
-    public int growthDurationS;
+    public int growthDurationInSeconds;
     private GameTime _time;
 
     private void Update() {
         if (_waitingForHarvest) return;
-        if (_progress >= growthDurationS)
+        if (_progress.Value >= growthDurationInSeconds)
             FinishGrowth();
         else
             UpdateProgress();
@@ -30,7 +33,7 @@ public class WheatField : MonoBehaviour, ISavableComponent {
     }
 
     private void UpdateProgress() {
-        _progress += _time.DeltaTime;
+        _progress.Set(_progress.Value + _time.DeltaTime);
     }
 
     private void FinishGrowth() {
@@ -41,19 +44,20 @@ public class WheatField : MonoBehaviour, ISavableComponent {
     public Cost Harvest() {
         if (!_waitingForHarvest) return new Cost();
         _waitingForHarvest = false;
-        _progress = 0;
+        _progress.Set(0);
         return harvestValue;
     }
 
     public string SaveKey => "WheatField";
 
     public string Save() {
-        return new WheatFieldData {progress = _progress, waitingForHarvest = _waitingForHarvest}.ToJson();
+        return new WheatFieldData
+            {progress = _progress.Value, waitingForHarvest = _waitingForHarvest}.ToJson();
     }
 
     public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
         var data = rawData.FromJson<WheatFieldData>();
-        _progress = data.progress;
+        _progress.Set(data.progress);
         _waitingForHarvest = data.waitingForHarvest;
     }
 }
