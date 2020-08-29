@@ -51,6 +51,7 @@ public class UnitControlGui : MonoBehaviour {
     private void ActivateSingleUnitGui(Unit current) {
         _singleUnitGui.gameObject.SetActive(true);
         _singleUnitGui.DisplayName = current.displayName;
+        _singleUnitGui.Icon = current.icon;
         InitMortalUi(current);
         InitDetailUi(current);
     }
@@ -68,7 +69,6 @@ public class UnitControlGui : MonoBehaviour {
         var mortal = current.GetComponent<Mortal>();
         if (mortal == null) return;
         _singleUnitGui.MaxHp = mortal.MaxHitpoints;
-        _singleUnitGui.Icon = current.icon;
         mortal.Hitpoints.OnChange(SetSingleUnitCurrentHp);
         _onDeactivate.Add(() => mortal.Hitpoints.RemoveOnChange(SetSingleUnitCurrentHp));
     }

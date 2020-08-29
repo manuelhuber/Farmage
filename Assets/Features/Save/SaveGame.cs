@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Features.Building.BuildMenu;
+using Grimity.Singleton;
 using JetBrains.Annotations;
 using Ludiq.PeekCore;
 using UnityEditor;
@@ -8,7 +10,12 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Features.Save {
-public class SaveGame : MonoBehaviour {
+public class SaveGame : GrimitySingleton<SaveGame> {
+    public Dictionary<string, GameObject> PrefabDict => _prefabDict;
+
+    private Dictionary<string, GameObject> _prefabDict;
+    private Dictionary<string, BuildingMenuEntry> _buildingDict;
+
     [UsedImplicitly]
     public void Save() {
         var save = new SaveData {version = "0.1"};
@@ -30,6 +37,9 @@ public class SaveGame : MonoBehaviour {
 
     [UsedImplicitly]
     public void Load() {
+        _prefabDict = GetSavePrefabs();
+        _buildingDict = GetBuildingMenuEntries();
+
         var loadFile = new SaveFileWriter().LoadFile<SaveData>();
         var saveData = loadFile.Data;
 
@@ -45,7 +55,7 @@ public class SaveGame : MonoBehaviour {
         LoadObjectStates(loadFile, loadedObjects);
     }
 
-    private static void LoadObjectStates(SaveData loadFile, Dictionary<string, GameObject> loadedObjects) {
+    private void LoadObjectStates(SaveData loadFile, Dictionary<string, GameObject> loadedObjects) {
         foreach (var loadFileObject in loadFile.Objects) {
             var objectData = loadFileObject.Value;
             var objectId = loadFileObject.Key;
@@ -54,8 +64,7 @@ public class SaveGame : MonoBehaviour {
         }
     }
 
-    private static Dictionary<string, GameObject> InstantiateSavedObjects(SaveData loadFile) {
-        var readOnlyDictionary = GetSavePrefabs();
+    private Dictionary<string, GameObject> InstantiateSavedObjects(SaveData loadFile) {
         var loadedObjects = new Dictionary<string, GameObject>();
 
         foreach (var loadFileObject in loadFile.Objects) {
@@ -63,8 +72,15 @@ public class SaveGame : MonoBehaviour {
             var objectId = loadFileObject.Key;
 
             var prefabKey = objectData[SavableObject.PrefabKey];
-            var prefab = readOnlyDictionary[prefabKey];
-            loadedObjects[objectId] = Instantiate(prefab);
+            if (_prefabDict.ContainsKey(prefabKey)) {
+                var prefab = _prefabDict[prefabKey];
+                loadedObjects[objectId] = Instantiate(prefab);
+            } else if (_buildingDict.ContainsKey(prefabKey)) {
+                var menuEntry = _buildingDict[prefabKey];
+                var building = Instantiate(menuEntry.buildingPrefab);
+                menuEntry.InitBuilding(building);
+                loadedObjects[objectId] = building;
+            }
         }
 
         return loadedObjects;
@@ -72,18 +88,37 @@ public class SaveGame : MonoBehaviour {
 
     private static Dictionary<string, GameObject> GetSavePrefabs() {
         var dict = new Dictionary<string, GameObject>();
-        var savableObjects =
+        var savablePrefabs =
             GetAllPrefabs().Select(o => o.GetComponent<SavableObject>()).Where(o => o != null);
-        foreach (var savableObject in savableObjects) {
+        foreach (var savableObject in savablePrefabs) {
             dict[savableObject.PrefabName] = savableObject.gameObject;
         }
 
         return dict;
     }
 
+    private static Dictionary<string, BuildingMenuEntry> GetBuildingMenuEntries() {
+        var dict = new Dictionary<string, BuildingMenuEntry>();
+        var menuEntries = GetAllBuildings();
+        foreach (var buildingMenuEntry in menuEntries) {
+            dict[buildingMenuEntry.buildingName] = buildingMenuEntry;
+        }
+
+        return dict;
+    }
+
     private static IEnumerable<Object> GetAllPrefabs() {
-        var temp = AssetDatabase.GetAllAssetPaths();
-        return (from s in temp where s.Contains(".prefab") select AssetDatabase.LoadMainAssetAtPath(s))
+        var paths = AssetDatabase.GetAllAssetPaths();
+        return (from path in paths
+                where path.Contains(".prefab")
+                select AssetDatabase.LoadMainAssetAtPath(path))
+            .ToArray();
+    }
+
+    public static IEnumerable<BuildingMenuEntry> GetAllBuildings() {
+        var paths = AssetDatabase.FindAssets("t:BuildingMenuEntry").Select(AssetDatabase.GUIDToAssetPath);
+        return (from path in paths
+                select (BuildingMenuEntry) AssetDatabase.LoadMainAssetAtPath(path))
             .ToArray();
     }
 }

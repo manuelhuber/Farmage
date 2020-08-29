@@ -97,16 +97,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Warehouse_Prefab
       objectReference: {fileID: 0}
-    - target: {fileID: 2211836723595585756, guid: 367f8f4e80502e14a8ef8a46497b32b7,
-        type: 3}
-      propertyPath: PrefabName
-      value: Warehouse
-      objectReference: {fileID: 0}
-    - target: {fileID: 2744936451345570462, guid: 367f8f4e80502e14a8ef8a46497b32b7,
-        type: 3}
-      propertyPath: displayName
-      value: Warehouse
-      objectReference: {fileID: 0}
     - target: {fileID: 5890649793366211811, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: size.x

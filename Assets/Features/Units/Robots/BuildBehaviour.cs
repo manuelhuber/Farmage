@@ -10,7 +10,7 @@ namespace Features.Units.Robots {
 public class BuildBehaviour : UnitBehaviourBase {
     private MovementAgent _movementAgent;
     private PeriodicalAction _buildAction;
-    private ConstructionSite _target;
+    private Construction _target;
     private GameTime _time;
 
     private void Awake() {
@@ -36,7 +36,7 @@ public class BuildBehaviour : UnitBehaviourBase {
     }
 
     public override bool Init(Task task) {
-        _target = task.payload.GetComponent<ConstructionSite>();
+        _target = task.payload.GetComponent<Construction>();
         _movementAgent.SetDestination(_target.transform.position, true);
         _movementAgent.IsStopped = false;
         return true;

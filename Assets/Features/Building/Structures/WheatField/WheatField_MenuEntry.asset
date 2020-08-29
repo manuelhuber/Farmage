@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84747c50b2b8422683e10affc725c9db, type: 3}
   m_Name: WheatField_MenuEntry
   m_EditorClassIdentifier: 
+  buildingName: Wheat Field
   buildingPrefab: {fileID: 2449454019606219251, guid: 1a1bed11c3a3ef2409df7e8264180e66,
     type: 3}
   modelPrefab: {fileID: 7857275586180839656, guid: ea43063c673340446a9760d720c22d80,

@@ -5,6 +5,7 @@ using UnityEngine;
 namespace Features.Common {
 public class RangeCollider : MonoBehaviour {
     public const string RangeColliderTag = "RangeCollider";
+    public const int RangeColliderLayer = 2; // "Ignore Raycast"
     private SphereCollider _sphereCollider;
 
     public float Range {
@@ -20,9 +21,11 @@ public class RangeCollider : MonoBehaviour {
     private float _range;
 
     private void Awake() {
-        _sphereCollider = gameObject.AddComponent<SphereCollider>();
+        var go = gameObject;
+        _sphereCollider = go.AddComponent<SphereCollider>();
         _sphereCollider.isTrigger = true;
-        gameObject.tag = RangeColliderTag;
+        go.tag = RangeColliderTag;
+        go.layer = RangeColliderLayer;
     }
 
     public void OnEnter(Action<Collider> callback) {

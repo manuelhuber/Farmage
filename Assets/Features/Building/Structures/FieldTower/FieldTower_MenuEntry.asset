@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84747c50b2b8422683e10affc725c9db, type: 3}
   m_Name: FieldTower_MenuEntry
   m_EditorClassIdentifier: 
-  buildingPrefab: {fileID: 0}
-  modelPrefab: {fileID: 0}
+  buildingName: Field Tower
+  buildingPrefab: {fileID: 8958712014341238561, guid: c4552ea606d94a24da2d15f6cc82bb73,
+    type: 3}
+  modelPrefab: {fileID: 8932857904367113411, guid: 0d8937e74882d174db41aabd06eabc0d,
+    type: 3}
   size:
-    x: 0
-    y: 0
+    x: 1
+    y: 1
   cost:
-    cash: 0
+    cash: 100
   image: {fileID: 0}

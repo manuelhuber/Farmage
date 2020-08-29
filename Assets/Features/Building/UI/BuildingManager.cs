@@ -1,13 +1,12 @@
 using System;
 using System.Linq;
 using Features.Building.BuildMenu;
-using Features.Building.Construction;
 using Features.Building.Placement;
 using Features.Health;
 using Features.Queue;
 using Features.Resources;
 using Grimity.Data;
-using Grimity.Layer;
+using Grimity.Singleton;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,15 +17,16 @@ public struct BuildingOption {
     public Action OnSelect;
 }
 
-public class BuildingManager : MonoBehaviour {
+public class BuildingManager : GrimitySingleton<BuildingManager> {
+    public static readonly int GridSize = 4;
     public Grimity.Data.IObservable<BuildingOption[]> BuildingOptions => _buildingOptions;
 
     [SerializeField] private JobMultiQueue farmerQueue;
     [SerializeField] private PlacementSettings placementSettings;
+    [SerializeField] private GameObject constructionSitePrefab;
     [SerializeField] private LayerMask terrainLayer = 0;
     [SerializeField] private BuildMenu.BuildMenu buildMenu;
-    [SerializeField] private int gridSize = 4;
-    [SerializeField] private LayerMask previewLayer;
+    [SerializeField] private LayerMask constructionSiteLayer;
 
     private bool _hasActivePlaceable;
     private Placeable _placeable;
@@ -83,10 +83,7 @@ public class BuildingManager : MonoBehaviour {
     private void AttachSelectionToCursor() {
         var preview = Instantiate(_selected.modelPrefab);
         _placeable = preview.AddComponent<Placeable>();
-        _placeable.Init(placementSettings,
-            terrainLayer,
-            _selected.size,
-            gridSize);
+        _placeable.Init(placementSettings, terrainLayer, _selected.size);
         _placeable.MayBePlaced.Set(true);
         _hasActivePlaceable = true;
     }
@@ -99,6 +96,9 @@ public class BuildingManager : MonoBehaviour {
 
         if (_resourceManager.Pay(_selected.cost)) {
             CreateConstructionSite();
+            if (!Input.GetKeyDown(KeyCode.LeftShift)) {
+                DetachFromCursor();
+            }
         } else {
             // TODO handle error case
             Debug.Log("Can't pay!");
@@ -106,19 +106,13 @@ public class BuildingManager : MonoBehaviour {
     }
 
     private void CreateConstructionSite() {
-        var constructionSite = _placeable.gameObject.AddComponent<ConstructionSite>();
-        constructionSite.progressTarget = _selected.buildingPrefab.GetComponent<Mortal>().MaxHitpoints;
-        constructionSite.finalBuildingPrefab = _selected.buildingPrefab;
-
-        var constructionSiteGameObject = constructionSite.gameObject;
-        constructionSiteGameObject.layer = LayerUtil.LayerMaskToLayer(previewLayer);
-        constructionSiteGameObject.GetComponent<Collider>().isTrigger = false;
-        constructionSiteGameObject.AddComponent<Rigidbody>().isKinematic = true;
+        var location = _placeable.transform;
+        var constructionSiteGameObject =
+            Instantiate(constructionSitePrefab, location.position, location.rotation);
+        var constructionSite = constructionSiteGameObject.GetComponent<Construction.Construction>();
+        constructionSite.Init(_selected);
 
         farmerQueue.Enqueue(new Task {type = TaskType.Build, payload = constructionSiteGameObject});
-        Destroy(_placeable);
-        _placeable = null;
-        _hasActivePlaceable = false;
     }
 
     private void DetachFromCursor() {

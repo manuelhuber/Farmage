@@ -44,23 +44,27 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
                 var task = jobQueue.Dequeue(type,
                     t => Vector3.Distance(t.payload.transform.position, position));
                 if (!task.HasValue) continue;
-
-                var newBehaviour = _behaviours[type];
-                Debug.Log($"{transform.name} dequeued task {task}");
-                if (!newBehaviour.Init(task.Value)) {
-                    jobQueue.Enqueue(task.Value);
-                    continue;
-                }
-
-                _currentTask = task.Value;
-                _activeBehaviour = newBehaviour;
-                _activeBehaviour.TaskCompleted.AddListener(() => ResetBehaviour(false));
-                _activeBehaviour.TaskAbandoned.AddListener(() => ResetBehaviour(true));
+                if (!SetTask(task.Value)) continue;
                 yield break;
             }
 
             yield return new WaitForSeconds(.5f);
         }
+    }
+
+    private bool SetTask(Task task) {
+        var newBehaviour = _behaviours[task.type];
+        Debug.Log($"{transform.name} dequeued task {task}");
+        if (!newBehaviour.Init(task)) {
+            jobQueue.Enqueue(task);
+            return false;
+        }
+
+        _currentTask = task;
+        _activeBehaviour = newBehaviour;
+        _activeBehaviour.TaskCompleted.AddListener(() => ResetBehaviour(false));
+        _activeBehaviour.TaskAbandoned.AddListener(() => ResetBehaviour(true));
+        return true;
     }
 
 
@@ -78,18 +82,21 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
     public string SaveKey => "workerbot";
 
     public string Save() {
+        if (_activeBehaviour == null) return "";
         var activeType = _behaviours.FirstOrDefault(pair => pair.Value == _activeBehaviour).Key;
-        return new WorkerbotData {active = activeType}.ToJson();
+        return new WorkerbotData {active = activeType, payload = _currentTask.payload.getSaveID()}.ToJson();
     }
 
     public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        if (rawData == "") return;
         var data = rawData.FromJson<WorkerbotData>();
-        _activeBehaviour = _behaviours[data.active];
+        SetTask(new Task {type = data.active, payload = objects.getBySaveID(data.payload)});
     }
 }
 
 [Serializable]
 internal struct WorkerbotData {
     public TaskType active;
+    public string payload;
 }
 }

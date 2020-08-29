@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84747c50b2b8422683e10affc725c9db, type: 3}
   m_Name: Warehouse_MenuEntry
   m_EditorClassIdentifier: 
+  buildingName: Warehouse
   buildingPrefab: {fileID: 7219245548793499584, guid: 5c08f047a4f4d804999a426da3a4d145,
     type: 3}
   modelPrefab: {fileID: 7871623509545793830, guid: 6028c2a65c75696408579d7630059355,

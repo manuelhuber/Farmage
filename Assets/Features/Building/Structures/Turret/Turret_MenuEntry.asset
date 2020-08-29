@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84747c50b2b8422683e10affc725c9db, type: 3}
   m_Name: Turret_MenuEntry
   m_EditorClassIdentifier: 
+  buildingName: Turret
   buildingPrefab: {fileID: 6936962898103013789, guid: 5e2b2aeef4d02a14eb2c63265af78a7a,
     type: 3}
   modelPrefab: {fileID: 5894054075766307270, guid: dba058e4a21168f41a5b6694df4d3c09,

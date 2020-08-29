@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84747c50b2b8422683e10affc725c9db, type: 3}
   m_Name: HQ_MenuEntry
   m_EditorClassIdentifier: 
+  buildingName: Farm House
   buildingPrefab: {fileID: 9207006124092333049, guid: 939ac5b7c3fbee045824ec5fbf62dcfe,
     type: 3}
   modelPrefab: {fileID: 7896822171643210548, guid: 5e71d59dfb2dfd54eb7c181e4caebc4f,

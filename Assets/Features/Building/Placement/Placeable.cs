@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Features.Building.Structures.FieldTower;
+using Features.Building.UI;
 using Features.Common;
 using Features.Pathfinding;
 using Grimity.Cursor;
@@ -19,7 +20,6 @@ public class Placeable : MonoBehaviour {
     public PlacementSettings settings;
     public LayerMask terrainLayer;
     public int2 size;
-    public int gridSize;
 
     public readonly Observable<bool> MayBePlaced = new Observable<bool>(false);
 
@@ -35,15 +35,13 @@ public class Placeable : MonoBehaviour {
     public void Init(
         PlacementSettings newSettings,
         LayerMask newTerrainLayer,
-        int2 newSize,
-        int newGridSize) {
+        int2 newSize) {
         settings = newSettings;
         terrainLayer = newTerrainLayer;
         size = newSize;
-        gridSize = newGridSize;
         _collider.center = new Vector3(0, -0.5f, 0);
         _collider.isTrigger = true;
-        _collider.size = new Vector3(size.x, 1, size.y) * gridSize;
+        _collider.size = new Vector3(size.x, 1, size.y) * BuildingManager.GridSize;
     }
 
     private void Awake() {
@@ -61,6 +59,7 @@ public class Placeable : MonoBehaviour {
 
     private void Update() {
         var pos = MouseToTerrain().point;
+        var gridSize = BuildingManager.GridSize;
         pos.x = MathUtils.RoundToMultiple(pos.x, gridSize, size.x.IsEven());
         pos.z = MathUtils.RoundToMultiple(pos.z, gridSize, size.y.IsEven());
         transform.position = pos;
