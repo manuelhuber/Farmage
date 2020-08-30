@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84747c50b2b8422683e10affc725c9db, type: 3}
+  m_Name: Silo_MenuEntry
+  m_EditorClassIdentifier: 
+  buildingName: Silo
+  buildingPrefab: {fileID: 1152272717889822205, guid: 0b7b9a02d93b58a4a82f7a62581ca250,
+    type: 3}
+  modelPrefab: {fileID: 6194172979020733434, guid: 079b6b9d0007c934ca2d7026878ba61f,
+    type: 3}
+  size:
+    x: 2
+    y: 2
+  cost:
+    cash: 100
+  image: {fileID: 0}

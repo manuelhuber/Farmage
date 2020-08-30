@@ -2,7 +2,8 @@
 
 namespace Features.Items {
 public enum ItemType {
-    Fertiliser
+    Fertiliser,
+    Wheat
 }
 
 public class Storable : MonoBehaviour {

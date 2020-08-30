@@ -114,7 +114,7 @@ GameObject:
   - component: {fileID: 6758092825325677999}
   - component: {fileID: -7684090239413587853}
   m_Layer: 0
-  m_Name: Workerbot
+  m_Name: Workerbot_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e75b9db26f94b6bb7c0bbf168d3b6e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
+  speed: 10
   stoppingDistance: 1
   turnSpeed: 10
 --- !u!114 &2607298129412826994

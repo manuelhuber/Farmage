@@ -7,11 +7,9 @@ using UnityEngine;
 namespace Features.Units.Robots {
 public class HarvestBehaviour : UnitBehaviourBase {
     private MovementAgent _movementAgent;
-    private ResourceManager _resourceManager;
     private GameObject _target;
 
     private void Awake() {
-        _resourceManager = ResourceManager.Instance;
         _movementAgent = GetComponent<MovementAgent>();
     }
 
@@ -23,9 +21,8 @@ public class HarvestBehaviour : UnitBehaviourBase {
     }
 
     public override void Behave() {
-        if (!(_movementAgent.HasArrived)) return;
-        var harvest = _target.GetComponent<WheatField>().Harvest();
-        _resourceManager.Add(harvest);
+        if (!_movementAgent.HasArrived) return;
+        _target.GetComponent<WheatField>().Harvest();
         CompleteTask();
     }
 }

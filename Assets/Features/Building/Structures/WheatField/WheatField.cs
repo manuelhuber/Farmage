@@ -11,7 +11,9 @@ using UnityEngine;
 
 namespace Features.Building.Structures.WheatField {
 public class WheatField : MonoBehaviour, ISavableComponent {
-    public Cost harvestValue;
+    public GameObject wheatPrefab;
+    public Transform dumpingPlace;
+    public int harvestCount;
     public Grimity.Data.IObservable<float> Progress => _progress;
 
     private readonly Observable<float> _progress = new Observable<float>(0);
@@ -41,11 +43,13 @@ public class WheatField : MonoBehaviour, ISavableComponent {
         queue.Enqueue(new Task {payload = gameObject, type = TaskType.Harvest});
     }
 
-    public Cost Harvest() {
-        if (!_waitingForHarvest) return new Cost();
+    public void Harvest() {
         _waitingForHarvest = false;
         _progress.Set(0);
-        return harvestValue;
+        for (var i = 0; i < harvestCount; i++) {
+            var wheat = Instantiate(wheatPrefab, dumpingPlace.position, dumpingPlace.rotation);
+            queue.Enqueue(new Task {payload = wheat, type = TaskType.Loot});
+        }
     }
 
     public string SaveKey => "WheatField";
