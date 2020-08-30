@@ -1,8 +1,7 @@
-using System;
 using System.Linq;
 using Features.Building.BuildMenu;
 using Features.Building.Placement;
-using Features.Health;
+using Features.Building.Production;
 using Features.Queue;
 using Features.Resources;
 using Grimity.Data;
@@ -11,15 +10,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Features.Building.UI {
-public struct BuildingOption {
-    public BuildingMenuEntry Entry;
-    public bool Buildable;
-    public Action OnSelect;
-}
-
 public class BuildingManager : GrimitySingleton<BuildingManager> {
     public static readonly int GridSize = 4;
-    public Grimity.Data.IObservable<BuildingOption[]> BuildingOptions => _buildingOptions;
+    public IObservable<ProductionOption[]> BuildingOptions => _buildingOptions;
 
     [SerializeField] private JobMultiQueue farmerQueue;
     [SerializeField] private PlacementSettings placementSettings;
@@ -33,8 +26,8 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
     private ResourceManager _resourceManager;
     private BuildingMenuEntry _selected;
 
-    private readonly Observable<BuildingOption[]> _buildingOptions =
-        new Observable<BuildingOption[]>(new BuildingOption[0]);
+    private readonly Observable<ProductionOption[]> _buildingOptions =
+        new Observable<ProductionOption[]>(new ProductionOption[0]);
 
     private void Awake() {
         _resourceManager = ResourceManager.Instance;
@@ -64,8 +57,8 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
     }
 
     private void UpdateBuildingOptions() {
-        _buildingOptions.Set(buildMenu.entries.Select(menuEntry => new BuildingOption {
-                Entry = menuEntry, Buildable = _resourceManager.CanBePayed(menuEntry.cost),
+        _buildingOptions.Set(buildMenu.entries.Select(menuEntry => new ProductionOption {
+                Image = menuEntry.image, Buildable = _resourceManager.CanBePayed(menuEntry.cost),
                 OnSelect = () => SelectBuilding(menuEntry)
             })
             .ToArray());

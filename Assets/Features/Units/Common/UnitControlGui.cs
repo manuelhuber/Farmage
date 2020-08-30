@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using Features.Building.Production;
+using Features.Building.UI;
 using Features.Health;
 using Features.Units.Common.Ui;
 using UnityEngine;
 
 namespace Features.Units.Common {
 public class UnitControlGui : MonoBehaviour {
+    [SerializeField] private ProductionGui productionGui;
     private UnitControl _control;
     private SingleUnitGui _singleUnitGui;
     private GameObject _activeUi;
@@ -43,6 +46,7 @@ public class UnitControlGui : MonoBehaviour {
         _onDeactivate.Clear();
         _singleUnitGui.gameObject.SetActive(false);
         Destroy(_activeUi);
+        productionGui.ShowDefault();
     }
 
     private void ActivateMultipleUnitsGui(List<Unit> set) {
@@ -54,6 +58,15 @@ public class UnitControlGui : MonoBehaviour {
         _singleUnitGui.Icon = current.icon;
         InitMortalUi(current);
         InitDetailUi(current);
+        InitProductionUi(current);
+    }
+
+    private void InitProductionUi(Unit current) {
+        var production = current.GetComponent<Production>();
+        if (production == null) return;
+        void BuildProductionUi(ProductionOption[] options) => productionGui.BuildUi(options);
+        production.Options.OnChange(BuildProductionUi);
+        _onDeactivate.Add(() => production.Options.RemoveOnChange(BuildProductionUi));
     }
 
     private void InitDetailUi(Unit current) {

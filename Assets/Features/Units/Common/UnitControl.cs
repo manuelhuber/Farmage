@@ -2,6 +2,7 @@
 using Grimity.Data;
 using Grimity.Singleton;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using static Grimity.Cursor.CursorUtil;
 
 namespace Features.Units.Common {
@@ -29,6 +30,8 @@ public class UnitControl : GrimitySingleton<UnitControl> {
     }
 
     private void Update() {
+        var clickedOnUi = EventSystem.current.IsPointerOverGameObject();
+        if (clickedOnUi) return;
         var rightClick = Input.GetMouseButtonUp(1);
         var leftClickDown = Input.GetMouseButtonDown(0);
         var leftClickUp = Input.GetMouseButtonUp(0);

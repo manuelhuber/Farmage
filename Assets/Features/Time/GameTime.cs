@@ -18,7 +18,7 @@ public class GameTime : GrimitySingleton<GameTime>, ISavableComponent {
     public float FixedDeltaTime => UnityEngine.Time.fixedDeltaTime * Speed;
 
     private void FixedUpdate() {
-        Time += Speed * UnityEngine.Time.deltaTime;
+        Time += Speed * UnityEngine.Time.fixedDeltaTime;
     }
 
     public string SaveKey => "GameTime";

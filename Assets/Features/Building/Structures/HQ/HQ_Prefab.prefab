@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7484525210222850759
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 672259910156556586}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &672259910156556586
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7484525210222850759}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.107, z: 5.12}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 770371645470792347}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-6993627789886401120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9207006124092333049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b236089371904d3b85520e64f77fc47c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  QueueSize: 5
+  entries:
+  - {fileID: 11400000, guid: a420e6d0ab037c64cba3b07af4513f8d, type: 2}
+  spawnPoint: {fileID: 672259910156556586}
 --- !u!114 &66102991996470107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,13 +150,19 @@ PrefabInstance:
     - target: {fileID: 990117219375781617, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: m_Name
-      value: HQPrefab
+      value: HQ_Prefab
       objectReference: {fileID: 0}
     - target: {fileID: 990117219375781617, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: m_TagString
       value: HQ
       objectReference: {fileID: 0}
+    - target: {fileID: 2744936451345570462, guid: 367f8f4e80502e14a8ef8a46497b32b7,
+        type: 3}
+      propertyPath: uiDetailPrefab
+      value: 
+      objectReference: {fileID: 2198952672970565827, guid: 79559a247d65a814b8259eb71f02eb73,
+        type: 3}
     - target: {fileID: 5890649793366211811, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: size.x
