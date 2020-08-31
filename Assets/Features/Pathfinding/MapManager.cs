@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Grimity.Layer;
 using Grimity.Loops;
+using Grimity.Math;
 using Grimity.NativeCollections;
 using Grimity.Singleton;
 using Sirenix.OdinInspector;
@@ -79,7 +80,6 @@ public class MapManager : GrimitySingleton<MapManager> {
         var newPaths = new NativeList<PathNode>[requestsCount];
         var callbacks = new Action<Vector3[]>[requestsCount];
 
-        Debug.Log($"Scheduling {requestsCount} pathFindingJobs");
         for (var i = 0; i < requestsCount; i++) {
             var pathRequest = _requests.Dequeue();
             newPaths[i] = new NativeList<PathNode>(Allocator.TempJob);
@@ -155,15 +155,48 @@ public class MapManager : GrimitySingleton<MapManager> {
         return _map.Get2D(z, x, _cellCountX);
     }
 
+    public void SetNode(int x, int z, GridNode node) {
+        _map.Put2D(node, z, x, _cellCountX);
+    }
+
     private void OnDrawGizmos() {
         Gizmos.DrawWireCube(transform.position, new Vector3(sizeX, 1, sizeZ));
         var size = cellSize * .9f;
-        foreach (var gridNode in _map.Where(gridNode => !gridNode.IsWalkable)) {
-            Gizmos.color = Color.red;
+        foreach (var gridNode in _map.Where(gridNode => !gridNode.IsWalkable || gridNode.Highlight)) {
+            Gizmos.color = gridNode.Highlight ? Color.blue : Color.red;
             Gizmos.DrawCube(
                 GridToWorldPosition(gridNode.X, gridNode.Z),
                 new Vector3(size, .1f, size));
         }
+    }
+
+    public List<GridNode> GetAreaAroundPosition(Vector3 pos, int2 size) {
+        if (size.x.IsEven()) {
+            pos.x -= cellSize / 2;
+        }
+
+        if (size.y.IsEven()) {
+            pos.z -= cellSize / 2;
+        }
+
+        var worldPositionToNode = WorldPositionToNode(pos);
+        var startX = Mathf.RoundToInt(size.x.IsEven()
+                ? worldPositionToNode.x - ((size.x / 2) - 1)
+                : worldPositionToNode.x - (Mathf.Floor(size.x / 2)))
+            ;
+        var startY = Mathf.RoundToInt(size.y.IsEven()
+                ? worldPositionToNode.y - ((size.y / 2) - 1)
+                : worldPositionToNode.y - (Mathf.Floor(size.y / 2)))
+            ;
+        var list = new List<GridNode>();
+
+        for (var x = startX; x < startX + size.x; x++) {
+            for (var y = startY; y < startY + size.y; y++) {
+                list.Add(GetNode(x, y));
+            }
+        }
+
+        return list;
     }
 }
 }

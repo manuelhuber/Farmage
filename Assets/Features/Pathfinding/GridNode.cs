@@ -15,5 +15,7 @@ public struct GridNode {
     /// This should be 0 unless you explicitly 
     /// </summary>
     public int Penalty;
+
+    public bool Highlight;
 }
 }

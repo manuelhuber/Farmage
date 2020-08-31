@@ -14,7 +14,7 @@ using UnityEngine;
 namespace Features.Building.Placement {
 public class Placeable : MonoBehaviour {
     private static readonly string[] IgnoredColliderTags =
-        {RangeCollider.RangeColliderTag, FieldTower.SphereTag};
+        {RangeCollider.RangeColliderTag, FieldTower.SphereTag, "Terrain"};
 
     public bool CanBePlaced => _isTerrainGood.Value && _collisions.Count == 0 && MayBePlaced.Value;
     public PlacementSettings settings;
@@ -31,6 +31,8 @@ public class Placeable : MonoBehaviour {
     private MapManager _mapManager;
     private BoxCollider _collider;
     private readonly Observable<bool> _isTerrainGood = new Observable<bool>(false);
+    private List<int2> occupiedNodes1 = new List<int2>();
+
 
     public void Init(
         PlacementSettings newSettings,
@@ -60,27 +62,48 @@ public class Placeable : MonoBehaviour {
     private void Update() {
         var pos = MouseToTerrain().point;
         var gridSize = BuildingManager.GridSize;
-        pos.x = MathUtils.RoundToMultiple(pos.x, gridSize, size.x.IsEven());
-        pos.z = MathUtils.RoundToMultiple(pos.z, gridSize, size.y.IsEven());
-        transform.position = pos;
+        var nodePosition = _mapManager.WorldPositionToNode(pos);
+        var newWorldPos = _mapManager.GridToWorldPosition(nodePosition.x, nodePosition.y);
+        if (size.x.IsEven()) {
+            newWorldPos.x -= gridSize / 2;
+        }
+
+        if (size.y.IsEven()) {
+            newWorldPos.z -= gridSize / 2;
+        }
+
+        newWorldPos.y = transform.position.y;
+
+        transform.position = newWorldPos;
         CheckTerrain();
     }
 
     private void CheckTerrain() {
-        var pos = transform.position;
-        var center = _mapManager.WorldPositionToNode(pos);
-        var occupiedNodes = new List<int2>();
+        ClearOccupiedNodes();
 
-        var xOffsetMax = (int) Math.Floor((double) (size.x / 2));
-        var yOffsetMax = (int) Math.Floor((double) (size.y / 2));
-        for (var xOffset = -xOffsetMax; xOffset <= xOffsetMax; xOffset++) {
-            for (var yOffset = -yOffsetMax; yOffset <= yOffsetMax; yOffset++) {
-                occupiedNodes.Add(new int2(center.x + xOffset, center.y + yOffset));
-            }
+        var pos = transform.position;
+        var areaAroundPosition = _mapManager.GetAreaAroundPosition(pos, size);
+
+        foreach (var node in areaAroundPosition) {
+            occupiedNodes1.Add(new int2(node.X, node.Z));
+
+            var gridNode = node;
+            gridNode.Highlight = true;
+            _mapManager.SetNode(node.X, node.Z, gridNode);
         }
 
-        var goodTerrain = occupiedNodes.All(node => _mapManager.GetNode(node.x, node.y).IsWalkable);
+        var goodTerrain = occupiedNodes1.All(node => _mapManager.GetNode(node.x, node.y).IsWalkable);
         _isTerrainGood.Set(goodTerrain);
+    }
+
+    private void ClearOccupiedNodes() {
+        foreach (var node in occupiedNodes1) {
+            var gridNode = _mapManager.GetNode(node.x, node.y);
+            gridNode.Highlight = false;
+            _mapManager.SetNode(node.x, node.y, gridNode);
+        }
+
+        occupiedNodes1.Clear();
     }
 
     private void OnTriggerEnter(Collider other) {
