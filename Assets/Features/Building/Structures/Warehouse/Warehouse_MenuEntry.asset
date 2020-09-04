@@ -18,8 +18,8 @@ MonoBehaviour:
   modelPrefab: {fileID: 7871623509545793830, guid: 6028c2a65c75696408579d7630059355,
     type: 3}
   size:
-    x: 3
-    y: 3
+    x: 2
+    y: 4
   cost:
     cash: 50
   image: {fileID: 21300000, guid: e4b809ab2eeb33f45b8e1dbeceff0cf3, type: 3}

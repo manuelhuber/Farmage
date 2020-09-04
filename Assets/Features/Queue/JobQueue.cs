@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Features.Queue {
 [CreateAssetMenu(menuName = "queue/simple")]
 public class JobQueue : ScriptableObject {
-    public readonly List<Task> Tasks = new List<Task>();
+    public readonly List<BaseTask> Tasks = new List<BaseTask>();
 
     public int Count() {
         return Tasks.Count;
     }
 
-    public void Enqueue(Task task) {
+    public void Enqueue(BaseTask task) {
         Tasks.Add(task);
     }
 
-    public Task? Dequeue(Func<Task, float> prioritisation = null) {
+    [CanBeNull]
+    public BaseTask Dequeue(Func<BaseTask, float> prioritisation = null) {
         if (Tasks.Count == 0) return null;
         var task = prioritisation == null ? Tasks[0] : Tasks.OrderBy(prioritisation).First();
         Tasks.Remove(task);

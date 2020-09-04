@@ -3,11 +3,17 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace Features.Units.Robots {
-public abstract class UnitBehaviourBase : MonoBehaviour {
+public abstract class UnitBehaviourBase<T> : MonoBehaviour, IUnitBehaviourBase<T> where T : BaseTask {
+    private void OnDestroy() {
+        AbandonTask();
+    }
+
     public UnityEvent TaskCompleted { get; } = new UnityEvent();
     public UnityEvent TaskAbandoned { get; } = new UnityEvent();
 
-    public abstract bool Init(Task task);
+    public bool Init(BaseTask task) {
+        return InitImpl(task as T);
+    }
 
     public virtual void Behave() {
     }
@@ -16,12 +22,19 @@ public abstract class UnitBehaviourBase : MonoBehaviour {
         TaskAbandoned.Invoke();
     }
 
-    protected void CompleteTask() {
+    public void CompleteTask() {
         TaskCompleted.Invoke();
     }
 
-    private void OnDestroy() {
-        AbandonTask();
-    }
+    protected abstract bool InitImpl(T task);
+}
+
+public interface IUnitBehaviourBase<out T> where T : BaseTask {
+    UnityEvent TaskCompleted { get; }
+    UnityEvent TaskAbandoned { get; }
+    bool Init(BaseTask task);
+    void Behave();
+    void AbandonTask();
+    void CompleteTask();
 }
 }

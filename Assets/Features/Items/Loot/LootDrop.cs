@@ -11,7 +11,9 @@ public class LootDrop : MonoBehaviour {
         foreach (var tuple in lootTable.loot) {
             if (!(Random.value < tuple.dropchance)) continue;
             var newLoot = Instantiate(tuple.prefab, transform.position, transform.rotation);
-            if (lootQueue != null) lootQueue.Enqueue(new Task {type = TaskType.Loot, payload = newLoot});
+            if (lootQueue != null) {
+                lootQueue.Enqueue(new SimpleTask {type = TaskType.Loot, Payload = newLoot});
+            }
         }
     }
 }

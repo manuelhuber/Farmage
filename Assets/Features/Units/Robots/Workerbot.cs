@@ -12,17 +12,19 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
     [SerializeField] private JobMultiQueue jobQueue;
     [SerializeField] private TaskType[] typePriority = new TaskType[0];
 
-    private Task _currentTask;
-    private UnitBehaviourBase _activeBehaviour;
+    private readonly Dictionary<TaskType, IUnitBehaviourBase<BaseTask>>
+        _behaviours = new Dictionary<TaskType, IUnitBehaviourBase<BaseTask>>();
 
-    private readonly Dictionary<TaskType, UnitBehaviourBase>
-        _behaviours = new Dictionary<TaskType, UnitBehaviourBase>();
+    private IUnitBehaviourBase<BaseTask> _activeBehaviour;
+
+    private BaseTask _currentTask;
 
     // Start is called before the first frame update
     private void Awake() {
         // When duplicating a object during play the active behaviour isn't null on Awake...
         _activeBehaviour = null;
-        _behaviours[TaskType.Loot] = gameObject.GetComponent<LootGatherer>();
+        IUnitBehaviourBase<SimpleTask> lootGatherer = gameObject.GetComponent<LootGatherer>();
+        _behaviours[TaskType.Loot] = lootGatherer;
         _behaviours[TaskType.Harvest] = gameObject.GetComponent<HarvestBehaviour>();
         _behaviours[TaskType.Repair] = gameObject.GetComponent<RepairBehaviour>();
         _behaviours[TaskType.Build] = gameObject.GetComponent<BuildBehaviour>();
@@ -37,14 +39,28 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
         if (_activeBehaviour != null) _activeBehaviour.Behave();
     }
 
+    public string SaveKey => "workerbot";
+
+    public string Save() {
+        if (_activeBehaviour == null) return "";
+        var activeType = _behaviours.FirstOrDefault(pair => pair.Value == _activeBehaviour).Key;
+        // TODO serialise current task
+        return new WorkerbotData {active = activeType}.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        if (rawData == "") return;
+        var data = rawData.FromJson<WorkerbotData>();
+        // TODO deserialise current task
+        SetTask(new SimpleTask {type = data.active});
+    }
+
     private IEnumerator GetNewTask() {
         while (_activeBehaviour == null) {
-            var position = transform.position;
             foreach (var type in typePriority) {
-                var task = jobQueue.Dequeue(type,
-                    t => Vector3.Distance(t.payload.transform.position, position));
-                if (!task.HasValue) continue;
-                if (!SetTask(task.Value)) continue;
+                var task = jobQueue.Dequeue<BaseTask>(type);
+                if (task == null) continue;
+                if (!SetTask(task)) continue;
                 yield break;
             }
 
@@ -52,9 +68,8 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
         }
     }
 
-    private bool SetTask(Task task) {
+    private bool SetTask(BaseTask task) {
         var newBehaviour = _behaviours[task.type];
-        Debug.Log($"{transform.name} dequeued task {task}");
         if (!newBehaviour.Init(task)) {
             jobQueue.Enqueue(task);
             return false;
@@ -78,25 +93,10 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
         if (requeueCurrentTask) jobQueue.Enqueue(_currentTask);
         StartCoroutine(GetNewTask());
     }
-
-    public string SaveKey => "workerbot";
-
-    public string Save() {
-        if (_activeBehaviour == null) return "";
-        var activeType = _behaviours.FirstOrDefault(pair => pair.Value == _activeBehaviour).Key;
-        return new WorkerbotData {active = activeType, payload = _currentTask.payload.getSaveID()}.ToJson();
-    }
-
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        if (rawData == "") return;
-        var data = rawData.FromJson<WorkerbotData>();
-        SetTask(new Task {type = data.active, payload = objects.getBySaveID(data.payload)});
-    }
 }
 
 [Serializable]
 internal struct WorkerbotData {
     public TaskType active;
-    public string payload;
 }
 }

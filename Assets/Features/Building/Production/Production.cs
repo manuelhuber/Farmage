@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Features.Resources;
 using Features.Time;
@@ -10,7 +9,6 @@ namespace Features.Building.Production {
 public class Production : MonoBehaviour {
     public int QueueSize;
     public UnitProductionEntry[] entries;
-    public IObservable<ProductionOption[]> Options => _options;
     public Transform spawnPoint;
 
     private readonly Observable<ProductionOption[]> _options =
@@ -19,11 +17,13 @@ public class Production : MonoBehaviour {
     public readonly Queue<UnitProductionEntry> Queue =
         new Queue<UnitProductionEntry>();
 
-    public UnitProductionEntry Current { get; private set; }
-    public float Progress { get; private set; }
-    private bool _startNewProduction = true;
     private GameTime _gameTime;
     private ResourceManager _resourceManager;
+    private bool _startNewProduction = true;
+    public IObservable<ProductionOption[]> Options => _options;
+
+    public UnitProductionEntry Current { get; private set; }
+    public float Progress { get; private set; }
 
     private void Awake() {
         _gameTime = GameTime.Instance;

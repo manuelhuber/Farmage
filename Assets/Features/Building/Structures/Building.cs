@@ -19,7 +19,7 @@ public class Building : MonoBehaviour, ISavableComponent {
             }
 
             if (_waitingForRepair) return;
-            queue.Enqueue(new Task {type = TaskType.Repair, payload = gameObject});
+            queue.Enqueue(new SimpleTask {type = TaskType.Repair, Payload = gameObject});
             _waitingForRepair = true;
         });
     }

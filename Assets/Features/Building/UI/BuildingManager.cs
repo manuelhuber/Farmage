@@ -12,7 +12,6 @@ using UnityEngine.EventSystems;
 namespace Features.Building.UI {
 public class BuildingManager : GrimitySingleton<BuildingManager> {
     public static readonly int GridSize = 4;
-    public IObservable<ProductionOption[]> BuildingOptions => _buildingOptions;
 
     [SerializeField] private JobMultiQueue farmerQueue;
     [SerializeField] private PlacementSettings placementSettings;
@@ -21,13 +20,14 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
     [SerializeField] private BuildMenu.BuildMenu buildMenu;
     [SerializeField] private LayerMask constructionSiteLayer;
 
+    private readonly Observable<ProductionOption[]> _buildingOptions =
+        new Observable<ProductionOption[]>(new ProductionOption[0]);
+
     private bool _hasActivePlaceable;
     private Placeable _placeable;
     private ResourceManager _resourceManager;
     private BuildingMenuEntry _selected;
-
-    private readonly Observable<ProductionOption[]> _buildingOptions =
-        new Observable<ProductionOption[]>(new ProductionOption[0]);
+    public IObservable<ProductionOption[]> BuildingOptions => _buildingOptions;
 
     private void Awake() {
         _resourceManager = ResourceManager.Instance;
@@ -105,7 +105,7 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
         var constructionSite = constructionSiteGameObject.GetComponent<Construction.Construction>();
         constructionSite.Init(_selected);
 
-        farmerQueue.Enqueue(new Task {type = TaskType.Build, payload = constructionSiteGameObject});
+        farmerQueue.Enqueue(new SimpleTask {type = TaskType.Build, Payload = constructionSiteGameObject});
     }
 
     private void DetachFromCursor() {

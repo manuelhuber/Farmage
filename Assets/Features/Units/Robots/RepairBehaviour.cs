@@ -7,7 +7,7 @@ using Grimity.Actions;
 using UnityEngine;
 
 namespace Features.Units.Robots {
-public class RepairBehaviour : UnitBehaviourBase {
+public class RepairBehaviour : UnitBehaviourBase<SimpleTask> {
     private MovementAgent _movementAgent;
     private PeriodicalAction _repairAction;
     private ResourceManager _resourceManager;
@@ -31,13 +31,25 @@ public class RepairBehaviour : UnitBehaviourBase {
         };
     }
 
+    private void OnTriggerEnter(Collider other) {
+        if (_target == null || _target.gameObject != other.gameObject) return;
+        _repairAction.IsRunning = true;
+        _movementAgent.IsStopped = true;
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if (_target == null || _target.gameObject != other.gameObject) return;
+        _repairAction.IsRunning = false;
+        _movementAgent.IsStopped = false;
+    }
+
     public override void AbandonTask() {
         _repairAction.IsRunning = false;
         base.AbandonTask();
     }
 
-    public override bool Init(Task task) {
-        _target = task.payload.GetComponent<Mortal>();
+    protected override bool InitImpl(SimpleTask task) {
+        _target = task.Payload.GetComponent<Mortal>();
         _target.onDeath.AddListener(Complete);
         _movementAgent.SetDestination(_target.transform.position, true);
         _movementAgent.IsStopped = false;
@@ -51,18 +63,6 @@ public class RepairBehaviour : UnitBehaviourBase {
     private void Complete() {
         _repairAction.IsRunning = false;
         CompleteTask();
-    }
-
-    private void OnTriggerEnter(Collider other) {
-        if (_target == null || _target.gameObject != other.gameObject) return;
-        _repairAction.IsRunning = true;
-        _movementAgent.IsStopped = true;
-    }
-
-    private void OnTriggerExit(Collider other) {
-        if (_target == null || _target.gameObject != other.gameObject) return;
-        _repairAction.IsRunning = false;
-        _movementAgent.IsStopped = false;
     }
 }
 }

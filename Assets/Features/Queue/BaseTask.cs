@@ -1,14 +1,12 @@
 using System;
-using UnityEngine;
 
 namespace Features.Queue {
 [Serializable]
-public struct Task {
+public class BaseTask {
     public TaskType type;
-    public GameObject payload;
 
     public override string ToString() {
-        return $"type={type} payload={payload.name}";
+        return $"type={type}";
     }
 }
 
