@@ -4567,5 +4567,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8911651612414844084, guid: fcf03f3cb95f5b44eaeb6f6e7be053be,
+        type: 3}
+      propertyPath: allFarmerBuildings
+      value: 
+      objectReference: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fcf03f3cb95f5b44eaeb6f6e7be053be, type: 3}

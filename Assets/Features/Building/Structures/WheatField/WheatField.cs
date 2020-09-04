@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Features.Delivery;
+using Features.Items;
 using Features.Queue;
+using Features.Resources;
 using Features.Save;
 using Features.Time;
 using Grimity.Data;
@@ -19,10 +22,12 @@ public class WheatField : MonoBehaviour, ISavableComponent {
     private readonly Observable<float> _progress = new Observable<float>(0);
     private GameTime _time;
     private bool _waitingForHarvest;
+    private ResourceManager resourceManager;
     public Grimity.Data.IObservable<float> Progress => _progress;
 
     private void Awake() {
         _time = GameTime.Instance;
+        resourceManager = ResourceManager.Instance;
     }
 
     private void Update() {
@@ -61,7 +66,11 @@ public class WheatField : MonoBehaviour, ISavableComponent {
         _progress.Set(0);
         for (var i = 0; i < harvestCount; i++) {
             var wheat = Instantiate(wheatPrefab, dumpingPlace.position, dumpingPlace.rotation);
-            queue.Enqueue(new SimpleTask {Payload = wheat, type = TaskType.Loot});
+            queue.Enqueue(new DeliveryTask {
+                Goods = wheat,
+                type = TaskType.Loot,
+                Target = resourceManager.GetBestStorage(wheat.GetComponent<Storable>())
+            });
         }
     }
 }

@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Features.Building.Structures.Warehouse;
-using Features.Items;
-using Features.Queue;
+using Features.Delivery;
 using Features.Save;
 using Features.Units.Common;
-using Grimity.ScriptableObject;
 using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Units.Robots {
-public class LootGatherer : UnitBehaviourBase<SimpleTask>, ISavableComponent {
-    public RuntimeGameObjectSet buildings;
+public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableComponent {
     private bool _isCarryingLoot;
     private GameObject _loot;
     private MovementAgent _movementAgent;
@@ -53,18 +49,11 @@ public class LootGatherer : UnitBehaviourBase<SimpleTask>, ISavableComponent {
         PickupLoot();
     }
 
-    protected override bool InitImpl(SimpleTask task) {
-        var target = FindStorage(task.Payload);
+    protected override bool InitImpl(DeliveryTask task) {
+        var target = task.Target;
         if (target == null) return false;
-        StartGathering(task.Payload, target);
+        StartGathering(task.Goods, target.GetComponent<Storage>());
         return true;
-    }
-
-    private Storage FindStorage(GameObject loot) {
-        var storable = loot.GetComponent<Storable>();
-        return buildings.Items.Select(o => o.GetComponent<Storage>())
-            .Where(storage => storage != null)
-            .FirstOrDefault(storage => storable.IsType(storage.type));
     }
 
     private void StartGathering(GameObject loot, Storage storage) {
@@ -76,7 +65,7 @@ public class LootGatherer : UnitBehaviourBase<SimpleTask>, ISavableComponent {
     }
 
     private void DeliverLoot() {
-        if (!_targetStorage.Deliver(_loot.GetComponent<Storable>())) {
+        if (!_targetStorage.AcceptDelivery(_loot)) {
             Debug.LogWarning("Couldn't deliver item - code a solution for this problem!");
             return;
         }

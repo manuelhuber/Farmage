@@ -1,19 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Features.Delivery;
 using Features.Items;
 using Features.Save;
 using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Building.Structures.Warehouse {
-public class Storage : MonoBehaviour, ISavableComponent {
+public class Storage : DeliveryAcceptor, ISavableComponent {
     public ItemType type;
     public int capacity;
     public List<Storable> items = new List<Storable>();
     public int size = 10;
 
-    public bool Deliver(Storable item) {
+    public bool IsFull => items.Count == capacity;
+
+    public string SaveKey => "Storage";
+
+    public string Save() {
+        return new StorageData {items = items.Select(storable => storable.getSaveID()).ToArray()}.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        foreach (var itemID in rawData.FromJson<StorageData>().items) {
+            var item = objects[itemID];
+            AcceptDelivery(item);
+        }
+    }
+
+
+    public override bool AcceptDelivery(GameObject goods) {
+        var item = goods.GetComponent<Storable>();
         if (!CanAccept(item)) return false;
         items.Add(item);
         PlaceItemInStorage(item);
@@ -33,20 +51,7 @@ public class Storage : MonoBehaviour, ISavableComponent {
     }
 
     public bool CanAccept(Storable item) {
-        return items.Count < capacity && item.IsType(type);
-    }
-
-    public string SaveKey => "Storage";
-
-    public string Save() {
-        return new StorageData {items = items.Select(storable => storable.getSaveID()).ToArray()}.ToJson();
-    }
-
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        foreach (var itemID in rawData.FromJson<StorageData>().items) {
-            var item = objects[itemID].GetComponent<Storable>();
-            Deliver(item);
-        }
+        return !IsFull && item.IsType(type);
     }
 }
 
