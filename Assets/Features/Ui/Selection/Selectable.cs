@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Features.Ui.Selection {
 public class Selectable : MonoBehaviour {
@@ -6,9 +8,16 @@ public class Selectable : MonoBehaviour {
     public string displayName;
     public GameObject uiDetailPrefab;
 
-    // Start is called before the first frame update
+    public readonly List<Action> onDestroyCallbacks = new List<Action>();
+
     private void Start() {
         SelectionManager.Instance.Register(this);
+    }
+
+    private void OnDestroy() {
+        foreach (var onDestroyCallback in onDestroyCallbacks) {
+            onDestroyCallback();
+        }
     }
 }
 }

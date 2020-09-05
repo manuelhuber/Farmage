@@ -1,9 +1,9 @@
 using System.Linq;
 using Features.Building.BuildMenu;
 using Features.Building.Placement;
-using Features.Building.Production;
 using Features.Queue;
 using Features.Resources;
+using Features.Ui.Actions;
 using Grimity.Data;
 using Grimity.Singleton;
 using UnityEngine;
@@ -20,14 +20,14 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
     [SerializeField] private BuildMenu.BuildMenu buildMenu;
     [SerializeField] private LayerMask constructionSiteLayer;
 
-    private readonly Observable<ProductionOption[]> _buildingOptions =
-        new Observable<ProductionOption[]>(new ProductionOption[0]);
+    private readonly Observable<ActionEntry[]> _buildingOptions =
+        new Observable<ActionEntry[]>(new ActionEntry[0]);
 
     private bool _hasActivePlaceable;
     private Placeable _placeable;
     private ResourceManager _resourceManager;
     private BuildingMenuEntry _selected;
-    public IObservable<ProductionOption[]> BuildingOptions => _buildingOptions;
+    public IObservable<ActionEntry[]> BuildingOptions => _buildingOptions;
 
     private void Awake() {
         _resourceManager = ResourceManager.Instance;
@@ -57,8 +57,8 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
     }
 
     private void UpdateBuildingOptions() {
-        _buildingOptions.Set(buildMenu.entries.Select(menuEntry => new ProductionOption {
-                Image = menuEntry.image, Buildable = _resourceManager.CanBePayed(menuEntry.cost),
+        _buildingOptions.Set(buildMenu.entries.Select(menuEntry => new ActionEntry {
+                Image = menuEntry.image, Active = _resourceManager.CanBePayed(menuEntry.cost),
                 OnSelect = () => SelectBuilding(menuEntry)
             })
             .ToArray());

@@ -10,8 +10,6 @@ public class SelectionManager : GrimitySingleton<SelectionManager> {
     public LayerMask clickableLayers;
 
     private readonly List<Selectable> _all = new List<Selectable>();
-
-
     private UnityEngine.Camera _camera;
 
     public Observable<List<Selectable>> Selection { get; } =

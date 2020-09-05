@@ -2,17 +2,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Features.Resources;
 using Features.Time;
+using Features.Ui.Actions;
 using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Building.Production {
-public class Production : MonoBehaviour {
+public class Production : MonoBehaviour, IHasActions {
     public int QueueSize;
     public UnitProductionEntry[] entries;
     public Transform spawnPoint;
 
-    private readonly Observable<ProductionOption[]> _options =
-        new Observable<ProductionOption[]>(new ProductionOption[] { });
+    private readonly Observable<ActionEntry[]> _options =
+        new Observable<ActionEntry[]>(new ActionEntry[] { });
 
     public readonly Queue<UnitProductionEntry> Queue =
         new Queue<UnitProductionEntry>();
@@ -20,7 +21,6 @@ public class Production : MonoBehaviour {
     private GameTime _gameTime;
     private ResourceManager _resourceManager;
     private bool _startNewProduction = true;
-    public IObservable<ProductionOption[]> Options => _options;
 
     public UnitProductionEntry Current { get; private set; }
     public float Progress { get; private set; }
@@ -44,6 +44,10 @@ public class Production : MonoBehaviour {
         }
     }
 
+    public IObservable<ActionEntry[]> GetActions() {
+        return _options;
+    }
+
     private void FinishProduction() {
         Instantiate(Current.prefab, spawnPoint.position, spawnPoint.rotation);
         _startNewProduction = true;
@@ -51,8 +55,8 @@ public class Production : MonoBehaviour {
     }
 
     private void UpdateOptions(Cost _) {
-        var options = entries.Select(entry => new ProductionOption {
-            Image = entry.icon, Buildable = _resourceManager.CanBePayed(entry.cost),
+        var options = entries.Select(entry => new ActionEntry {
+            Image = entry.icon, Active = _resourceManager.CanBePayed(entry.cost),
             OnSelect = () => AddToQueue(entry)
         });
         _options.Set(options.ToArray());

@@ -1,21 +1,30 @@
 using System;
 using System.Collections.Generic;
-using Features.Building.Production;
+using Features.Building.UI;
 using Features.Health;
+using Features.Ui.Actions;
+using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Ui.Selection {
 public class SelectionManagerGui : MonoBehaviour {
-    [SerializeField] private ProductionGui productionGui;
+    [SerializeField] private ActionsGui actionsGui;
     private readonly List<Action> _onDeactivate = new List<Action>();
+
+    private readonly Observable<List<ActionEntry>> currentActions =
+        new Observable<List<ActionEntry>>(new List<ActionEntry>());
+
     private GameObject _activeUi;
     private SelectionManager _selectionManager;
+    private BuildingManager buildingManager;
     private SingleSelectionGui singleSelectionGui;
 
     private void Awake() {
         _selectionManager = SelectionManager.Instance;
+        buildingManager = BuildingManager.Instance;
         singleSelectionGui = GetComponentInChildren<SingleSelectionGui>();
         singleSelectionGui.gameObject.SetActive(false);
+        currentActions.OnChange(actions => actionsGui.BuildUi(actions));
     }
 
     private void Start() {
@@ -23,9 +32,10 @@ public class SelectionManagerGui : MonoBehaviour {
     }
 
     private void UpdateSelection(List<Selectable> set) {
-        DeactivateAllUi();
+        ResetUi();
         switch (set.Count) {
             case 0:
+                ActivateNoSelectionGui();
                 return;
             case 1:
                 ActivateSingleUnitGui(set[0]);
@@ -36,7 +46,7 @@ public class SelectionManagerGui : MonoBehaviour {
         }
     }
 
-    private void DeactivateAllUi() {
+    private void ResetUi() {
         foreach (var action in _onDeactivate) {
             action.Invoke();
         }
@@ -44,13 +54,18 @@ public class SelectionManagerGui : MonoBehaviour {
         _onDeactivate.Clear();
         singleSelectionGui.gameObject.SetActive(false);
         Destroy(_activeUi);
-        productionGui.ShowDefault();
+    }
+
+    private void ActivateNoSelectionGui() {
+        buildingManager.BuildingOptions.OnChange(BuildProductionUi);
+        _onDeactivate.Add(() => buildingManager.BuildingOptions.RemoveOnChange(BuildProductionUi));
     }
 
     private void ActivateMultipleUnitsGui(List<Selectable> set) {
     }
 
     private void ActivateSingleUnitGui(Selectable current) {
+        current.onDestroyCallbacks.Add(ResetUi);
         singleSelectionGui.gameObject.SetActive(true);
         singleSelectionGui.DisplayName = current.displayName;
         singleSelectionGui.Icon = current.icon;
@@ -60,15 +75,12 @@ public class SelectionManagerGui : MonoBehaviour {
     }
 
     private void InitProductionUi(Selectable current) {
-        var production = current.GetComponent<Production>();
+        var production = current.GetComponent<IHasActions>();
         if (production == null) return;
 
-        void BuildProductionUi(ProductionOption[] options) {
-            productionGui.BuildUi(options);
-        }
-
-        production.Options.OnChange(BuildProductionUi);
-        _onDeactivate.Add(() => production.Options.RemoveOnChange(BuildProductionUi));
+        var actions = production.GetActions();
+        actions.OnChange(BuildProductionUi);
+        _onDeactivate.Add(() => actions.RemoveOnChange(BuildProductionUi));
     }
 
     private void InitDetailUi(Selectable current) {
@@ -88,6 +100,10 @@ public class SelectionManagerGui : MonoBehaviour {
 
     private void SetSingleUnitCurrentHp(int i) {
         singleSelectionGui.CurrentHp = i;
+    }
+
+    private void BuildProductionUi(ActionEntry[] options) {
+        actionsGui.BuildUi(options);
     }
 }
 }
