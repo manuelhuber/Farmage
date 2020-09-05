@@ -1,20 +1,20 @@
-﻿using Features.Units.Common.Ui;
+﻿using Features.Ui.Selection;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Features.Building.Construction {
-public class ConstructionUI : SingleUnitDetailUi {
+public class ConstructionGui : MonoBehaviour, ISingleSelectionDetailGui {
     public Text progressText;
-    private float _target;
     private Construction _construction;
-
-    public override void Init(GameObject selectedUnit) {
-        _construction = selectedUnit.GetComponent<Construction>();
-        _target = _construction.progressTarget;
-    }
+    private float _target;
 
     private void Update() {
         UpdateProgress();
+    }
+
+    public void Init(GameObject selectedUnit) {
+        _construction = selectedUnit.GetComponent<Construction>();
+        _target = _construction.progressTarget;
     }
 
     private void UpdateProgress() {

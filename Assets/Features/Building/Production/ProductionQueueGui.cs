@@ -1,9 +1,9 @@
-﻿using Features.Units.Common.Ui;
+﻿using Features.Ui.Selection;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Features.Building.Production {
-public class ProductionQueueGui : SingleUnitDetailUi {
+public class ProductionQueueGui : MonoBehaviour, ISingleSelectionDetailGui {
     public GameObject iconPrefab;
     public Image currentProductionIcon;
     public Text currentProductionText;
@@ -12,9 +12,14 @@ public class ProductionQueueGui : SingleUnitDetailUi {
     private Production _production;
     private Image[] _queueIcons;
 
-    void Update() {
+    private void Update() {
         UpdateQueueIcons();
         UpdateCurrentProduction();
+    }
+
+    public void Init(GameObject selectedUnit) {
+        _production = selectedUnit.GetComponent<Production>();
+        CreateQueuePrefabs(_production.QueueSize);
     }
 
     private void UpdateCurrentProduction() {
@@ -46,11 +51,6 @@ public class ProductionQueueGui : SingleUnitDetailUi {
             var icon = Instantiate(iconPrefab, queueSection);
             _queueIcons[i] = icon.GetComponent<Image>();
         }
-    }
-
-    public override void Init(GameObject selectedUnit) {
-        _production = selectedUnit.GetComponent<Production>();
-        CreateQueuePrefabs(_production.QueueSize);
     }
 }
 }

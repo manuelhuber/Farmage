@@ -2,7 +2,7 @@ using System;
 using Features.Building.UI;
 using Features.Resources;
 using Features.Save;
-using Features.Units.Common;
+using Features.Ui.Selection;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
@@ -37,7 +37,7 @@ public static class BuildingMenuEntryExtensions {
     }
 
     private static void InitUnit(GameObject building, BuildingMenuEntry entry) {
-        var unit = building.GetComponent<Unit>();
+        var unit = building.GetComponent<Selectable>();
         unit.icon = entry.image;
         unit.displayName = entry.buildingName;
     }

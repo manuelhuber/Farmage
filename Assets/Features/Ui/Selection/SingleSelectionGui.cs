@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Features.Units.Common.Ui {
-public class SingleUnitGui : MonoBehaviour {
+namespace Features.Ui.Selection {
+public class SingleSelectionGui : MonoBehaviour {
     public Transform detailSection;
     [SerializeField] private Text displayNameText;
     [SerializeField] private Text hpText;
     [SerializeField] private Image icon;
+    private int _currentHp;
 
     private string _displayName;
-    private int _currentHp;
+
+    private Sprite _icon;
     private int _maxHp;
 
     public string DisplayName {
@@ -35,8 +37,6 @@ public class SingleUnitGui : MonoBehaviour {
             UpdateHp();
         }
     }
-
-    private Sprite _icon;
 
     public Sprite Icon {
         get => _icon;
