@@ -32,11 +32,19 @@ public class GameTimeUi : MonoBehaviour {
         SetSpeed(2);
     }
 
+    public void UltraSpeed() {
+        SetSpeed(5);
+    }
+
     private string GetFormattedGameTime() {
         var time = Math.Round(_time.Time);
         var minutes = Math.Floor(time / 60);
         var seconds = time % 60;
-        string Pad(double num) => num < 10 ? $"0{num}" : num.ToString();
+
+        string Pad(double num) {
+            return num < 10 ? $"0{num}" : num.ToString();
+        }
+
         return $"{Pad(minutes)}:{Pad(seconds)}";
     }
 }

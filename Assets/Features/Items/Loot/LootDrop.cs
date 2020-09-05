@@ -26,7 +26,7 @@ public class LootDrop : MonoBehaviour {
     private void EnqueueDeliverTask(GameObject newLoot) {
         var storage = resourceManager.GetBestStorage(newLoot.GetComponent<Storable>());
         if (lootQueue != null) {
-            lootQueue.Enqueue(new DeliveryTask {type = TaskType.Loot, Goods = newLoot, Target = storage});
+            lootQueue.Enqueue(new DeliveryTask {type = TaskType.Deliver, Goods = newLoot, Target = storage});
         }
     }
 }

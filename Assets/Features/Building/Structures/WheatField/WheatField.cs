@@ -68,7 +68,7 @@ public class WheatField : MonoBehaviour, ISavableComponent {
             var wheat = Instantiate(wheatPrefab, dumpingPlace.position, dumpingPlace.rotation);
             queue.Enqueue(new DeliveryTask {
                 Goods = wheat,
-                type = TaskType.Loot,
+                type = TaskType.Deliver,
                 Target = resourceManager.GetBestStorage(wheat.GetComponent<Storable>())
             });
         }

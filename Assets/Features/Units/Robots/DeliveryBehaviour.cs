@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Features.Building.Structures.Warehouse;
 using Features.Delivery;
 using Features.Save;
 using Features.Units.Common;
@@ -9,23 +8,24 @@ using UnityEngine;
 
 namespace Features.Units.Robots {
 public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableComponent {
-    private bool _isCarryingLoot;
-    private GameObject _loot;
+    private GameObject _destination;
+    private GameObject _goods;
+    private bool _isCarryingGoods;
     private MovementAgent _movementAgent;
-    private Storage _targetStorage;
+    private GameObject _originStorage;
 
     private void Awake() {
         _movementAgent = GetComponent<MovementAgent>();
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (_loot == null) return;
+        if (_goods == null) return;
         var o = other.gameObject;
-        var isLoot = o == _loot.gameObject;
-        var isStorage = o == _targetStorage.gameObject;
-        if (isLoot) {
+        var arrivedAtGoods = o == _goods.gameObject || o == _originStorage;
+        var arrivedAtStorage = o == _destination.gameObject;
+        if (arrivedAtGoods) {
             PickupLoot();
-        } else if (_isCarryingLoot && isStorage) {
+        } else if (_isCarryingGoods && arrivedAtStorage) {
             DeliverLoot();
         }
     }
@@ -34,8 +34,9 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableCompon
 
     public string Save() {
         return new LootGathererData {
-            loot = _loot.getSaveID(), isCarryingLoot = _isCarryingLoot,
-            targetStorage = _targetStorage.getSaveID()
+            loot = _goods.getSaveID(), isCarryingLoot = _isCarryingGoods,
+            targetStorage = _destination.getSaveID(),
+            originStorage = _originStorage.getSaveID()
         }.ToJson();
     }
 
@@ -43,8 +44,9 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableCompon
         var data = rawData.FromJson<LootGathererData>();
         var loot = objects.getBySaveID(data.loot);
         var targetStorage = objects.getBySaveID(data.targetStorage);
+        var originStorage = objects.getBySaveID(data.originStorage);
         if (loot == null) return;
-        StartGathering(loot, targetStorage.GetComponent<Storage>());
+        StartGathering(loot, targetStorage, originStorage);
         if (!data.isCarryingLoot) return;
         PickupLoot();
     }
@@ -52,34 +54,40 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableCompon
     protected override bool InitImpl(DeliveryTask task) {
         var target = task.Target;
         if (target == null) return false;
-        StartGathering(task.Goods, target.GetComponent<Storage>());
+        StartGathering(task.Goods, target, task.From);
         return true;
     }
 
-    private void StartGathering(GameObject loot, Storage storage) {
-        _loot = loot;
-        _isCarryingLoot = false;
-        _targetStorage = storage;
-        _movementAgent.SetDestination(_loot.transform.position);
+    private void StartGathering(GameObject goods, GameObject destination, GameObject origin) {
+        _goods = goods;
+        _isCarryingGoods = false;
+        _destination = destination;
+        _originStorage = origin;
+        _movementAgent.SetDestination(_goods.transform.position, true);
         _movementAgent.IsStopped = false;
     }
 
     private void DeliverLoot() {
-        if (!_targetStorage.AcceptDelivery(_loot)) {
+        if (!_destination.GetComponent<IDeliveryAcceptor>().AcceptDelivery(_goods)) {
             Debug.LogWarning("Couldn't deliver item - code a solution for this problem!");
             return;
         }
 
-        _isCarryingLoot = false;
+        _isCarryingGoods = false;
         _movementAgent.IsStopped = true;
-        _loot = null;
+        _goods = null;
         CompleteTask();
     }
 
     private void PickupLoot() {
-        _loot.transform.parent = transform;
-        _isCarryingLoot = true;
-        _movementAgent.SetDestination(_targetStorage.transform.position, true);
+        if (_originStorage != null) {
+            var dispenser = _originStorage.GetComponent<IDeliveryDispenser>();
+            dispenser.DispenseDelivery(_goods);
+        }
+
+        _goods.transform.parent = transform;
+        _isCarryingGoods = true;
+        _movementAgent.SetDestination(_destination.transform.position, true);
     }
 
     public override void AbandonTask() {
@@ -89,9 +97,9 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableCompon
     }
 
     private void DropLoot() {
-        if (_loot == null) return;
-        _loot.transform.parent = null;
-        _loot = null;
+        if (_goods == null) return;
+        _goods.transform.parent = null;
+        _goods = null;
     }
 }
 
@@ -99,6 +107,7 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableCompon
 internal struct LootGathererData {
     public string loot;
     public string targetStorage;
+    public string originStorage;
     public bool isCarryingLoot;
 }
 }

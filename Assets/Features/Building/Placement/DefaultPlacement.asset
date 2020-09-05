@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8e65d8abeec25e4ab9fa2290ddf08fe, type: 3}
   m_Name: DefaultPlacement
   m_EditorClassIdentifier: 
-  placementOk: {fileID: 2100000, guid: a6f6f573a44512148bc905f4c7a62714, type: 2}
   placementBad: {fileID: 2100000, guid: 230b437a3f6bdf3409de0cbbecdf324a, type: 2}
+  placementOk: {fileID: 2100000, guid: 0e6d9344d5bbb9a4abca1058f4e295d6, type: 2}
   placementThreshold: 2

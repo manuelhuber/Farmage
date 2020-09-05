@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Features.Building.Structures.Warehouse;
 using Features.Items;
@@ -16,20 +17,10 @@ public class ResourceManager : GrimitySingleton<ResourceManager>, ISavableCompon
     private readonly Observable<Cost> _have = new Observable<Cost>(new Cost());
 
     private Text _text;
-    public IObservable<Cost> Have => _have;
+    public Grimity.Data.IObservable<Cost> Have => _have;
 
     private void Start() {
         Add(new Cost {cash = 1000});
-    }
-
-    public string SaveKey => "resources";
-
-    public string Save() {
-        return _have.Value.ToJson();
-    }
-
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        _have.Set(rawData.FromJson<Cost>());
     }
 
     public Cost Add(Cost change) {
@@ -48,12 +39,39 @@ public class ResourceManager : GrimitySingleton<ResourceManager>, ISavableCompon
         return cost <= _have.Value;
     }
 
+    public Optional<Tuple<Storable, Storage>> FindItem(ItemType type) {
+        var storage = GetStorages()
+            .First(s => s.type == type);
+        var item = storage.ReserveItem(storable => storable.IsType(type));
+        return !item.HasValue
+            ? Optional<Tuple<Storable, Storage>>.NoValue()
+            : Optional<Tuple<Storable, Storage>>.Of(new Tuple<Storable, Storage>(item.Value, storage));
+    }
+
     public GameObject GetBestStorage(Storable newLoot) {
-        return allFarmerBuildings.Items.Select(o => o.GetComponent<Storage>())
-            .Where(storage => storage != null)
+        return GetStorages()
             .Where(storage => !storage.IsFull)
             .FirstOrDefault(storage => newLoot.IsType(storage.type))
             ?.gameObject;
     }
+
+    private IEnumerable<Storage> GetStorages() {
+        return allFarmerBuildings.Items.Select(o => o.GetComponent<Storage>())
+            .Where(storage => storage != null);
+    }
+
+    #region Save
+
+    public string SaveKey => "resources";
+
+    public string Save() {
+        return _have.Value.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        _have.Set(rawData.FromJson<Cost>());
+    }
+
+    #endregion
 }
 }

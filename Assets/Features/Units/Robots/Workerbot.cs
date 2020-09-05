@@ -23,7 +23,7 @@ public class Workerbot : MonoBehaviour, ISavableComponent {
     private void Awake() {
         // When duplicating a object during play the active behaviour isn't null on Awake...
         _activeBehaviour = null;
-        _behaviours[TaskType.Loot] = gameObject.GetComponent<DeliveryBehaviour>();
+        _behaviours[TaskType.Deliver] = gameObject.GetComponent<DeliveryBehaviour>();
         _behaviours[TaskType.Harvest] = gameObject.GetComponent<HarvestBehaviour>();
         _behaviours[TaskType.Repair] = gameObject.GetComponent<RepairBehaviour>();
         _behaviours[TaskType.Build] = gameObject.GetComponent<BuildBehaviour>();

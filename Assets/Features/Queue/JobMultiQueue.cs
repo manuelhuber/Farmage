@@ -12,6 +12,10 @@ namespace Features.Queue {
 public class JobMultiQueue : ScriptableObject, ISavableComponent {
     public readonly Dictionary<TaskType, List<BaseTask>> Tasks = new Dictionary<TaskType, List<BaseTask>>();
 
+    // private void Awake() {
+    //     Tasks.Clear();
+    // }
+
     public string SaveKey => "JobMultiQueue";
 
     public string Save() {

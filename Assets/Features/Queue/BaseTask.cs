@@ -12,7 +12,7 @@ public class BaseTask {
 
 [Serializable]
 public enum TaskType {
-    Loot,
+    Deliver,
     Harvest,
     Repair,
     Build
