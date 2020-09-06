@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84747c50b2b8422683e10affc725c9db, type: 3}
-  m_Name: WheatField_MenuEntry
+  m_Name: MerchantDock_MenuEntry
   m_EditorClassIdentifier: 
-  buildingName: Wheat Field
-  buildingPrefab: {fileID: 2449454019606219251, guid: 1a1bed11c3a3ef2409df7e8264180e66,
+  buildingName: Merchant Dock
+  buildingPrefab: {fileID: 325917469068498222, guid: 1ee3ac81ca98227499df4a39ffac218a,
     type: 3}
-  modelPrefab: {fileID: 7857275586180839656, guid: ea43063c673340446a9760d720c22d80,
+  modelPrefab: {fileID: 2880124697843879048, guid: 56da55051cb2a0e4980abefb7aacab87,
     type: 3}
   size:
     x: 3
     y: 3
   cost:
-    cash: 100
-  image: {fileID: 21300000, guid: d45313cb80f72b8419a576f8b7bd1f43, type: 3}
+    cash: 0
+  image: {fileID: 0}
