@@ -12,7 +12,10 @@ using UnityEngine;
 namespace Features.Building.Placement {
 public class Placeable : MonoBehaviour {
     private static readonly string[] IgnoredColliderTags =
-        {Tags.RangeColliderTag, Tags.SphereTag, Tags.Terrain};
+        // We ignore "Buildings" to make sure we can place buildings adjacent to each other
+        // Building inside other buildings is prevented since their map tiles are marked as
+        // not walkable
+        {Tags.RangeColliderTag, Tags.SphereTag, Tags.Terrain, Tags.Building};
 
     public PlacementSettings settings;
     public LayerMask terrainLayer;

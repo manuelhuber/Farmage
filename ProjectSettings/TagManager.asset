@@ -12,6 +12,7 @@ TagManager:
   - ForceSphere
   - RangeCollider
   - Terrain
+  - Building
   layers:
   - Default
   - TransparentFX
