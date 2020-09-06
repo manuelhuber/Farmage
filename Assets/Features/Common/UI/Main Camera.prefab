@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1276776140704763333}
   - component: {fileID: 1276776140704763330}
   - component: {fileID: 1276776140704763331}
-  - component: {fileID: 1276776140704763332}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -84,21 +83,3 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1276776140704763328}
   m_Enabled: 1
---- !u!114 &1276776140704763332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1276776140704763328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f90c93c604f2b14c96b827e184e0e7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  placementSettings: {fileID: 11400000, guid: 9d585bd98fba38942bbaf3813b5eaf1d, type: 2}
-  terrainLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  buildMenu: {fileID: 11400000, guid: c975020b41911e540b445c852674023a, type: 2}
-  gridSize: 4
