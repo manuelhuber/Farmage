@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Constants;
 using Features.Health;
 using Features.Save;
 using Features.Time;
@@ -9,16 +10,14 @@ using UnityEngine;
 
 namespace Features.Building.Structures.FieldTower {
 public class FieldTower : MonoBehaviour, ISavableComponent {
-    public const string SphereTag = "ForceSphere";
-
     public GameObject spherePrefab;
     public int regenPerSecond;
     public float sphereRebuildDelay = 1f;
+    public int sphereHp;
+    private DelayedAction _rebuildAction;
 
     private PeriodicalAction _shieldRegeneration;
-    public int sphereHp;
     private GameTime _time;
-    private DelayedAction _rebuildAction;
 
     private void Awake() {
         _time = GameTime.Instance;
@@ -29,27 +28,6 @@ public class FieldTower : MonoBehaviour, ISavableComponent {
 
     private void Start() {
         RebuildSphere();
-    }
-
-    private void RebuildSphere() {
-        _rebuildAction = this.Do(() => BuildSphere(sphereHp)).withTime(_time.getTime);
-        _rebuildAction.After(sphereRebuildDelay);
-    }
-
-    private void BuildSphere(int initialHp) {
-        _rebuildAction = null;
-        var sphere = Instantiate(spherePrefab, transform).AddComponent<Mortal>();
-        sphere.tag = SphereTag;
-        sphere.MaxHitpoints = this.sphereHp;
-        sphere.TakeDamage(-initialHp);
-        sphere.onDeath.AddListener(() => {
-            _shieldRegeneration.action = null;
-            RebuildSphere();
-        });
-        _shieldRegeneration.action = () => {
-            sphere.TakeDamage(-regenPerSecond);
-            return true;
-        };
     }
 
     public string SaveKey => "FieldTower";
@@ -69,6 +47,27 @@ public class FieldTower : MonoBehaviour, ISavableComponent {
         } else {
             BuildSphere(data.currentShieldHp);
         }
+    }
+
+    private void RebuildSphere() {
+        _rebuildAction = this.Do(() => BuildSphere(sphereHp)).withTime(_time.getTime);
+        _rebuildAction.After(sphereRebuildDelay);
+    }
+
+    private void BuildSphere(int initialHp) {
+        _rebuildAction = null;
+        var sphere = Instantiate(spherePrefab, transform).AddComponent<Mortal>();
+        sphere.tag = Tags.SphereTag;
+        sphere.MaxHitpoints = sphereHp;
+        sphere.TakeDamage(-initialHp);
+        sphere.onDeath.AddListener(() => {
+            _shieldRegeneration.action = null;
+            RebuildSphere();
+        });
+        _shieldRegeneration.action = () => {
+            sphere.TakeDamage(-regenPerSecond);
+            return true;
+        };
     }
 }
 

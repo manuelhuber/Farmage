@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
+using Constants;
 using UnityEngine;
 
 namespace Features.Common {
 public class RangeCollider : MonoBehaviour {
-    public const string RangeColliderTag = "RangeCollider";
     public const int RangeColliderLayer = 2; // "Ignore Raycast"
+
+    private readonly HashSet<Action<Collider>> _onEnter = new HashSet<Action<Collider>>();
+    private readonly HashSet<Action<Collider>> _onExit = new HashSet<Action<Collider>>();
+    private float _range;
     private SphereCollider _sphereCollider;
 
     public float Range {
@@ -16,24 +20,12 @@ public class RangeCollider : MonoBehaviour {
         }
     }
 
-    private readonly HashSet<Action<Collider>> _onEnter = new HashSet<Action<Collider>>();
-    private readonly HashSet<Action<Collider>> _onExit = new HashSet<Action<Collider>>();
-    private float _range;
-
     private void Awake() {
         var go = gameObject;
         _sphereCollider = go.AddComponent<SphereCollider>();
         _sphereCollider.isTrigger = true;
-        go.tag = RangeColliderTag;
+        go.tag = Tags.RangeColliderTag;
         go.layer = RangeColliderLayer;
-    }
-
-    public void OnEnter(Action<Collider> callback) {
-        _onEnter.Add(callback);
-    }
-
-    public void OnExit(Action<Collider> callback) {
-        _onExit.Add(callback);
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -46,6 +38,14 @@ public class RangeCollider : MonoBehaviour {
         foreach (var action in _onExit) {
             action(other);
         }
+    }
+
+    public void OnEnter(Action<Collider> callback) {
+        _onEnter.Add(callback);
+    }
+
+    public void OnExit(Action<Collider> callback) {
+        _onExit.Add(callback);
     }
 }
 }
