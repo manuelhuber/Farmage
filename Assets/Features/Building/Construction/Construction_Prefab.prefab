@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -1677847347412762025}
   m_Layer: 9
   m_Name: Construction_Prefab
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -92,7 +92,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79d119989b45412aa63f2acc7b764c5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  finalBuildingPrefab: {fileID: 0}
   progressTarget: 0
   material: {fileID: 2100000, guid: c15ef801e9b27514ea305ccaa4bc9496, type: 2}
 --- !u!114 &-1677847347412762025
