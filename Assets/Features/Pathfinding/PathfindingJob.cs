@@ -179,8 +179,9 @@ public struct PathfindingJob : IJob {
             var node = pathNodes[index];
             if (node.TotalCost < bestNode.TotalCost
                 || node.TotalCost == bestNode.TotalCost && node.HeuristicCost < bestNode.HeuristicCost
-            )
+            ) {
                 bestNode = node;
+            }
         }
 
         return bestNode.Index;
@@ -204,13 +205,13 @@ public struct PathfindingJob : IJob {
         while (!node.IsWalkable && node.Index != startIndex) {
             var nextX = node.X;
             var nextZ = node.Z;
-            if (startNode.X < node.X)
+            if (startNode.X < node.X) {
                 nextX--;
-            else if (startNode.Z > node.X) nextX++;
+            } else if (startNode.X > node.X) nextX++;
 
-            if (startNode.Z < node.Z)
+            if (startNode.Z < node.Z) {
                 nextZ--;
-            else if (startNode.Z > node.Z) nextZ++;
+            } else if (startNode.Z > node.Z) nextZ++;
 
             node = map[CalculateIndex(nextX, nextZ)];
         }

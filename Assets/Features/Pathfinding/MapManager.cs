@@ -22,11 +22,6 @@ public struct PathRequest {
 }
 
 public class MapManager : GrimitySingleton<MapManager> {
-    private readonly Queue<PathRequest> _requests = new Queue<PathRequest>();
-    private int _cellCountX;
-    private int _cellCountZ;
-    private NativeArray<GridNode> _map;
-
     public int nodeScansPerFrame;
     public float cellSize;
     public float sizeX;
@@ -38,8 +33,15 @@ public class MapManager : GrimitySingleton<MapManager> {
     [InfoBox("All layers (incl blocking) that count as terrain")]
     public LayerMask terrainLayer;
 
+    // TODO: _activeRequests makes no sense and doesn't do anything - fix it
+    private readonly List<PathRequest> _activeRequests = new List<PathRequest>();
+
+    private readonly Queue<PathRequest> _requests = new Queue<PathRequest>();
+    private int _cellCountX;
+    private int _cellCountZ;
+    private NativeArray<GridNode> _map;
+
     private int2 _mapSize;
-    private List<PathRequest> _activeRequests = new List<PathRequest>();
 
     private void Start() {
         _cellCountX = Mathf.RoundToInt(sizeX / cellSize);
@@ -60,19 +62,6 @@ public class MapManager : GrimitySingleton<MapManager> {
         StartCoroutine(ScanMap());
     }
 
-    private void OnDestroy() {
-        _map.Dispose();
-    }
-
-    public Action RequestPath(PathRequest request) {
-        _requests.Enqueue(request);
-        return () => {
-            if (!_activeRequests.Remove(request)) {
-                Debug.Log("Canceled requests before it got calculated");
-            }
-        };
-    }
-
     private void Update() {
         var requestsCount = _requests.Count;
         if (requestsCount == 0) return;
@@ -90,7 +79,7 @@ public class MapManager : GrimitySingleton<MapManager> {
                 MoveDiagonalCost = 14,
                 MoveStraightCost = 11,
                 MapSize = _mapSize,
-                Path = newPaths[i],
+                Path = newPaths[i]
             }.Schedule();
             callbacks[i] = pathRequest.Callback;
             _activeRequests.Add(pathRequest);
@@ -109,6 +98,30 @@ public class MapManager : GrimitySingleton<MapManager> {
         }
 
         jobHandleArray.Dispose();
+    }
+
+    private void OnDestroy() {
+        _map.Dispose();
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.DrawWireCube(transform.position, new Vector3(sizeX, 1, sizeZ));
+        var size = cellSize * .9f;
+        foreach (var gridNode in _map.Where(gridNode => !gridNode.IsWalkable || gridNode.Highlight)) {
+            Gizmos.color = gridNode.Highlight ? Color.blue : Color.red;
+            Gizmos.DrawCube(
+                GridToWorldPosition(gridNode.X, gridNode.Z),
+                new Vector3(size, .1f, size));
+        }
+    }
+
+    public Action RequestPath(PathRequest request) {
+        _requests.Enqueue(request);
+        return () => {
+            if (!_activeRequests.Remove(request)) {
+                Debug.Log("Canceled requests before it got calculated");
+            }
+        };
     }
 
     private IEnumerator ScanMap() {
@@ -159,17 +172,6 @@ public class MapManager : GrimitySingleton<MapManager> {
         _map.Put2D(node, z, x, _cellCountX);
     }
 
-    private void OnDrawGizmos() {
-        Gizmos.DrawWireCube(transform.position, new Vector3(sizeX, 1, sizeZ));
-        var size = cellSize * .9f;
-        foreach (var gridNode in _map.Where(gridNode => !gridNode.IsWalkable || gridNode.Highlight)) {
-            Gizmos.color = gridNode.Highlight ? Color.blue : Color.red;
-            Gizmos.DrawCube(
-                GridToWorldPosition(gridNode.X, gridNode.Z),
-                new Vector3(size, .1f, size));
-        }
-    }
-
     public List<GridNode> GetAreaAroundPosition(Vector3 pos, int2 size) {
         if (size.x.IsEven()) {
             pos.x -= cellSize / 2;
@@ -181,12 +183,12 @@ public class MapManager : GrimitySingleton<MapManager> {
 
         var worldPositionToNode = WorldPositionToNode(pos);
         var startX = Mathf.RoundToInt(size.x.IsEven()
-                ? worldPositionToNode.x - ((size.x / 2) - 1)
-                : worldPositionToNode.x - (Mathf.Floor(size.x / 2)))
+                ? worldPositionToNode.x - (size.x / 2 - 1)
+                : worldPositionToNode.x - Mathf.Floor(size.x / 2))
             ;
         var startY = Mathf.RoundToInt(size.y.IsEven()
-                ? worldPositionToNode.y - ((size.y / 2) - 1)
-                : worldPositionToNode.y - (Mathf.Floor(size.y / 2)))
+                ? worldPositionToNode.y - (size.y / 2 - 1)
+                : worldPositionToNode.y - Mathf.Floor(size.y / 2))
             ;
         var list = new List<GridNode>();
 
