@@ -16,24 +16,15 @@ namespace Features.Pathfinding {
 ///     Testing and debuging class for pathfinding - not intended for use in game
 /// </summary>
 public class PathFindingGrid : MonoBehaviour {
-    private UnityEngine.Camera _camera;
-    private int _cellCountX;
-
-
-    private int _cellCountZ;
     [SerializeField] private int grassPenalty;
     public float cellSize;
     public int diagonalCost = 1;
     public bool drawGizmos;
     public int findPathJobCount = 20;
-    public NativeArray<GridNode> map;
-
-    private readonly List<int[]> _paths = new List<int[]>();
     public bool schedule;
     public float sizeX;
     public float sizeZ;
     public LayerMask terrainLayer;
-    private readonly List<int> _visitedIndices = new List<int>();
 
     public int GrassPenalty {
         get => grassPenalty;
@@ -42,6 +33,15 @@ public class PathFindingGrid : MonoBehaviour {
             UpdatePenalty();
         }
     }
+
+    private readonly List<int[]> _paths = new List<int[]>();
+    private readonly List<int> _visitedIndices = new List<int>();
+    private UnityEngine.Camera _camera;
+    private int _cellCountX;
+
+
+    private int _cellCountZ;
+    public NativeArray<GridNode> map;
 
     private void Start() {
         _camera = UnityEngine.Camera.main;
@@ -59,15 +59,6 @@ public class PathFindingGrid : MonoBehaviour {
                 Penalty = x != 15 && x != 16 ? 0 : GrassPenalty
             };
         });
-    }
-
-    [Button("Update Penalty")]
-    private void UpdatePenalty() {
-        for (var index = 0; index < map.Length; index++) {
-            var gridNode = map[index];
-            gridNode.Penalty = gridNode.X == 15 || gridNode.X == 16 ? 0 : GrassPenalty;
-            map[index] = gridNode;
-        }
     }
 
     private void Update() {
@@ -98,20 +89,23 @@ public class PathFindingGrid : MonoBehaviour {
                     MoveDiagonalCost = diagonalCost,
                     MoveStraightCost = 11,
                     MapSize = new int2(_cellCountX, _cellCountZ),
-                    Path = newPaths[i],
+                    Path = newPaths[i]
                     // visited = visited[i]
                 };
-                if (schedule)
+                if (schedule) {
                     jobHandleArray[i] = findPathJob.Schedule();
-                else
+                } else {
                     findPathJob.Execute();
+                }
             }
 
             JobHandle.CompleteAll(jobHandleArray);
 
             _visitedIndices.Clear();
             foreach (var visitedByPath in visited) {
-                foreach (var i in visitedByPath) _visitedIndices.Add(i);
+                foreach (var i in visitedByPath) {
+                    _visitedIndices.Add(i);
+                }
 
                 visitedByPath.Dispose();
             }
@@ -126,17 +120,6 @@ public class PathFindingGrid : MonoBehaviour {
             sw.Stop();
             Debug.Log("Total time: " + sw.ElapsedMilliseconds + "ms");
         }
-    }
-
-    private int2 WorldPositionToNode(Vector3 pos) {
-        var transformPosition = transform.position;
-        var start = transformPosition - new Vector3(sizeX / 2, 0, sizeZ / 2);
-        var end = transformPosition + new Vector3(sizeX / 2, 0, sizeZ / 2);
-
-        var percentageX = Mathf.Clamp01((pos.x - start.x - cellSize / 2) / (end.x - start.x));
-        var percentageZ = Mathf.Clamp01((pos.z - start.z - cellSize / 2) / (end.z - start.z));
-        return new int2(Mathf.RoundToInt(percentageX * _cellCountX),
-            Mathf.RoundToInt(percentageZ * _cellCountZ));
     }
 
     private void OnDrawGizmos() {
@@ -160,6 +143,26 @@ public class PathFindingGrid : MonoBehaviour {
                     gridNode.Z * cellSize - sizeZ / 2 + cellSize / 2),
                 new Vector3(size, .1f, size));
         }
+    }
+
+    [Button("Update Penalty")]
+    private void UpdatePenalty() {
+        for (var index = 0; index < map.Length; index++) {
+            var gridNode = map[index];
+            gridNode.Penalty = gridNode.X == 15 || gridNode.X == 16 ? 0 : GrassPenalty;
+            map[index] = gridNode;
+        }
+    }
+
+    private int2 WorldPositionToNode(Vector3 pos) {
+        var transformPosition = transform.position;
+        var start = transformPosition - new Vector3(sizeX / 2, 0, sizeZ / 2);
+        var end = transformPosition + new Vector3(sizeX / 2, 0, sizeZ / 2);
+
+        var percentageX = Mathf.Clamp01((pos.x - start.x - cellSize / 2) / (end.x - start.x));
+        var percentageZ = Mathf.Clamp01((pos.z - start.z - cellSize / 2) / (end.z - start.z));
+        return new int2(Mathf.RoundToInt(percentageX * _cellCountX),
+            Mathf.RoundToInt(percentageZ * _cellCountZ));
     }
 }
 }

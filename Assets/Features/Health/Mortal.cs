@@ -14,7 +14,7 @@ public class Mortal : MonoBehaviour, ISavableComponent {
     [field: SerializeField] public int MaxHitpoints { get; set; }
 
     public Grimity.Data.IObservable<int> Hitpoints => _hitpoints;
-    private Observable<int> _hitpoints = new Observable<int>(0);
+    private readonly Observable<int> _hitpoints = new Observable<int>(0);
 
     private void Awake() {
         _hitpoints.Set(MaxHitpoints);
@@ -32,6 +32,8 @@ public class Mortal : MonoBehaviour, ISavableComponent {
         }
     }
 
+    #region Save
+
     public string SaveKey => "Mortal";
 
     public string Save() {
@@ -41,11 +43,13 @@ public class Mortal : MonoBehaviour, ISavableComponent {
     public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
         _hitpoints.Set(rawData.FromJson<MortalData>().hp);
     }
-}
 
-[Serializable]
-struct MortalData {
-    public int hp;
+    [Serializable]
+    private struct MortalData {
+        public int hp;
+    }
+
+    #endregion
 }
 
 public enum Team {

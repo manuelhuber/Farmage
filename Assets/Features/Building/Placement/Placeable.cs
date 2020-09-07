@@ -11,29 +11,26 @@ using UnityEngine;
 
 namespace Features.Building.Placement {
 public class Placeable : MonoBehaviour {
+    // We ignore "Buildings" to make sure we can place buildings adjacent to each other
+    // Building inside other buildings is prevented since their map tiles are marked as
+    // not walkable
     private static readonly string[] IgnoredColliderTags =
-        // We ignore "Buildings" to make sure we can place buildings adjacent to each other
-        // Building inside other buildings is prevented since their map tiles are marked as
-        // not walkable
         {Tags.RangeColliderTag, Tags.SphereTag, Tags.Terrain, Tags.Building};
 
-    public PlacementSettings settings;
-    public LayerMask terrainLayer;
-    public int2 size;
+    public bool CanBePlaced => _isTerrainGood.Value && _collisions.Count == 0 && MayBePlaced.Value;
     private readonly List<Collider> _collisions = new List<Collider>();
     private readonly Observable<bool> _isTerrainGood = new Observable<bool>(false);
-
+    private readonly List<int2> _occupiedNodes = new List<int2>();
     public readonly Observable<bool> MayBePlaced = new Observable<bool>(false);
-    private readonly List<int2> occupiedNodes1 = new List<int2>();
-
     private UnityEngine.Camera _camera;
     private BoxCollider _collider;
     private MapManager _mapManager;
-
-    private bool _mayBePlaced;
     private MeshRenderer[] _renderer = { };
 
-    public bool CanBePlaced => _isTerrainGood.Value && _collisions.Count == 0 && MayBePlaced.Value;
+    private PlacementSettings _settings;
+    private int2 _size;
+    private LayerMask _terrainLayer;
+
 
     private void Awake() {
         _renderer = GetComponentsInChildren<MeshRenderer>();
@@ -53,11 +50,11 @@ public class Placeable : MonoBehaviour {
         var gridSize = BuildingManager.GridSize;
         var nodePosition = _mapManager.WorldPositionToNode(pos);
         var newWorldPos = _mapManager.GridToWorldPosition(nodePosition.x, nodePosition.y);
-        if (size.x.IsEven()) {
+        if (_size.x.IsEven()) {
             newWorldPos.x -= gridSize / 2;
         }
 
-        if (size.y.IsEven()) {
+        if (_size.y.IsEven()) {
             newWorldPos.z -= gridSize / 2;
         }
 
@@ -85,55 +82,55 @@ public class Placeable : MonoBehaviour {
         PlacementSettings newSettings,
         LayerMask newTerrainLayer,
         int2 newSize) {
-        settings = newSettings;
-        terrainLayer = newTerrainLayer;
-        size = newSize;
+        _settings = newSettings;
+        _terrainLayer = newTerrainLayer;
+        _size = newSize;
         _collider.center = new Vector3(0, -0.5f, 0);
         _collider.isTrigger = true;
-        _collider.size = new Vector3(size.x, 1, size.y) * BuildingManager.GridSize;
+        _collider.size = new Vector3(_size.x, 1, _size.y) * BuildingManager.GridSize;
     }
 
     private void CheckTerrain() {
         ClearOccupiedNodes();
 
         var pos = transform.position;
-        var areaAroundPosition = _mapManager.GetAreaAroundPosition(pos, size);
+        var areaAroundPosition = _mapManager.GetAreaAroundPosition(pos, _size);
 
         foreach (var node in areaAroundPosition) {
-            occupiedNodes1.Add(new int2(node.X, node.Z));
+            _occupiedNodes.Add(new int2(node.X, node.Z));
 
             var gridNode = node;
             gridNode.Highlight = true;
             _mapManager.SetNode(node.X, node.Z, gridNode);
         }
 
-        var goodTerrain = occupiedNodes1.All(node => _mapManager.GetNode(node.x, node.y).IsWalkable);
+        var goodTerrain = _occupiedNodes.All(node => _mapManager.GetNode(node.x, node.y).IsWalkable);
         _isTerrainGood.Set(goodTerrain);
     }
 
     private void ClearOccupiedNodes() {
-        foreach (var node in occupiedNodes1) {
+        foreach (var node in _occupiedNodes) {
             var gridNode = _mapManager.GetNode(node.x, node.y);
             gridNode.Highlight = false;
             _mapManager.SetNode(node.x, node.y, gridNode);
         }
 
-        occupiedNodes1.Clear();
+        _occupiedNodes.Clear();
     }
 
     private bool IsTerrainLayer(Component other) {
-        return terrainLayer == (terrainLayer | (1 << other.gameObject.layer));
+        return _terrainLayer == (_terrainLayer | (1 << other.gameObject.layer));
     }
 
     private void UpdateMaterial() {
-        var material = CanBePlaced ? settings.placementOk : settings.placementBad;
+        var material = CanBePlaced ? _settings.placementOk : _settings.placementBad;
         foreach (var ren in _renderer) {
             ren.material = material;
         }
     }
 
     private RaycastHit MouseToTerrain() {
-        CursorUtil.GetCursorLocation(out var terrainHit, _camera, terrainLayer);
+        CursorUtil.GetCursorLocation(out var terrainHit, _camera, _terrainLayer);
         return terrainHit;
     }
 }

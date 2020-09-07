@@ -30,25 +30,6 @@ public class FieldTower : MonoBehaviour, ISavableComponent {
         RebuildSphere();
     }
 
-    public string SaveKey => "FieldTower";
-
-    public string Save() {
-        var data = new FieldTowerData {
-            currentShieldHp = 1,
-            shieldRebuildTimestamp = _rebuildAction != null ? _rebuildAction.TargetTime : -1
-        };
-        return data.ToJson();
-    }
-
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        var data = rawData.FromJson<FieldTowerData>();
-        if (data.shieldRebuildTimestamp >= 0) {
-            this.Do(() => BuildSphere(sphereHp)).withTime(_time.getTime).At(data.shieldRebuildTimestamp);
-        } else {
-            BuildSphere(data.currentShieldHp);
-        }
-    }
-
     private void RebuildSphere() {
         _rebuildAction = this.Do(() => BuildSphere(sphereHp)).withTime(_time.getTime);
         _rebuildAction.After(sphereRebuildDelay);
@@ -69,11 +50,34 @@ public class FieldTower : MonoBehaviour, ISavableComponent {
             return true;
         };
     }
-}
 
-[Serializable]
-internal struct FieldTowerData {
-    public int currentShieldHp;
-    public float shieldRebuildTimestamp;
+    #region Save
+
+    public string SaveKey => "FieldTower";
+
+    public string Save() {
+        var data = new FieldTowerData {
+            currentShieldHp = 1,
+            shieldRebuildTimestamp = _rebuildAction != null ? _rebuildAction.TargetTime : -1
+        };
+        return data.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        var data = rawData.FromJson<FieldTowerData>();
+        if (data.shieldRebuildTimestamp >= 0) {
+            this.Do(() => BuildSphere(sphereHp)).withTime(_time.getTime).At(data.shieldRebuildTimestamp);
+        } else {
+            BuildSphere(data.currentShieldHp);
+        }
+    }
+
+    [Serializable]
+    private struct FieldTowerData {
+        public int currentShieldHp;
+        public float shieldRebuildTimestamp;
+    }
+
+    #endregion
 }
 }

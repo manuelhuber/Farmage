@@ -14,27 +14,13 @@ namespace Features.Building.Construction {
 public class Construction : MonoBehaviour, ISavableComponent, IHasActions {
     public float progressTarget;
     public Material material;
+    public float Progress { get; private set; }
+
     private readonly Observable<ActionEntry[]> _actions = new Observable<ActionEntry[]>(new ActionEntry[0]);
     private BuildingMenuEntry _building;
-    public float Progress { get; private set; }
 
     public Grimity.Data.IObservable<ActionEntry[]> GetActions() {
         return _actions;
-    }
-
-    public string SaveKey => "ConstructionSite";
-
-    public string Save() {
-        return new ConstructionData {progress = Progress, menuEntry = _building.buildingName}.ToJson();
-    }
-
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        var data = rawData.FromJson<ConstructionData>();
-        var menuEntries = SaveGame.GetAllBuildings();
-        var menuEntry = menuEntries.First(entry => entry.buildingName == data.menuEntry);
-        Init(menuEntry);
-
-        Progress = data.progress;
     }
 
     public bool Build(float effort) {
@@ -75,11 +61,30 @@ public class Construction : MonoBehaviour, ISavableComponent, IHasActions {
         _building.InitBuilding(completedBuilding);
         Destroy(gameObject);
     }
-}
 
-[Serializable]
-internal struct ConstructionData {
-    public float progress;
-    public string menuEntry;
+    #region Save
+
+    public string SaveKey => "ConstructionSite";
+
+    public string Save() {
+        return new ConstructionData {progress = Progress, menuEntry = _building.buildingName}.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        var data = rawData.FromJson<ConstructionData>();
+        var menuEntries = SaveGame.GetAllBuildings();
+        var menuEntry = menuEntries.First(entry => entry.buildingName == data.menuEntry);
+        Init(menuEntry);
+
+        Progress = data.progress;
+    }
+
+    [Serializable]
+    private struct ConstructionData {
+        public float progress;
+        public string menuEntry;
+    }
+
+    #endregion
 }
 }

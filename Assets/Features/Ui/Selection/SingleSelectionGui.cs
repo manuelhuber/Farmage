@@ -7,12 +7,6 @@ public class SingleSelectionGui : MonoBehaviour {
     [SerializeField] private Text displayNameText;
     [SerializeField] private Text hpText;
     [SerializeField] private Image icon;
-    private int _currentHp;
-
-    private string _displayName;
-
-    private Sprite _icon;
-    private int _maxHp;
 
     public string DisplayName {
         get => _displayName;
@@ -46,6 +40,10 @@ public class SingleSelectionGui : MonoBehaviour {
         }
     }
 
+    private int _currentHp;
+    private string _displayName;
+    private Sprite _icon;
+    private int _maxHp;
 
     private void UpdateHp() {
         hpText.text = $"{_currentHp} / {_maxHp}";

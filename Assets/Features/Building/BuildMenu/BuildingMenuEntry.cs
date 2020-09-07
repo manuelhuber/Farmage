@@ -12,10 +12,10 @@ namespace Features.Building.BuildMenu {
 [CreateAssetMenu(menuName = "buildings/building menu entry")]
 public class BuildingMenuEntry : ScriptableObject {
     [Required] public string buildingName;
-    public GameObject buildingPrefab;
-    public GameObject modelPrefab;
-    public int2 size;
-    public Cost cost;
+    [Required] public GameObject buildingPrefab;
+    [Required] public GameObject modelPrefab;
+    [Required] public int2 size;
+    [Required] public Cost cost;
     public Sprite image;
 }
 

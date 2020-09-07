@@ -13,13 +13,13 @@ using UnityEngine;
 
 namespace Features.Units.Enemies {
 public class EnemyScript : MonoBehaviour, ISavableComponent {
+    public float attackSpeed;
+    public int damage = 5;
     private PeriodicalAction _attack;
     private MovementAgent _movementAgent;
     private List<Mortal> _targets = new List<Mortal>();
-    [CanBeNull] private Mortal _victim;
-    public float attackSpeed;
-    public int damage = 5;
     private GameTime _time;
+    [CanBeNull] private Mortal _victim;
 
 
     private void Awake() {
@@ -38,11 +38,12 @@ public class EnemyScript : MonoBehaviour, ISavableComponent {
         FindNewTarget();
     }
 
-    public void SetTargets(List<Mortal> targets) {
-        _targets = targets;
-        foreach (var target in _targets) {
-            target.onDeath.AddListener(() => _targets.Remove(target));
-        }
+    private void OnTriggerEnter(Collider other) {
+        var destructible = other.gameObject.GetComponent<Mortal>();
+        if (destructible == null || destructible.team == Team.Aliens) return;
+        transform.LookAt(destructible.transform);
+        _movementAgent.IsStopped = true;
+        SetTarget(destructible);
     }
 
     private void OnTriggerExit(Collider other) {
@@ -53,12 +54,11 @@ public class EnemyScript : MonoBehaviour, ISavableComponent {
         _movementAgent.SetDestination(victim.transform.position, true);
     }
 
-    private void OnTriggerEnter(Collider other) {
-        var destructible = other.gameObject.GetComponent<Mortal>();
-        if (destructible == null || destructible.team == Team.Aliens) return;
-        transform.LookAt(destructible.transform);
-        _movementAgent.IsStopped = true;
-        SetTarget(destructible);
+    public void SetTargets(List<Mortal> targets) {
+        _targets = targets;
+        foreach (var target in _targets) {
+            target.onDeath.AddListener(() => _targets.Remove(target));
+        }
     }
 
     private void SetTarget(Mortal destructible) {
@@ -83,11 +83,13 @@ public class EnemyScript : MonoBehaviour, ISavableComponent {
         _movementAgent.SetDestination(target.transform.position, true);
     }
 
+    #region Save
+
     public string SaveKey => "EnemyController";
 
     public string Save() {
         var victim = _victim;
-        return new EnemyData() {
+        return new EnemyData {
             target = victim == null ? "" : victim.getSaveID(),
             targets = _targets.Select(mortal => mortal.getSaveID()).ToArray(),
             nextAttack = _attack.NextExecution
@@ -104,12 +106,14 @@ public class EnemyScript : MonoBehaviour, ISavableComponent {
             SetTarget(target.GetComponent<Mortal>());
         }
     }
-}
 
-[Serializable]
-internal struct EnemyData {
-    public string target;
-    public string[] targets;
-    public float nextAttack;
+    [Serializable]
+    private struct EnemyData {
+        public string target;
+        public string[] targets;
+        public float nextAttack;
+    }
+
+    #endregion
 }
 }

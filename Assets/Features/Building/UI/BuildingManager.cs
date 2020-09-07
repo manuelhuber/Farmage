@@ -17,6 +17,7 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
     [SerializeField] private GameObject constructionSitePrefab;
     [SerializeField] private LayerMask terrainLayer = 0;
     [SerializeField] private BuildMenu.BuildMenu buildMenu;
+    public IObservable<ActionEntry[]> BuildingOptions => _buildingOptions;
 
     private readonly Observable<ActionEntry[]> _buildingOptions =
         new Observable<ActionEntry[]>(new ActionEntry[0]);
@@ -26,7 +27,6 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
     private ResourceManager _resourceManager;
     private BuildingMenuEntry _selected;
     private TaskManager _taskManager;
-    public IObservable<ActionEntry[]> BuildingOptions => _buildingOptions;
 
     private void Awake() {
         _taskManager = TaskManager.Instance;

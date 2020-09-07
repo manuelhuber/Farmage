@@ -13,6 +13,7 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
     public int visitIntervalsInSeconds;
     public SalesPrices prices;
 
+    public bool TradeInProgress { get; private set; }
 
     private readonly Observable<ActionEntry[]>
         _actions = new Observable<ActionEntry[]>(new ActionEntry[0]);
@@ -21,7 +22,6 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
     private float _nextTradeTimestamp;
     private ResourceManager _resourceManager;
     private TaskManager _taskManager;
-    public bool TradeInProgress { get; private set; }
 
     private void Awake() {
         _taskManager = TaskManager.Instance;
@@ -45,6 +45,7 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
             InitTrade();
         }
     }
+
 
     public bool AcceptDelivery(GameObject goods) {
         var itemType = goods.GetComponent<Storable>().type;

@@ -7,13 +7,13 @@ using UnityEngine;
 
 namespace Features.Building.Structures {
 public class Building : MonoBehaviour, ISavableComponent {
-    private readonly bool autoRepair = false;
+    private readonly bool _autoRepair = false;
     private bool _waitingForRepair;
 
     private void Start() {
         var mortal = GetComponent<Mortal>();
         mortal.Hitpoints.OnChange(hitpoints => {
-            if (!autoRepair) return;
+            if (!_autoRepair) return;
             if (hitpoints == mortal.MaxHitpoints) {
                 _waitingForRepair = false;
                 return;
@@ -25,6 +25,8 @@ public class Building : MonoBehaviour, ISavableComponent {
         });
     }
 
+    #region Save
+
     public string SaveKey => "building";
 
     public string Save() {
@@ -34,5 +36,7 @@ public class Building : MonoBehaviour, ISavableComponent {
     public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
         _waitingForRepair = rawData.FromJson<bool>();
     }
+
+    #endregion
 }
 }

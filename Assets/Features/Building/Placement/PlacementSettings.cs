@@ -5,6 +5,5 @@ namespace Features.Building.Placement {
 public class PlacementSettings : ScriptableObject {
     public Material placementBad;
     public Material placementOk;
-    public float placementThreshold;
 }
 }

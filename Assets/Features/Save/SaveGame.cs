@@ -11,9 +11,7 @@ using Object = UnityEngine.Object;
 
 namespace Features.Save {
 public class SaveGame : GrimitySingleton<SaveGame> {
-    public Dictionary<string, GameObject> PrefabDict => _prefabDict;
-
-    private Dictionary<string, GameObject> _prefabDict;
+    public Dictionary<string, GameObject> PrefabDict { get; private set; }
     private Dictionary<string, BuildingMenuEntry> _buildingDict;
 
     [UsedImplicitly]
@@ -37,7 +35,7 @@ public class SaveGame : GrimitySingleton<SaveGame> {
 
     [UsedImplicitly]
     public void Load() {
-        _prefabDict = GetSavePrefabs();
+        PrefabDict = GetSavePrefabs();
         _buildingDict = GetBuildingMenuEntries();
 
         var loadFile = new SaveFileWriter().LoadFile<SaveData>();
@@ -72,8 +70,8 @@ public class SaveGame : GrimitySingleton<SaveGame> {
             var objectId = loadFileObject.Key;
 
             var prefabKey = objectData[SavableObject.PrefabKey];
-            if (_prefabDict.ContainsKey(prefabKey)) {
-                var prefab = _prefabDict[prefabKey];
+            if (PrefabDict.ContainsKey(prefabKey)) {
+                var prefab = PrefabDict[prefabKey];
                 loadedObjects[objectId] = Instantiate(prefab);
             } else if (_buildingDict.ContainsKey(prefabKey)) {
                 var menuEntry = _buildingDict[prefabKey];
@@ -121,12 +119,16 @@ public class SaveGame : GrimitySingleton<SaveGame> {
                 select (BuildingMenuEntry) AssetDatabase.LoadMainAssetAtPath(path))
             .ToArray();
     }
-}
 
-[Serializable]
-internal struct SaveData {
-    public string version;
-    public Dictionary<string, Dictionary<string, string>> Data;
-    public Dictionary<string, Dictionary<string, string>> Objects;
+    #region Save
+
+    [Serializable]
+    private struct SaveData {
+        public string version;
+        public Dictionary<string, Dictionary<string, string>> Data;
+        public Dictionary<string, Dictionary<string, string>> Objects;
+    }
+
+    #endregion
 }
 }

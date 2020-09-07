@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 namespace Features.Resources {
 public class ResourceGui : MonoBehaviour {
-    private ResourceManager _resourceManager;
     [SerializeField] private Text text;
+    private ResourceManager _resourceManager;
 
     private void Awake() {
         _resourceManager = ResourceManager.Instance;

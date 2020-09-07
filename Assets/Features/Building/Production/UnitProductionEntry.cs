@@ -1,12 +1,13 @@
 using Features.Resources;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Features.Building.Production {
 [CreateAssetMenu(menuName = "production/Unit production")]
 public class UnitProductionEntry : ScriptableObject {
-    public GameObject prefab;
+    [Required] public GameObject prefab;
     public Sprite icon;
-    public float productionTimeInSeconds;
-    public Cost cost;
+    [Required] public float productionTimeInSeconds;
+    [Required] public Cost cost;
 }
 }

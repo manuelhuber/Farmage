@@ -11,12 +11,12 @@ namespace Features.Units.Robots {
 public class Worker : MonoBehaviour, ISavableComponent {
     [SerializeField] private TaskType[] typePriority = new TaskType[0];
 
+    public BaseTask CurrentTask { get; private set; }
+
     private readonly Dictionary<TaskType, IUnitBehaviourBase<BaseTask>>
         _behaviours = new Dictionary<TaskType, IUnitBehaviourBase<BaseTask>>();
 
     private IUnitBehaviourBase<BaseTask> _activeBehaviour;
-
-    public BaseTask CurrentTask { get; private set; }
 
     // Start is called before the first frame update
     private void Awake() {

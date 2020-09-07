@@ -30,27 +30,6 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableCompon
         }
     }
 
-    public string SaveKey => "LootGatherer";
-
-    public string Save() {
-        return new LootGathererData {
-            loot = _goods.getSaveID(), isCarryingLoot = _isCarryingGoods,
-            targetStorage = _destination.getSaveID(),
-            originStorage = _originStorage.getSaveID()
-        }.ToJson();
-    }
-
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        var data = rawData.FromJson<LootGathererData>();
-        var loot = objects.getBySaveID(data.loot);
-        var targetStorage = objects.getBySaveID(data.targetStorage);
-        var originStorage = objects.getBySaveID(data.originStorage);
-        if (loot == null) return;
-        StartGathering(loot, targetStorage, originStorage);
-        if (!data.isCarryingLoot) return;
-        PickupLoot();
-    }
-
     protected override bool InitImpl(DeliveryTask task) {
         var target = task.Target;
         if (target == null) return false;
@@ -101,13 +80,38 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableCompon
         _goods.transform.parent = null;
         _goods = null;
     }
-}
 
-[Serializable]
-internal struct LootGathererData {
-    public string loot;
-    public string targetStorage;
-    public string originStorage;
-    public bool isCarryingLoot;
+    #region Save
+
+    public string SaveKey => "LootGatherer";
+
+    public string Save() {
+        return new LootGathererData {
+            loot = _goods.getSaveID(), isCarryingLoot = _isCarryingGoods,
+            targetStorage = _destination.getSaveID(),
+            originStorage = _originStorage.getSaveID()
+        }.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        var data = rawData.FromJson<LootGathererData>();
+        var loot = objects.getBySaveID(data.loot);
+        var targetStorage = objects.getBySaveID(data.targetStorage);
+        var originStorage = objects.getBySaveID(data.originStorage);
+        if (loot == null) return;
+        StartGathering(loot, targetStorage, originStorage);
+        if (!data.isCarryingLoot) return;
+        PickupLoot();
+    }
+
+    [Serializable]
+    private struct LootGathererData {
+        public string loot;
+        public string targetStorage;
+        public string originStorage;
+        public bool isCarryingLoot;
+    }
+
+    #endregion
 }
 }

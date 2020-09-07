@@ -17,9 +17,9 @@ public static class SaveExtensions {
         if (!dictionary.ContainsKey(saveId)) {
             Debug.LogError("Trying to load an object that wasn't saved! FIX ME!");
             return null;
-        } else {
-            return dictionary[saveId];
         }
+
+        return dictionary[saveId];
     }
 }
 }

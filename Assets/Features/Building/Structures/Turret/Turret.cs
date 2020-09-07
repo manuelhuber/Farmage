@@ -11,12 +11,12 @@ using UnityEngine;
 
 namespace Features.Building.Structures.Turret {
 public class Turret : MonoBehaviour, ISavableComponent {
-    private readonly List<Mortal> _targets = new List<Mortal>();
-    private PeriodicalAction _attack;
-    private Mortal _currentTarget;
     public float attackSpeed;
     public int damage;
     public int range;
+    private readonly List<Mortal> _targets = new List<Mortal>();
+    private PeriodicalAction _attack;
+    private Mortal _currentTarget;
     private GameTime _time;
 
 
@@ -81,6 +81,8 @@ public class Turret : MonoBehaviour, ISavableComponent {
         RemoveTarget(target);
     }
 
+    #region Save
+
     public string SaveKey => "Turret";
 
     public string Save() {
@@ -98,11 +100,13 @@ public class Turret : MonoBehaviour, ISavableComponent {
             SetTarget(target);
         }
     }
-}
 
-[Serializable]
-internal struct TurretData {
-    public string currentTarget;
-    public float nextAttack;
+    [Serializable]
+    private struct TurretData {
+        public string currentTarget;
+        public float nextAttack;
+    }
+
+    #endregion
 }
 }

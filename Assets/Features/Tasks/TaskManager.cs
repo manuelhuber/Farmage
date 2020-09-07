@@ -87,6 +87,8 @@ public class TaskManager : GrimitySingleton<TaskManager> {
         return true;
     }
 
+    #region Save
+
     private readonly struct WorkerData {
         public readonly Optional<BaseTask> Task;
 
@@ -94,5 +96,7 @@ public class TaskManager : GrimitySingleton<TaskManager> {
             Task = task;
         }
     }
+
+    #endregion
 }
 }

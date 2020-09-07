@@ -19,7 +19,7 @@ public class ProductionQueueGui : MonoBehaviour, ISingleSelectionDetailGui {
 
     public void Init(GameObject selectedUnit) {
         _production = selectedUnit.GetComponent<Production>();
-        CreateQueuePrefabs(_production.QueueSize);
+        CreateQueuePrefabs(_production.queueSize);
     }
 
     private void UpdateCurrentProduction() {

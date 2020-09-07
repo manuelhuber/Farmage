@@ -6,10 +6,10 @@ namespace Features.Health {
 public class Healthbar : MonoBehaviour {
     public GameObject hpBarPrefab;
     public float hpBarOffset = 2f;
+    private Bounds _bounds;
 
     private UnityEngine.Camera _camera;
     private RectTransform _rectTransform;
-    private Bounds _bounds;
 
     private void Awake() {
         _camera = UnityEngine.Camera.main;

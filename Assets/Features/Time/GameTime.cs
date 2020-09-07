@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Features.Time {
 public class GameTime : GrimitySingleton<GameTime>, ISavableComponent {
     [SerializeField] private float _speed = 1;
-    public float Time { get; private set; } = 0;
+    public float Time { get; private set; }
 
     public float Speed {
         get => _speed;
@@ -21,11 +21,13 @@ public class GameTime : GrimitySingleton<GameTime>, ISavableComponent {
         Time += Speed * UnityEngine.Time.fixedDeltaTime;
     }
 
-    public string SaveKey => "GameTime";
-
     public float getTime() {
         return Time;
     }
+
+    #region Save
+
+    public string SaveKey => "GameTime";
 
     public string Save() {
         return Time.ToString();
@@ -34,5 +36,7 @@ public class GameTime : GrimitySingleton<GameTime>, ISavableComponent {
     public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
         Time = float.Parse(rawData);
     }
+
+    #endregion
 }
 }

@@ -7,7 +7,7 @@ namespace Features.Resources {
 // ReSharper disable once UnusedType.Global
 public class CostDrawer : OdinValueDrawer<Cost> {
     protected override void DrawPropertyLayout(GUIContent label) {
-        var value = this.ValueEntry.SmartValue;
+        var value = ValueEntry.SmartValue;
 
         var rect = EditorGUILayout.GetControlRect();
 

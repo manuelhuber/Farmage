@@ -14,16 +14,16 @@ public class MovementAgent : MonoBehaviour, ISavableComponent {
     public float speed = 3f;
     public float stoppingDistance = 1f;
     public float turnSpeed = 10f;
-    private Action _cancelPath;
-    private int _currentNode = -1;
-    private MapManager _mapManager;
-
-    private Vector3[] _path = new Vector3[0];
-    private Rigidbody _rigidbody;
-    private GameTime _time;
 
     public bool HasArrived { get; private set; }
     public bool IsStopped { get; set; }
+
+    private Action _cancelPath;
+    private int _currentNode = -1;
+    private MapManager _mapManager;
+    private Vector3[] _path = new Vector3[0];
+    private Rigidbody _rigidbody;
+    private GameTime _time;
 
     private void Awake() {
         _mapManager = MapManager.Instance;
@@ -56,6 +56,24 @@ public class MovementAgent : MonoBehaviour, ISavableComponent {
         }
     }
 
+    public void SetDestination(Vector3 pos, bool bruteMove = false) {
+        HasArrived = false;
+        _cancelPath?.Invoke();
+        _cancelPath = _mapManager.RequestPath(new PathRequest {
+            From = transform.position,
+            To = pos,
+            Movement = transform,
+            Callback = path => {
+                var legitPath = path;
+                _path = bruteMove ? legitPath.Prepend(pos).ToArray() : legitPath;
+                _currentNode = _path.Length - 1;
+                if (_currentNode == -1) HasArrived = true;
+            }
+        });
+    }
+
+    #region Save
+
     public string SaveKey => "MovementAgent";
 
     public string Save() {
@@ -73,25 +91,11 @@ public class MovementAgent : MonoBehaviour, ISavableComponent {
         SetDestination(movementData.destination.To());
     }
 
-    public void SetDestination(Vector3 pos, bool bruteMove = false) {
-        HasArrived = false;
-        _cancelPath?.Invoke();
-        _cancelPath = _mapManager.RequestPath(new PathRequest {
-            From = transform.position,
-            To = pos,
-            Movement = transform,
-            Callback = path => {
-                var legitPath = path;
-                _path = bruteMove ? legitPath.Prepend(pos).ToArray() : legitPath;
-                _currentNode = _path.Length - 1;
-                if (_currentNode == -1) HasArrived = true;
-            }
-        });
+    [Serializable]
+    private struct MovementData {
+        public SerialisableVector3 destination;
     }
-}
 
-[Serializable]
-internal struct MovementData {
-    public SerialisableVector3 destination;
+    #endregion
 }
 }

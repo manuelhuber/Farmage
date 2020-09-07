@@ -14,10 +14,10 @@ using UnityEngine.UI;
 namespace Features.Resources {
 public class ResourceManager : GrimitySingleton<ResourceManager>, ISavableComponent {
     public RuntimeGameObjectSet allFarmerBuildings;
+    public Grimity.Data.IObservable<Cost> Have => _have;
     private readonly Observable<Cost> _have = new Observable<Cost>(new Cost());
 
     private Text _text;
-    public Grimity.Data.IObservable<Cost> Have => _have;
 
     private void Start() {
         Add(new Cost {cash = 1000});

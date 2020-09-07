@@ -14,9 +14,9 @@ public class Storage : MonoBehaviour, IDeliveryAcceptor, IDeliveryDispenser, ISa
     public int capacity;
     public int size = 10;
 
-    private readonly List<StoredItem> items = new List<StoredItem>();
-
     public bool IsFull => items.Count == capacity;
+
+    private readonly List<StoredItem> items = new List<StoredItem>();
 
     public bool AcceptDelivery(GameObject goods) {
         var item = goods.GetComponent<Storable>();
@@ -56,12 +56,18 @@ public class Storage : MonoBehaviour, IDeliveryAcceptor, IDeliveryDispenser, ISa
         return !IsFull && item.IsType(type);
     }
 
+
+    private struct StoredItem {
+        public Storable Storable;
+        public bool Reserved;
+    }
+
     #region Save
 
     public string SaveKey => "Storage";
 
     public string Save() {
-        var serializedItems = items.Select(item => new StoredItemSerialized {
+        var serializedItems = items.Select(item => new StoredItemData {
                 storable = item.Storable.getSaveID(),
                 reserved = item.Reserved
             })
@@ -76,22 +82,17 @@ public class Storage : MonoBehaviour, IDeliveryAcceptor, IDeliveryDispenser, ISa
         }
     }
 
+    [Serializable]
+    private struct StorageData {
+        public StoredItemData[] items;
+    }
+
+    [Serializable]
+    private struct StoredItemData {
+        public string storable;
+        public bool reserved;
+    }
+
     #endregion
-}
-
-internal struct StoredItem {
-    public Storable Storable;
-    public bool Reserved;
-}
-
-[Serializable]
-internal struct StorageData {
-    public StoredItemSerialized[] items;
-}
-
-[Serializable]
-internal struct StoredItemSerialized {
-    public string storable;
-    public bool reserved;
 }
 }

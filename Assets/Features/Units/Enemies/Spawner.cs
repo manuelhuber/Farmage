@@ -7,17 +7,17 @@ using UnityEngine;
 
 namespace Features.Units.Enemies {
 public class Spawner : MonoBehaviour {
+    public GameObject enemyPrefab;
+
+    public GameObject[] spawnPoints;
+    public float waveInterval = 5f;
     private GameObject[] _hqs;
 
     private float _lastSpawn;
-    public GameObject enemyPrefab;
     private GameTime _time;
 
     [InfoBox("Min/Max number of enemies spawned per wave")]
     public RangeInt spawnCount = new RangeInt(1, 1);
-
-    public GameObject[] spawnPoints;
-    public float waveInterval = 5f;
 
     private void Awake() {
         _time = GameTime.Instance;

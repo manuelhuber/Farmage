@@ -42,7 +42,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b236089371904d3b85520e64f77fc47c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  QueueSize: 5
+  queueSize: 5
   entries:
   - {fileID: 11400000, guid: a420e6d0ab037c64cba3b07af4513f8d, type: 2}
   spawnPoint: {fileID: 672259910156556586}

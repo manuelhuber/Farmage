@@ -9,11 +9,11 @@ namespace Features.Ui.Selection {
 public class SelectionManager : GrimitySingleton<SelectionManager> {
     public LayerMask clickableLayers;
 
-    private readonly List<Selectable> _all = new List<Selectable>();
-    private UnityEngine.Camera _camera;
-
     public Observable<List<Selectable>> Selection { get; } =
         new Observable<List<Selectable>>(new List<Selectable>());
+
+    private readonly List<Selectable> _all = new List<Selectable>();
+    private UnityEngine.Camera _camera;
 
     private void Start() {
         _camera = UnityEngine.Camera.main;

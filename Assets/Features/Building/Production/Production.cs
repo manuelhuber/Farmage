@@ -8,9 +8,11 @@ using UnityEngine;
 
 namespace Features.Building.Production {
 public class Production : MonoBehaviour, IHasActions {
-    public int QueueSize;
+    public int queueSize;
     public UnitProductionEntry[] entries;
     public Transform spawnPoint;
+    public UnitProductionEntry Current { get; private set; }
+    public float Progress { get; private set; }
 
     private readonly Observable<ActionEntry[]> _options =
         new Observable<ActionEntry[]>(new ActionEntry[] { });
@@ -21,9 +23,6 @@ public class Production : MonoBehaviour, IHasActions {
     private GameTime _gameTime;
     private ResourceManager _resourceManager;
     private bool _startNewProduction = true;
-
-    public UnitProductionEntry Current { get; private set; }
-    public float Progress { get; private set; }
 
     private void Awake() {
         _gameTime = GameTime.Instance;
@@ -63,7 +62,7 @@ public class Production : MonoBehaviour, IHasActions {
     }
 
     private void AddToQueue(UnitProductionEntry entry) {
-        if (Queue.Count >= QueueSize) return;
+        if (Queue.Count >= queueSize) return;
         if (_resourceManager.Pay(entry.cost)) {
             Queue.Enqueue(entry);
         }
