@@ -1,17 +1,18 @@
 using Features.Delivery;
-using Features.Queue;
 using Features.Resources;
+using Features.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Features.Items.Loot {
 public class LootDrop : MonoBehaviour {
-    [CanBeNull] public JobMultiQueue lootQueue;
     public LootTable lootTable;
-    private ResourceManager resourceManager;
+    private ResourceManager _resourceManager;
+    private TaskManager _taskManager;
 
     private void Awake() {
-        resourceManager = ResourceManager.Instance;
+        _resourceManager = ResourceManager.Instance;
+        _taskManager = TaskManager.Instance;
     }
 
     [UsedImplicitly]
@@ -24,10 +25,8 @@ public class LootDrop : MonoBehaviour {
     }
 
     private void EnqueueDeliverTask(GameObject newLoot) {
-        var storage = resourceManager.GetBestStorage(newLoot.GetComponent<Storable>());
-        if (lootQueue != null) {
-            lootQueue.Enqueue(new DeliveryTask {type = TaskType.Deliver, Goods = newLoot, Target = storage});
-        }
+        var storage = _resourceManager.GetBestStorage(newLoot.GetComponent<Storable>());
+        _taskManager.Enqueue(new DeliveryTask {type = TaskType.Deliver, Goods = newLoot, Target = storage});
     }
 }
 }

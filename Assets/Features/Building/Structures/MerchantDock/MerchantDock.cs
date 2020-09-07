@@ -1,8 +1,8 @@
 using System;
 using Features.Delivery;
 using Features.Items;
-using Features.Queue;
 using Features.Resources;
+using Features.Tasks;
 using Features.Time;
 using Features.Ui.Actions;
 using Grimity.Data;
@@ -12,20 +12,22 @@ namespace Features.Building.Structures.MerchantDock {
 public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
     public int visitIntervalsInSeconds;
     public SalesPrices prices;
-    public JobMultiQueue queue;
+
 
     private readonly Observable<ActionEntry[]>
-        actions = new Observable<ActionEntry[]>(new ActionEntry[0]);
+        _actions = new Observable<ActionEntry[]>(new ActionEntry[0]);
 
-    private GameTime gameTime;
-    private float nextTradeTimestamp;
-    private ResourceManager resourceManager;
+    private GameTime _gameTime;
+    private float _nextTradeTimestamp;
+    private ResourceManager _resourceManager;
+    private TaskManager _taskManager;
     public bool TradeInProgress { get; private set; }
 
     private void Awake() {
-        gameTime = GameTime.Instance;
-        resourceManager = ResourceManager.Instance;
-        actions.Set(new[] {
+        _taskManager = TaskManager.Instance;
+        _gameTime = GameTime.Instance;
+        _resourceManager = ResourceManager.Instance;
+        _actions.Set(new[] {
             new ActionEntry {
                 Active = true,
                 OnSelect = EnqueueTask(ItemType.Wheat)
@@ -34,12 +36,12 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
     }
 
     private void Start() {
-        nextTradeTimestamp = gameTime.Time + visitIntervalsInSeconds;
+        _nextTradeTimestamp = _gameTime.Time + visitIntervalsInSeconds;
     }
 
     private void Update() {
         if (TradeInProgress) return;
-        if (gameTime.Time >= nextTradeTimestamp) {
+        if (_gameTime.Time >= _nextTradeTimestamp) {
             InitTrade();
         }
     }
@@ -50,22 +52,22 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
             return false;
         }
 
-        resourceManager.Add(prices.Prices[itemType]);
+        _resourceManager.Add(prices.Prices[itemType]);
         Destroy(goods);
 
         return true;
     }
 
     public Grimity.Data.IObservable<ActionEntry[]> GetActions() {
-        return actions;
+        return _actions;
     }
 
     private Action EnqueueTask(ItemType itemType) {
         return () => {
-            var item = resourceManager.FindItem(itemType);
+            var item = _resourceManager.FindItem(itemType);
             if (!item.HasValue) return;
             var (storable, storage) = item.Value;
-            queue.Enqueue(new DeliveryTask {
+            _taskManager.Enqueue(new DeliveryTask {
                 type = TaskType.Deliver, Target = gameObject,
                 Goods = storable.gameObject,
                 From = storage.gameObject
@@ -79,7 +81,7 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
 
     private void FinishTrade() {
         TradeInProgress = false;
-        nextTradeTimestamp = gameTime.Time + visitIntervalsInSeconds;
+        _nextTradeTimestamp = _gameTime.Time + visitIntervalsInSeconds;
     }
 }
 }

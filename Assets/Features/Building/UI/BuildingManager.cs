@@ -1,8 +1,8 @@
 using System.Linq;
 using Features.Building.BuildMenu;
 using Features.Building.Placement;
-using Features.Queue;
 using Features.Resources;
+using Features.Tasks;
 using Features.Ui.Actions;
 using Grimity.Data;
 using Grimity.Singleton;
@@ -13,12 +13,10 @@ namespace Features.Building.UI {
 public class BuildingManager : GrimitySingleton<BuildingManager> {
     public static readonly int GridSize = 4;
 
-    [SerializeField] private JobMultiQueue farmerQueue;
     [SerializeField] private PlacementSettings placementSettings;
     [SerializeField] private GameObject constructionSitePrefab;
     [SerializeField] private LayerMask terrainLayer = 0;
     [SerializeField] private BuildMenu.BuildMenu buildMenu;
-    [SerializeField] private LayerMask constructionSiteLayer;
 
     private readonly Observable<ActionEntry[]> _buildingOptions =
         new Observable<ActionEntry[]>(new ActionEntry[0]);
@@ -27,9 +25,11 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
     private Placeable _placeable;
     private ResourceManager _resourceManager;
     private BuildingMenuEntry _selected;
+    private TaskManager _taskManager;
     public IObservable<ActionEntry[]> BuildingOptions => _buildingOptions;
 
     private void Awake() {
+        _taskManager = TaskManager.Instance;
         _resourceManager = ResourceManager.Instance;
     }
 
@@ -105,7 +105,7 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
         var constructionSite = constructionSiteGameObject.GetComponent<Construction.Construction>();
         constructionSite.Init(_selected);
 
-        farmerQueue.Enqueue(new SimpleTask {type = TaskType.Build, Payload = constructionSiteGameObject});
+        _taskManager.Enqueue(new SimpleTask {type = TaskType.Build, Payload = constructionSiteGameObject});
     }
 
     private void DetachFromCursor() {

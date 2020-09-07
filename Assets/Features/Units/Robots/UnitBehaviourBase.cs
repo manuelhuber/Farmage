@@ -1,6 +1,6 @@
-using Features.Queue;
+using System;
+using Features.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Features.Units.Robots {
 public abstract class UnitBehaviourBase<T> : MonoBehaviour, IUnitBehaviourBase<T> where T : BaseTask {
@@ -8,8 +8,8 @@ public abstract class UnitBehaviourBase<T> : MonoBehaviour, IUnitBehaviourBase<T
         AbandonTask();
     }
 
-    public UnityEvent TaskCompleted { get; } = new UnityEvent();
-    public UnityEvent TaskAbandoned { get; } = new UnityEvent();
+    public event Action<IUnitBehaviourBase<T>> TaskCompleted;
+    public event Action<IUnitBehaviourBase<T>> TaskAbandoned;
 
     public bool Init(BaseTask task) {
         return InitImpl(task as T);
@@ -19,19 +19,19 @@ public abstract class UnitBehaviourBase<T> : MonoBehaviour, IUnitBehaviourBase<T
     }
 
     public virtual void AbandonTask() {
-        TaskAbandoned.Invoke();
+        TaskAbandoned?.Invoke(this);
     }
 
     public void CompleteTask() {
-        TaskCompleted.Invoke();
+        TaskCompleted?.Invoke(this);
     }
 
     protected abstract bool InitImpl(T task);
 }
 
 public interface IUnitBehaviourBase<out T> where T : BaseTask {
-    UnityEvent TaskCompleted { get; }
-    UnityEvent TaskAbandoned { get; }
+    event Action<IUnitBehaviourBase<T>> TaskCompleted;
+    event Action<IUnitBehaviourBase<T>> TaskAbandoned;
     bool Init(BaseTask task);
     void Behave();
     void AbandonTask();

@@ -1,6 +1,6 @@
 using System;
 
-namespace Features.Queue {
+namespace Features.Tasks {
 [Serializable]
 public class BaseTask {
     public TaskType type;
@@ -8,13 +8,5 @@ public class BaseTask {
     public override string ToString() {
         return $"type={type}";
     }
-}
-
-[Serializable]
-public enum TaskType {
-    Deliver,
-    Harvest,
-    Repair,
-    Build
 }
 }

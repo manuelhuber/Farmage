@@ -1,25 +1,26 @@
 ﻿using System.Collections.Generic;
 using Features.Health;
-using Features.Queue;
 using Features.Save;
+using Features.Tasks;
 using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Building.Structures {
 public class Building : MonoBehaviour, ISavableComponent {
-    [SerializeField] private JobMultiQueue queue;
+    private readonly bool autoRepair = false;
     private bool _waitingForRepair;
 
     private void Start() {
         var mortal = GetComponent<Mortal>();
         mortal.Hitpoints.OnChange(hitpoints => {
+            if (!autoRepair) return;
             if (hitpoints == mortal.MaxHitpoints) {
                 _waitingForRepair = false;
                 return;
             }
 
             if (_waitingForRepair) return;
-            queue.Enqueue(new SimpleTask {type = TaskType.Repair, Payload = gameObject});
+            TaskManager.Instance.Enqueue(new SimpleTask {type = TaskType.Repair, Payload = gameObject});
             _waitingForRepair = true;
         });
     }

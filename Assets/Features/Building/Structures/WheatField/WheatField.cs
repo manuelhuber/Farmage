@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using Features.Delivery;
 using Features.Items;
-using Features.Queue;
 using Features.Resources;
 using Features.Save;
+using Features.Tasks;
 using Features.Time;
 using Grimity.Data;
 using Ludiq.PeekCore.TinyJson;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Features.Building.Structures.WheatField {
@@ -16,18 +15,19 @@ public class WheatField : MonoBehaviour, ISavableComponent {
     public GameObject wheatPrefab;
     public Transform dumpingPlace;
     public int harvestCount;
-    [Required] [SerializeField] private JobMultiQueue queue;
     public int growthDurationInSeconds;
 
     private readonly Observable<float> _progress = new Observable<float>(0);
+    private ResourceManager _resourceManager;
+    private TaskManager _taskManager;
     private GameTime _time;
     private bool _waitingForHarvest;
-    private ResourceManager resourceManager;
     public Grimity.Data.IObservable<float> Progress => _progress;
 
     private void Awake() {
         _time = GameTime.Instance;
-        resourceManager = ResourceManager.Instance;
+        _resourceManager = ResourceManager.Instance;
+        _taskManager = TaskManager.Instance;
     }
 
     private void Update() {
@@ -58,7 +58,7 @@ public class WheatField : MonoBehaviour, ISavableComponent {
 
     private void FinishGrowth() {
         _waitingForHarvest = true;
-        queue.Enqueue(new SimpleTask {Payload = gameObject, type = TaskType.Harvest});
+        _taskManager.Enqueue(new SimpleTask {Payload = gameObject, type = TaskType.Harvest});
     }
 
     public void Harvest() {
@@ -66,10 +66,10 @@ public class WheatField : MonoBehaviour, ISavableComponent {
         _progress.Set(0);
         for (var i = 0; i < harvestCount; i++) {
             var wheat = Instantiate(wheatPrefab, dumpingPlace.position, dumpingPlace.rotation);
-            queue.Enqueue(new DeliveryTask {
+            _taskManager.Enqueue(new DeliveryTask {
                 Goods = wheat,
                 type = TaskType.Deliver,
-                Target = resourceManager.GetBestStorage(wheat.GetComponent<Storable>())
+                Target = _resourceManager.GetBestStorage(wheat.GetComponent<Storable>())
             });
         }
     }

@@ -14,25 +14,16 @@ public class MovementAgent : MonoBehaviour, ISavableComponent {
     public float speed = 3f;
     public float stoppingDistance = 1f;
     public float turnSpeed = 10f;
-
-    public bool HasArrived { get; private set; }
-    public bool IsStopped { get; set; }
-
-    private Vector3[] _path = new Vector3[0];
+    private Action _cancelPath;
     private int _currentNode = -1;
     private MapManager _mapManager;
-    private Action _cancelPath;
+
+    private Vector3[] _path = new Vector3[0];
     private Rigidbody _rigidbody;
     private GameTime _time;
 
-    private void OnDrawGizmos() {
-        var prev = transform.position;
-        foreach (var pathPos in _path) {
-            Gizmos.DrawLine(prev, pathPos);
-            Gizmos.DrawSphere(pathPos, 1);
-            prev = pathPos;
-        }
-    }
+    public bool HasArrived { get; private set; }
+    public bool IsStopped { get; set; }
 
     private void Awake() {
         _mapManager = MapManager.Instance;
@@ -46,7 +37,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent {
         var trans = transform;
         var position = trans.position;
         nextTarget.y = position.y;
-        var neededRotation = Quaternion.LookRotation((nextTarget - position));
+        var neededRotation = Quaternion.LookRotation(nextTarget - position);
         trans.rotation =
             Quaternion.RotateTowards(trans.rotation, neededRotation, _time.FixedDeltaTime * turnSpeed * 100);
         var newPos = position + trans.forward * (speed * _time.FixedDeltaTime);
@@ -54,6 +45,32 @@ public class MovementAgent : MonoBehaviour, ISavableComponent {
         if (!(math.distance(position, nextTarget) < stoppingDistance)) return;
         _currentNode--;
         if (_currentNode == -1) HasArrived = true;
+    }
+
+    private void OnDrawGizmos() {
+        var prev = transform.position;
+        foreach (var pathPos in _path) {
+            Gizmos.DrawLine(prev, pathPos);
+            Gizmos.DrawSphere(pathPos, 1);
+            prev = pathPos;
+        }
+    }
+
+    public string SaveKey => "MovementAgent";
+
+    public string Save() {
+        if (_path.Length < 1) {
+            return "";
+        }
+
+        var movementData = new MovementData {destination = SerialisableVector3.From(_path[0])};
+        return movementData.ToJson();
+    }
+
+    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        if (rawData.Length < 1) return;
+        var movementData = rawData.FromJson<MovementData>();
+        SetDestination(movementData.destination.To());
     }
 
     public void SetDestination(Vector3 pos, bool bruteMove = false) {
@@ -71,29 +88,10 @@ public class MovementAgent : MonoBehaviour, ISavableComponent {
             }
         });
     }
-
-    public string SaveKey => "MovementAgent";
-
-    public string Save() {
-        if (_path.Length < 1) {
-            return "";
-        }
-
-        var movementData = new MovementData {destination = SerialisableVector3.From(_path[0])};
-        Debug.Log("Saving destination");
-        Debug.Log(_path[0]);
-        return movementData.ToJson();
-    }
-
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        if (rawData.Length < 1) return;
-        var movementData = rawData.FromJson<MovementData>();
-        SetDestination(movementData.destination.To());
-    }
 }
 
 [Serializable]
-struct MovementData {
+internal struct MovementData {
     public SerialisableVector3 destination;
 }
 }
