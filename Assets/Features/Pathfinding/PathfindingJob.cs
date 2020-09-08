@@ -70,7 +70,9 @@ public struct PathfindingJob : IJob {
             for (var i = 0; i < neighbours.Length; i++) {
                 var neighbourIndex = neighbours[i];
 
-                if (alreadyChecked.Contains(neighbourIndex) || !Map[neighbourIndex].IsWalkable) continue;
+                if (neighbourIndex == -1) continue;
+                if (alreadyChecked.Contains(neighbourIndex)) continue;
+                if (!IsReachable(currentNodeIndex, Map[neighbourIndex], neighbourOffsets)) continue;
 
                 var neighbour = pathNodes[neighbourIndex];
                 var newArrivalCost =
@@ -82,6 +84,8 @@ public struct PathfindingJob : IJob {
                 pathNodes[neighbour.Index] = neighbour;
                 if (!openList.Contains(neighbourIndex)) openList.Add(neighbourIndex);
             }
+
+            neighbours.Dispose();
 
             alreadyChecked.Add(currentNodeIndex);
         }
@@ -101,6 +105,52 @@ public struct PathfindingJob : IJob {
         var finalEndIndex = pathNodes[_endIndex].CameFromNodeIndex != -1 ? _endIndex : bestAttemptTargetIndex;
 
         WritePath(pathNodes, finalEndIndex);
+    }
+
+    /// <summary>
+    ///     Checks if you can go from one node to the given neighbour node.
+    ///     The destination node must be walkable.
+    ///     Diagonal neighbours are only reachable if either one of their common neighbours is walkable.
+    /// </summary>
+    /// <param name="fromIndex"></param>
+    /// <param name="to"></param>
+    /// <param name="neighbourOffsets"></param>
+    /// <param name="from"></param>
+    /// <returns></returns>
+    private bool IsReachable(int fromIndex, GridNode to, NativeArray<int2> neighbourOffsets) {
+        if (!to.IsWalkable) return false;
+        var neighbours = GetNeighbours(fromIndex, neighbourOffsets);
+        var from = Map[fromIndex];
+        var upIndex = neighbours[(int) Direction.Up];
+        var downIndex = neighbours[(int) Direction.Down];
+        var leftIndex = neighbours[(int) Direction.Left];
+        var rightIndex = neighbours[(int) Direction.Right];
+        neighbours.Dispose();
+
+        var upWalkable = upIndex != -1 && Map[upIndex].IsWalkable;
+        var downWalkable = upIndex != -1 && Map[downIndex].IsWalkable;
+        var leftWalkable = upIndex != -1 && Map[leftIndex].IsWalkable;
+        var rightWalkable = upIndex != -1 && Map[rightIndex].IsWalkable;
+
+        if (from.X < to.X) {
+            if (from.Z < to.Z) {
+                return rightWalkable || upWalkable;
+            }
+
+            if (from.Z > to.Z) {
+                return rightWalkable || downWalkable;
+            }
+        } else if (from.X > to.X) {
+            if (from.Z < to.Z) {
+                return leftWalkable || upWalkable;
+            }
+
+            if (@from.Z > to.Z) {
+                return leftWalkable || downWalkable;
+            }
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -132,15 +182,24 @@ public struct PathfindingJob : IJob {
         return x + z * MapSize.x;
     }
 
-    private NativeList<int> GetNeighbours(int currentIndex, NativeArray<int2> neighbourOffsetArray) {
-        var neighbours = new NativeList<int>(8, Allocator.Temp);
+    /// <summary>
+    ///     Returns an array of the index of all 8 neighbours of the given note.
+    ///     Their position in the array is indicated by the Direction enum.
+    ///     Non existent (=out of bounds) nodes get value -1
+    /// </summary>
+    /// <param name="currentIndex"></param>
+    /// <param name="neighbourOffsets"></param>
+    /// <returns>An array of indices</returns>
+    private NativeArray<int> GetNeighbours(int currentIndex, NativeArray<int2> neighbourOffsets) {
+        var neighbours = new NativeArray<int>(8, Allocator.Temp);
         var currentNode = Map[currentIndex];
-        for (var index = 0; index < neighbourOffsetArray.Length; index++) {
-            var offset = neighbourOffsetArray[index];
+        for (var index = 0; index < neighbourOffsets.Length; index++) {
+            var offset = neighbourOffsets[index];
             var neighbourX = currentNode.X + offset.x;
             var neighbourZ = currentNode.Z + offset.y;
-            if (OutOfBounds(neighbourX, neighbourZ)) continue;
-            neighbours.Add(CalculateIndex(neighbourX, neighbourZ));
+            neighbours[index] = OutOfBounds(neighbourX, neighbourZ)
+                ? -1
+                : CalculateIndex(neighbourX, neighbourZ);
         }
 
         return neighbours;
@@ -148,19 +207,6 @@ public struct PathfindingJob : IJob {
 
     private bool OutOfBounds(int x, int z) {
         return x < 0 || z < 0 || x >= MapSize.x || z >= MapSize.y;
-    }
-
-    private NativeArray<int2> GetNeighbourOffsets() {
-        return new NativeArray<int2>(8, Allocator.Temp) {
-            [0] = new int2(-1, 0), // Left
-            [1] = new int2(+1, 0), // Right
-            [2] = new int2(0, +1), // Up
-            [3] = new int2(0, -1), // Down
-            [4] = new int2(-1, -1), // Left Down
-            [5] = new int2(-1, +1), // Left Up
-            [6] = new int2(+1, -1), // Right Down
-            [7] = new int2(+1, +1) // Right Up
-        };
     }
 
     private int HeuristicCost(int fromX, int fromZ, int toX, int toZ) {
@@ -217,6 +263,30 @@ public struct PathfindingJob : IJob {
         }
 
         return node.Index;
+    }
+
+    private static NativeArray<int2> GetNeighbourOffsets() {
+        return new NativeArray<int2>(8, Allocator.Temp) {
+            [(int) Direction.Left] = new int2(-1, 0), // Left
+            [(int) Direction.Right] = new int2(+1, 0), // Right
+            [(int) Direction.Up] = new int2(0, +1), // Up
+            [(int) Direction.Down] = new int2(0, -1), // Down
+            [(int) Direction.LeftDown] = new int2(-1, -1), // Left Down
+            [(int) Direction.LeftUp] = new int2(-1, +1), // Left Up
+            [(int) Direction.RightDown] = new int2(+1, -1), // Right Down
+            [(int) Direction.RightUp] = new int2(+1, +1) // Right Up
+        };
+    }
+
+    private enum Direction {
+        Left = 0,
+        Right = 1,
+        Up = 2,
+        Down = 3,
+        LeftDown = 4,
+        LeftUp = 5,
+        RightDown = 6,
+        RightUp = 7
     }
 }
 }
