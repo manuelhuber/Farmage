@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Features.Delivery;
 using Features.Save;
 using Features.Units.Common;
+using Grimity.Data;
 using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
@@ -18,24 +20,28 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableCompon
         _movementAgent = GetComponent<MovementAgent>();
     }
 
-    private void OnTriggerEnter(Collider other) {
+    private void CheckForArrival(Collider[] colliders) {
         if (_goods == null) return;
-        var o = other.gameObject;
-        var arrivedAtGoods = o == _goods.gameObject || o == _originStorage;
-        var arrivedAtStorage = o == _destination.gameObject;
+        var objectsInRange = colliders.Select(col => col.gameObject).ToArray();
+        var arrivedAtGoods = objectsInRange.Any(obj => obj == _goods.gameObject || obj == _originStorage);
+        var arrivedAtStorage = objectsInRange.Any(obj => obj == _destination.gameObject);
         if (arrivedAtGoods) {
             PickupLoot();
-        } else if (_isCarryingGoods && arrivedAtStorage) {
+        }
+
+        if (_isCarryingGoods && arrivedAtStorage) {
             DeliverLoot();
         }
     }
 
-    protected override bool InitImpl(DeliveryTask task) {
+    protected override bool InitImpl(DeliveryTask task, Observable<Collider[]> inRange) {
         var target = task.Target;
         if (target == null) return false;
         StartGathering(task.Goods, target, task.From);
+        inRange.OnChange(CheckForArrival);
         return true;
     }
+
 
     private void StartGathering(GameObject goods, GameObject destination, GameObject origin) {
         _goods = goods;

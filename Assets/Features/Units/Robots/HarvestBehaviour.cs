@@ -1,6 +1,7 @@
 using Features.Building.Structures.WheatField;
 using Features.Tasks;
 using Features.Units.Common;
+using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Units.Robots {
@@ -12,7 +13,7 @@ public class HarvestBehaviour : UnitBehaviourBase<SimpleTask> {
         _movementAgent = GetComponent<MovementAgent>();
     }
 
-    protected override bool InitImpl(SimpleTask task) {
+    protected override bool InitImpl(SimpleTask task, Observable<Collider[]> inRange) {
         _target = task.Payload;
         _movementAgent.SetDestination(_target.transform.position);
         _movementAgent.IsStopped = false;

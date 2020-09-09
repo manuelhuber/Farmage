@@ -1,5 +1,6 @@
 using System;
 using Features.Tasks;
+using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Units.Robots {
@@ -11,8 +12,8 @@ public abstract class UnitBehaviourBase<T> : MonoBehaviour, IUnitBehaviourBase<T
     public event Action<IUnitBehaviourBase<T>> TaskCompleted;
     public event Action<IUnitBehaviourBase<T>> TaskAbandoned;
 
-    public bool Init(BaseTask task) {
-        return InitImpl(task as T);
+    public bool Init(BaseTask task, Observable<Collider[]> inRange) {
+        return InitImpl(task as T, inRange);
     }
 
     public virtual void Behave() {
@@ -26,13 +27,13 @@ public abstract class UnitBehaviourBase<T> : MonoBehaviour, IUnitBehaviourBase<T
         TaskCompleted?.Invoke(this);
     }
 
-    protected abstract bool InitImpl(T task);
+    protected abstract bool InitImpl(T task, Observable<Collider[]> inRange);
 }
 
 public interface IUnitBehaviourBase<out T> where T : BaseTask {
     event Action<IUnitBehaviourBase<T>> TaskCompleted;
     event Action<IUnitBehaviourBase<T>> TaskAbandoned;
-    bool Init(BaseTask task);
+    bool Init(BaseTask task, Observable<Collider[]> inRange);
     void Behave();
     void AbandonTask();
     void CompleteTask();

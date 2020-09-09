@@ -1,9 +1,11 @@
+using System.Linq;
 using Features.Health;
 using Features.Resources;
 using Features.Tasks;
 using Features.Time;
 using Features.Units.Common;
 using Grimity.Actions;
+using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Units.Robots {
@@ -31,16 +33,12 @@ public class RepairBehaviour : UnitBehaviourBase<SimpleTask> {
         };
     }
 
-    private void OnTriggerEnter(Collider other) {
-        if (_target == null || _target.gameObject != other.gameObject) return;
-        _repairAction.IsRunning = true;
-        _movementAgent.IsStopped = true;
-    }
 
-    private void OnTriggerExit(Collider other) {
-        if (_target == null || _target.gameObject != other.gameObject) return;
-        _repairAction.IsRunning = false;
-        _movementAgent.IsStopped = false;
+    private void CheckForArrival(Collider[] colliders) {
+        if (_target == null) return;
+        var arrived = colliders.Any(col => col.gameObject == _target.gameObject);
+        _repairAction.IsRunning = arrived;
+        _movementAgent.IsStopped = arrived;
     }
 
     public override void AbandonTask() {
@@ -48,11 +46,12 @@ public class RepairBehaviour : UnitBehaviourBase<SimpleTask> {
         base.AbandonTask();
     }
 
-    protected override bool InitImpl(SimpleTask task) {
+    protected override bool InitImpl(SimpleTask task, Observable<Collider[]> inRange) {
         _target = task.Payload.GetComponent<Mortal>();
         _target.onDeath.AddListener(Complete);
         _movementAgent.SetDestination(_target.transform.position, true);
         _movementAgent.IsStopped = false;
+        inRange.OnChange(CheckForArrival);
         return true;
     }
 

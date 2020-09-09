@@ -4,6 +4,7 @@ using System.Linq;
 using Features.Save;
 using Features.Tasks;
 using Grimity.Collections;
+using Grimity.Data;
 using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
@@ -15,6 +16,11 @@ public class Worker : MonoBehaviour, ISavableComponent {
 
     private readonly Dictionary<TaskType, IUnitBehaviourBase<BaseTask>>
         _behaviours = new Dictionary<TaskType, IUnitBehaviourBase<BaseTask>>();
+
+    private readonly List<Collider> _inRange = new List<Collider>();
+
+    private readonly Observable<Collider[]> _inRangeObservable =
+        new Observable<Collider[]>(new Collider[] { });
 
     private IUnitBehaviourBase<BaseTask> _activeBehaviour;
 
@@ -32,13 +38,25 @@ public class Worker : MonoBehaviour, ISavableComponent {
         _activeBehaviour?.Behave();
     }
 
+    private void OnTriggerEnter(Collider other) {
+        _inRange.Add(other);
+        _inRange.RemoveAll(obj => obj == null);
+        _inRangeObservable.Set(_inRange.ToArray());
+    }
+
+    private void OnTriggerExit(Collider other) {
+        _inRange.Remove(other);
+        _inRange.RemoveAll(obj => obj == null);
+        _inRangeObservable.Set(_inRange.ToArray());
+    }
+
     public event Action<Worker, BaseTask> TaskCompleted;
     public event Action<Worker, BaseTask> TaskAbandoned;
 
 
     public bool SetTask(BaseTask task) {
         var newBehaviour = _behaviours.GetOrDefault(task.type, null);
-        if (newBehaviour == null || !newBehaviour.Init(task)) {
+        if (newBehaviour == null || !newBehaviour.Init(task, _inRangeObservable)) {
             return false;
         }
 
