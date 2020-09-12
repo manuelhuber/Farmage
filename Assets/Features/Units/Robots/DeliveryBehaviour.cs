@@ -34,12 +34,10 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableCompon
         }
     }
 
-    protected override bool InitImpl(DeliveryTask task, Observable<Collider[]> inRange) {
-        var target = task.Target;
-        if (target == null) return false;
-        StartGathering(task.Goods, target, task.From);
+    protected override TaskResponse InitImpl(DeliveryTask task, Observable<Collider[]> inRange) {
+        StartGathering(task.Goods, task.Target, task.From);
         inRange.OnChange(CheckForArrival);
-        return true;
+        return _goods == null ? TaskResponse.Completed : TaskResponse.Accepted;
     }
 
 

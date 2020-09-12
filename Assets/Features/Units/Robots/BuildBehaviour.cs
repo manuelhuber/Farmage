@@ -36,12 +36,12 @@ public class BuildBehaviour : UnitBehaviourBase<SimpleTask> {
         base.AbandonTask();
     }
 
-    protected override bool InitImpl(SimpleTask task, Observable<Collider[]> inRange) {
+    protected override TaskResponse InitImpl(SimpleTask task, Observable<Collider[]> inRange) {
         _target = task.Payload.GetComponent<Construction>();
         _movementAgent.SetDestination(_target.transform.position, true);
         _movementAgent.IsStopped = false;
         inRange.OnChange(CheckColliders);
-        return true;
+        return TaskResponse.Accepted;
     }
 
     private void CheckColliders(Collider[] colliders) {

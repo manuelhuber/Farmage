@@ -12,7 +12,7 @@ public abstract class UnitBehaviourBase<T> : MonoBehaviour, IUnitBehaviourBase<T
     public event Action<IUnitBehaviourBase<T>> TaskCompleted;
     public event Action<IUnitBehaviourBase<T>> TaskAbandoned;
 
-    public bool Init(BaseTask task, Observable<Collider[]> inRange) {
+    public TaskResponse Init(BaseTask task, Observable<Collider[]> inRange) {
         return InitImpl(task as T, inRange);
     }
 
@@ -27,13 +27,13 @@ public abstract class UnitBehaviourBase<T> : MonoBehaviour, IUnitBehaviourBase<T
         TaskCompleted?.Invoke(this);
     }
 
-    protected abstract bool InitImpl(T task, Observable<Collider[]> inRange);
+    protected abstract TaskResponse InitImpl(T task, Observable<Collider[]> inRange);
 }
 
 public interface IUnitBehaviourBase<out T> where T : BaseTask {
     event Action<IUnitBehaviourBase<T>> TaskCompleted;
     event Action<IUnitBehaviourBase<T>> TaskAbandoned;
-    bool Init(BaseTask task, Observable<Collider[]> inRange);
+    TaskResponse Init(BaseTask task, Observable<Collider[]> inRange);
     void Behave();
     void AbandonTask();
     void CompleteTask();

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Features.Save;
 using Features.Units.Robots;
 using Grimity.Data;
 using Grimity.ScriptableObject;
@@ -45,12 +46,13 @@ public class TaskManager : GrimitySingleton<TaskManager> {
     }
 
     public void Enqueue(BaseTask task) {
-        if (!FindWorkerForTask(task)) {
+        if (FindWorkerForTask(task) == TaskResponse.Declined) {
             _availableTasks.Add(task);
         }
     }
 
-    private void OnTaskCompleted(Worker worker, BaseTask baseTask) {
+    private void OnTaskCompleted(Worker worker, BaseTask task) {
+        Debug.Log($"Worker={worker.getSaveID()} completed task={task.type}");
         FreeWorker(worker);
         FindTaskForWorker(worker);
     }
@@ -66,25 +68,41 @@ public class TaskManager : GrimitySingleton<TaskManager> {
         _workers[worker] = data;
     }
 
-    private bool FindWorkerForTask(BaseTask task) {
-        var worker = _workers.Where(pair => !pair.Value.Task.HasValue)
+    private TaskResponse FindWorkerForTask(BaseTask task) {
+        var worker = _workers
+            .Where(pair => !pair.Value.Task.HasValue)
             .Select(pair => pair.Key)
-            .FirstOrDefault();
-        if (worker == null) return false;
-        return AssignTaskToWorker(task, worker);
+            .FirstOrDefault(wrker => wrker.TypePriority.Contains(task.type));
+        return worker == null ? TaskResponse.Declined : AssignTaskToWorker(task, worker);
     }
 
     private void FindTaskForWorker(Worker worker) {
-        if (_availableTasks.IsEmpty()) return;
-        var task = _availableTasks.First();
-        AssignTaskToWorker(task, worker);
+        var taskResponse = TaskResponse.Declined;
+        while (taskResponse != TaskResponse.Accepted) {
+            if (_availableTasks.IsEmpty()) return;
+            var task = _availableTasks.First(baseTask => worker.TypePriority.Contains(baseTask.type));
+            taskResponse = AssignTaskToWorker(task, worker);
+        }
     }
 
-    private bool AssignTaskToWorker(BaseTask task, Worker worker) {
-        if (!worker.SetTask(task)) return false;
-        _workers[worker] = new WorkerData(Optional<BaseTask>.Of(task));
-        _availableTasks.Remove(task);
-        return true;
+    private TaskResponse AssignTaskToWorker(BaseTask task, Worker worker) {
+        var taskResponse = worker.SetTask(task);
+        switch (taskResponse) {
+            case TaskResponse.Accepted:
+                Debug.Log($"Worker={worker.getSaveID()} accepted task={task.type}");
+                _workers[worker] = new WorkerData(Optional<BaseTask>.Of(task));
+                _availableTasks.Remove(task);
+                break;
+            case TaskResponse.Completed:
+                Debug.Log($"Worker={worker.getSaveID()} completed instantly task={task.type}");
+                _availableTasks.Remove(task);
+                break;
+            case TaskResponse.Declined:
+                Debug.Log($"Worker={worker.getSaveID()} declined task={task.type}");
+                break;
+        }
+
+        return taskResponse;
     }
 
     #region Save

@@ -11,6 +11,7 @@ using UnityEngine;
 namespace Features.Units.Robots {
 public class Worker : MonoBehaviour, ISavableComponent {
     [SerializeField] private TaskType[] typePriority = new TaskType[0];
+    public TaskType[] TypePriority => typePriority;
 
     public BaseTask CurrentTask { get; private set; }
 
@@ -54,20 +55,23 @@ public class Worker : MonoBehaviour, ISavableComponent {
     public event Action<Worker, BaseTask> TaskAbandoned;
 
 
-    public bool SetTask(BaseTask task) {
+    public TaskResponse SetTask(BaseTask task) {
         var newBehaviour = _behaviours.GetOrDefault(task.type, null);
-        if (newBehaviour == null || !newBehaviour.Init(task, _inRangeObservable)) {
-            return false;
+        if (newBehaviour == null) {
+            return TaskResponse.Declined;
         }
 
-        CurrentTask = task;
-        _activeBehaviour = newBehaviour;
-        newBehaviour.TaskCompleted += OnTaskCompleted;
-        newBehaviour.TaskAbandoned += OnTaskAbandoned;
+        var taskResponse = newBehaviour.Init(task, _inRangeObservable);
 
-        return true;
+        if (taskResponse == TaskResponse.Accepted) {
+            newBehaviour.TaskCompleted += OnTaskCompleted;
+            newBehaviour.TaskAbandoned += OnTaskAbandoned;
+            CurrentTask = task;
+            _activeBehaviour = newBehaviour;
+        }
+
+        return taskResponse;
     }
-
 
     private void ResetBehaviour() {
         CurrentTask = null;

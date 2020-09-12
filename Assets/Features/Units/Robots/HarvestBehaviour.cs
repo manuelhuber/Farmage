@@ -13,11 +13,11 @@ public class HarvestBehaviour : UnitBehaviourBase<SimpleTask> {
         _movementAgent = GetComponent<MovementAgent>();
     }
 
-    protected override bool InitImpl(SimpleTask task, Observable<Collider[]> inRange) {
+    protected override TaskResponse InitImpl(SimpleTask task, Observable<Collider[]> inRange) {
         _target = task.Payload;
         _movementAgent.SetDestination(_target.transform.position);
         _movementAgent.IsStopped = false;
-        return true;
+        return TaskResponse.Accepted;
     }
 
     public override void Behave() {

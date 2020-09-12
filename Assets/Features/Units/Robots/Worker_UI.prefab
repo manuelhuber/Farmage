@@ -33,8 +33,8 @@ RectTransform:
   m_Father: {fileID: 8921813363722734647}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
@@ -103,9 +103,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8921813363722734647}
   - component: {fileID: 3070750859757497845}
-  - component: {fileID: 6022318750316600271}
+  - component: {fileID: 2182189283938743253}
   m_Layer: 0
-  m_Name: WheatField_UI
+  m_Name: Worker_UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &6022318750316600271
+--- !u!114 &2182189283938743253
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7559707857088061386}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 969a3e6d074eaed49888becc35ce296f, type: 3}
+  m_Script: {fileID: 11500000, guid: 6fc3688575e618b49a23270a591ff101, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  progessText: {fileID: 225413184235273279}
+  text: {fileID: 225413184235273279}

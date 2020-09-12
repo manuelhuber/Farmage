@@ -46,13 +46,13 @@ public class RepairBehaviour : UnitBehaviourBase<SimpleTask> {
         base.AbandonTask();
     }
 
-    protected override bool InitImpl(SimpleTask task, Observable<Collider[]> inRange) {
+    protected override TaskResponse InitImpl(SimpleTask task, Observable<Collider[]> inRange) {
         _target = task.Payload.GetComponent<Mortal>();
         _target.onDeath.AddListener(Complete);
         _movementAgent.SetDestination(_target.transform.position, true);
         _movementAgent.IsStopped = false;
         inRange.OnChange(CheckForArrival);
-        return true;
+        return TaskResponse.Accepted;
     }
 
     public override void Behave() {
