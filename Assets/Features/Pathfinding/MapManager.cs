@@ -33,10 +33,7 @@ public class MapManager : GrimitySingleton<MapManager> {
     [InfoBox("All layers (incl blocking) that count as terrain")]
     public LayerMask terrainLayer;
 
-    // TODO: _activeRequests makes no sense and doesn't do anything - fix it
-    private readonly List<PathRequest> _activeRequests = new List<PathRequest>();
-
-    private readonly Queue<PathRequest> _requests = new Queue<PathRequest>();
+    private readonly List<PathRequest> _requests = new List<PathRequest>();
     private int _cellCountX;
     private int _cellCountZ;
     private NativeArray<GridNode> _map;
@@ -70,7 +67,8 @@ public class MapManager : GrimitySingleton<MapManager> {
         var callbacks = new Action<Vector3[]>[requestsCount];
 
         for (var i = 0; i < requestsCount; i++) {
-            var pathRequest = _requests.Dequeue();
+            var pathRequest = _requests[0];
+            _requests.RemoveAt(0);
             newPaths[i] = new NativeList<PathNode>(Allocator.TempJob);
             jobHandleArray[i] = new PathfindingJob {
                 Map = _map,
@@ -82,7 +80,6 @@ public class MapManager : GrimitySingleton<MapManager> {
                 Path = newPaths[i]
             }.Schedule();
             callbacks[i] = pathRequest.Callback;
-            _activeRequests.Add(pathRequest);
         }
 
         JobHandle.CompleteAll(jobHandleArray);
@@ -116,10 +113,10 @@ public class MapManager : GrimitySingleton<MapManager> {
     }
 
     public Action RequestPath(PathRequest request) {
-        _requests.Enqueue(request);
+        _requests.Add(request);
         return () => {
-            if (!_activeRequests.Remove(request)) {
-                Debug.Log("Canceled requests before it got calculated");
+            if (_requests.Remove(request)) {
+                // Debug.Log("Canceled requests before it got calculated");
             }
         };
     }
@@ -144,7 +141,7 @@ public class MapManager : GrimitySingleton<MapManager> {
         if (!Physics.Raycast(ray, out var hit, 100, terrainLayer)) return;
         var gridNode = GetNode(x, z);
         gridNode.IsWalkable = !blockingLayer.Contains(hit.collider.gameObject.layer);
-        _map.Put2D(gridNode, z, x, _cellCountX);
+        SetNode(z, x, gridNode);
     }
 
     public Vector3 GridToWorldPosition(int x, int z) {
@@ -168,7 +165,7 @@ public class MapManager : GrimitySingleton<MapManager> {
         return _map.Get2D(z, x, _cellCountX);
     }
 
-    public void SetNode(int x, int z, GridNode node) {
+    public void SetNode(int z, int x, GridNode node) {
         _map.Put2D(node, z, x, _cellCountX);
     }
 

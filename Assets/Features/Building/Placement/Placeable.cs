@@ -90,6 +90,14 @@ public class Placeable : MonoBehaviour {
         _collider.size = new Vector3(_size.x, 1, _size.y) * BuildingManager.GridSize;
     }
 
+    public void OccupyTerrain() {
+        foreach (var node in _occupiedNodes) {
+            var gridNode = _mapManager.GetNode(node.x, node.y);
+            gridNode.IsWalkable = false;
+            _mapManager.SetNode(node.y, node.x, gridNode);
+        }
+    }
+
     private void CheckTerrain() {
         ClearOccupiedNodes();
 
@@ -101,7 +109,7 @@ public class Placeable : MonoBehaviour {
 
             var gridNode = node;
             gridNode.Highlight = true;
-            _mapManager.SetNode(node.X, node.Z, gridNode);
+            _mapManager.SetNode(node.Z, node.X, gridNode);
         }
 
         var goodTerrain = _occupiedNodes.All(node => _mapManager.GetNode(node.x, node.y).IsWalkable);
@@ -112,7 +120,7 @@ public class Placeable : MonoBehaviour {
         foreach (var node in _occupiedNodes) {
             var gridNode = _mapManager.GetNode(node.x, node.y);
             gridNode.Highlight = false;
-            _mapManager.SetNode(node.x, node.y, gridNode);
+            _mapManager.SetNode(node.y, node.x, gridNode);
         }
 
         _occupiedNodes.Clear();

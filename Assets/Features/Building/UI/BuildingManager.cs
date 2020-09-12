@@ -88,6 +88,7 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
         }
 
         if (_resourceManager.Pay(_selected.cost)) {
+            _placeable.OccupyTerrain();
             CreateConstructionSite();
             if (!Input.GetKey(KeyCode.LeftShift)) {
                 DetachFromCursor();
