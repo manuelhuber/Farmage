@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Features.Delivery;
-using Features.Save;
 using Features.Units.Common;
 using Grimity.Data;
-using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Units.Robots {
-public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableComponent {
+public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask> {
     private GameObject _destination;
     private GameObject _goods;
     private bool _isCarryingGoods;
@@ -84,38 +80,5 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask>, ISavableCompon
         _goods.transform.parent = null;
         _goods = null;
     }
-
-    #region Save
-
-    public string SaveKey => "LootGatherer";
-
-    public string Save() {
-        return new LootGathererData {
-            loot = _goods.getSaveID(), isCarryingLoot = _isCarryingGoods,
-            targetStorage = _destination.getSaveID(),
-            originStorage = _originStorage.getSaveID()
-        }.ToJson();
-    }
-
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        var data = rawData.FromJson<LootGathererData>();
-        var loot = objects.getBySaveID(data.loot);
-        var targetStorage = objects.getBySaveID(data.targetStorage);
-        var originStorage = objects.getBySaveID(data.originStorage);
-        if (loot == null) return;
-        StartGathering(loot, targetStorage, originStorage);
-        if (!data.isCarryingLoot) return;
-        PickupLoot();
-    }
-
-    [Serializable]
-    private struct LootGathererData {
-        public string loot;
-        public string targetStorage;
-        public string originStorage;
-        public bool isCarryingLoot;
-    }
-
-    #endregion
 }
 }

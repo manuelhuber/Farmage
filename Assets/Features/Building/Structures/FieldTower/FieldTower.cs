@@ -5,11 +5,10 @@ using Features.Health;
 using Features.Save;
 using Features.Time;
 using Grimity.Actions;
-using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Building.Structures.FieldTower {
-public class FieldTower : MonoBehaviour, ISavableComponent {
+public class FieldTower : MonoBehaviour, ISavableComponent<FieldTowerData> {
     public GameObject spherePrefab;
     public int regenPerSecond;
     public float sphereRebuildDelay = 1f;
@@ -55,16 +54,14 @@ public class FieldTower : MonoBehaviour, ISavableComponent {
 
     public string SaveKey => "FieldTower";
 
-    public string Save() {
-        var data = new FieldTowerData {
+    public FieldTowerData Save() {
+        return new FieldTowerData {
             currentShieldHp = 1,
             shieldRebuildTimestamp = _rebuildAction != null ? _rebuildAction.TargetTime : -1
         };
-        return data.ToJson();
     }
 
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        var data = rawData.FromJson<FieldTowerData>();
+    public void Load(FieldTowerData data, IReadOnlyDictionary<string, GameObject> objects) {
         if (data.shieldRebuildTimestamp >= 0) {
             this.Do(() => BuildSphere(sphereHp)).withTime(_time.getTime).At(data.shieldRebuildTimestamp);
         } else {
@@ -72,12 +69,12 @@ public class FieldTower : MonoBehaviour, ISavableComponent {
         }
     }
 
-    [Serializable]
-    private struct FieldTowerData {
-        public int currentShieldHp;
-        public float shieldRebuildTimestamp;
-    }
-
     #endregion
+}
+
+[Serializable]
+public struct FieldTowerData {
+    public int currentShieldHp;
+    public float shieldRebuildTimestamp;
 }
 }

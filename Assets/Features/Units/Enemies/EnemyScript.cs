@@ -8,11 +8,10 @@ using Features.Units.Common;
 using Grimity.Actions;
 using Grimity.Collections;
 using JetBrains.Annotations;
-using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Units.Enemies {
-public class EnemyScript : MonoBehaviour, ISavableComponent {
+public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
     public float attackSpeed;
     public int damage = 5;
     private PeriodicalAction _attack;
@@ -87,17 +86,16 @@ public class EnemyScript : MonoBehaviour, ISavableComponent {
 
     public string SaveKey => "EnemyController";
 
-    public string Save() {
+    public EnemyData Save() {
         var victim = _victim;
         return new EnemyData {
             target = victim == null ? "" : victim.getSaveID(),
             targets = _targets.Select(mortal => mortal.getSaveID()).ToArray(),
             nextAttack = _attack.NextExecution
-        }.ToJson();
+        };
     }
 
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        var data = rawData.FromJson<EnemyData>();
+    public void Load(EnemyData data, IReadOnlyDictionary<string, GameObject> objects) {
         _attack.SetNextExecution(data.nextAttack);
         _targets = data.targets.Select(t => objects[t].GetComponent<Mortal>()).ToList();
 
@@ -107,13 +105,13 @@ public class EnemyScript : MonoBehaviour, ISavableComponent {
         }
     }
 
-    [Serializable]
-    private struct EnemyData {
-        public string target;
-        public string[] targets;
-        public float nextAttack;
-    }
-
     #endregion
+}
+
+[Serializable]
+public struct EnemyData {
+    public string target;
+    public string[] targets;
+    public float nextAttack;
 }
 }

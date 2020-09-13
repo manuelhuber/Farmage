@@ -131,6 +131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 33723375}
   - component: {fileID: 33723376}
+  - component: {fileID: 33723377}
   m_Layer: 0
   m_Name: TaskManager
   m_TagString: Untagged
@@ -165,6 +166,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allWorkers: {fileID: 11400000, guid: abf8e1df5664ac741848cf0f78dcfc37, type: 2}
+--- !u!114 &33723377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33723374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1752f719abbe433db8a49d5e8fd8b765, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Key: TaskManager
 --- !u!1 &152770755
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +392,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &450206707
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7,11 +7,10 @@ using Features.Resources;
 using Features.Save;
 using Features.Ui.Actions;
 using Grimity.Data;
-using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Building.Construction {
-public class Construction : MonoBehaviour, ISavableComponent, IHasActions {
+public class Construction : MonoBehaviour, ISavableComponent<ConstructionData>, IHasActions {
     public float progressTarget;
     public Material material;
     public float Progress { get; private set; }
@@ -66,12 +65,11 @@ public class Construction : MonoBehaviour, ISavableComponent, IHasActions {
 
     public string SaveKey => "ConstructionSite";
 
-    public string Save() {
-        return new ConstructionData {progress = Progress, menuEntry = _building.buildingName}.ToJson();
+    public ConstructionData Save() {
+        return new ConstructionData {progress = Progress, menuEntry = _building.buildingName};
     }
 
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        var data = rawData.FromJson<ConstructionData>();
+    public void Load(ConstructionData data, IReadOnlyDictionary<string, GameObject> objects) {
         var menuEntries = SaveGame.GetAllBuildings();
         var menuEntry = menuEntries.First(entry => entry.buildingName == data.menuEntry);
         Init(menuEntry);
@@ -79,12 +77,12 @@ public class Construction : MonoBehaviour, ISavableComponent, IHasActions {
         Progress = data.progress;
     }
 
-    [Serializable]
-    private struct ConstructionData {
-        public float progress;
-        public string menuEntry;
-    }
-
     #endregion
+}
+
+[Serializable]
+public struct ConstructionData {
+    public float progress;
+    public string menuEntry;
 }
 }

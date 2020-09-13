@@ -2,11 +2,10 @@
 using Features.Health;
 using Features.Save;
 using Features.Tasks;
-using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Building.Structures {
-public class Building : MonoBehaviour, ISavableComponent {
+public class Building : MonoBehaviour, ISavableComponent<bool> {
     private readonly bool _autoRepair = false;
     private bool _waitingForRepair;
 
@@ -29,12 +28,12 @@ public class Building : MonoBehaviour, ISavableComponent {
 
     public string SaveKey => "building";
 
-    public string Save() {
-        return _waitingForRepair.ToJson();
+    public bool Save() {
+        return _waitingForRepair;
     }
 
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        _waitingForRepair = rawData.FromJson<bool>();
+    public void Load(bool data, IReadOnlyDictionary<string, GameObject> objects) {
+        _waitingForRepair = data;
     }
 
     #endregion

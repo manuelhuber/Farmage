@@ -6,11 +6,10 @@ using Features.Health;
 using Features.Save;
 using Features.Time;
 using Grimity.Actions;
-using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Building.Structures.Turret {
-public class Turret : MonoBehaviour, ISavableComponent {
+public class Turret : MonoBehaviour, ISavableComponent<TurretData> {
     public float attackSpeed;
     public int damage;
     public int range;
@@ -85,28 +84,27 @@ public class Turret : MonoBehaviour, ISavableComponent {
 
     public string SaveKey => "Turret";
 
-    public string Save() {
+    public TurretData Save() {
         return new TurretData {
             currentTarget = _currentTarget.getSaveID(),
             nextAttack = _attack.NextExecution
-        }.ToJson();
+        };
     }
 
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        var turretData = rawData.FromJson<TurretData>();
-        _attack.SetNextExecution(turretData.nextAttack);
-        var target = objects.getBySaveID(turretData.currentTarget)?.GetComponent<Mortal>();
+    public void Load(TurretData data, IReadOnlyDictionary<string, GameObject> objects) {
+        _attack.SetNextExecution(data.nextAttack);
+        var target = objects.getBySaveID(data.currentTarget)?.GetComponent<Mortal>();
         if (target != null) {
             SetTarget(target);
         }
     }
 
-    [Serializable]
-    private struct TurretData {
-        public string currentTarget;
-        public float nextAttack;
-    }
-
     #endregion
+}
+
+[Serializable]
+public struct TurretData {
+    public string currentTarget;
+    public float nextAttack;
 }
 }

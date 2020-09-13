@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using Features.Save;
 using Grimity.Data;
-using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Features.Health {
-public class Mortal : MonoBehaviour, ISavableComponent {
+public class Mortal : MonoBehaviour, ISavableComponent<MortalData> {
     public UnityEvent onDeath = new UnityEvent();
     public Team team;
 
@@ -36,24 +35,19 @@ public class Mortal : MonoBehaviour, ISavableComponent {
 
     public string SaveKey => "Mortal";
 
-    public string Save() {
-        return new MortalData {hp = _hitpoints.Value}.ToJson();
+    public MortalData Save() {
+        return new MortalData {hp = _hitpoints.Value};
     }
 
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        _hitpoints.Set(rawData.FromJson<MortalData>().hp);
-    }
-
-    [Serializable]
-    private struct MortalData {
-        public int hp;
+    public void Load(MortalData data, IReadOnlyDictionary<string, GameObject> objects) {
+        _hitpoints.Set(data.hp);
     }
 
     #endregion
 }
 
-public enum Team {
-    Farmers,
-    Aliens
+[Serializable]
+public struct MortalData {
+    public int hp;
 }
 }

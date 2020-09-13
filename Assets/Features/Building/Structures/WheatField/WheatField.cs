@@ -7,11 +7,10 @@ using Features.Save;
 using Features.Tasks;
 using Features.Time;
 using Grimity.Data;
-using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Building.Structures.WheatField {
-public class WheatField : MonoBehaviour, ISavableComponent {
+public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
     public GameObject wheatPrefab;
     public Transform dumpingPlace;
     public int harvestCount;
@@ -65,23 +64,22 @@ public class WheatField : MonoBehaviour, ISavableComponent {
 
     public string SaveKey => "WheatField";
 
-    public string Save() {
+    public WheatFieldData Save() {
         return new WheatFieldData
-            {progress = _progress.Value, waitingForHarvest = _waitingForHarvest}.ToJson();
+            {progress = _progress.Value, waitingForHarvest = _waitingForHarvest};
     }
 
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        var data = rawData.FromJson<WheatFieldData>();
+    public void Load(WheatFieldData data, IReadOnlyDictionary<string, GameObject> objects) {
         _progress.Set(data.progress);
         _waitingForHarvest = data.waitingForHarvest;
     }
 
-    [Serializable]
-    private struct WheatFieldData {
-        public float progress;
-        public bool waitingForHarvest;
-    }
-
     #endregion
+}
+
+[Serializable]
+public struct WheatFieldData {
+    public float progress;
+    public bool waitingForHarvest;
 }
 }

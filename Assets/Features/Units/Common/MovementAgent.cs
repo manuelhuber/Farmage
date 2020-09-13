@@ -5,12 +5,11 @@ using Features.Common;
 using Features.Pathfinding;
 using Features.Save;
 using Features.Time;
-using Ludiq.PeekCore.TinyJson;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace Features.Units.Common {
-public class MovementAgent : MonoBehaviour, ISavableComponent {
+public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData> {
     public float speed = 3f;
     public float stoppingDistance = 1f;
     public float turnSpeed = 10f;
@@ -76,26 +75,30 @@ public class MovementAgent : MonoBehaviour, ISavableComponent {
 
     public string SaveKey => "MovementAgent";
 
-    public string Save() {
-        if (_path.Length < 1) {
-            return "";
+    public MovementAgentData Save() {
+        var hasDestination = _path.Length > 0;
+        return new MovementAgentData {
+            destination = hasDestination ? SerialisableVector3.From(_path[0]) : new SerialisableVector3(),
+            isStopped = IsStopped,
+            hasDestination = hasDestination
+        };
+    }
+
+    public void Load(MovementAgentData data, IReadOnlyDictionary<string, GameObject> objects) {
+        if (data.hasDestination) {
+            SetDestination(data.destination.To());
         }
 
-        var movementData = new MovementData {destination = SerialisableVector3.From(_path[0])};
-        return movementData.ToJson();
-    }
-
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        if (rawData.Length < 1) return;
-        var movementData = rawData.FromJson<MovementData>();
-        SetDestination(movementData.destination.To());
-    }
-
-    [Serializable]
-    private struct MovementData {
-        public SerialisableVector3 destination;
+        IsStopped = data.isStopped;
     }
 
     #endregion
+}
+
+[Serializable]
+public struct MovementAgentData {
+    public SerialisableVector3 destination;
+    public bool isStopped;
+    public bool hasDestination;
 }
 }

@@ -7,12 +7,11 @@ using Features.Save;
 using Grimity.Data;
 using Grimity.ScriptableObject;
 using Grimity.Singleton;
-using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Features.Resources {
-public class ResourceManager : GrimitySingleton<ResourceManager>, ISavableComponent {
+public class ResourceManager : GrimitySingleton<ResourceManager>, ISavableComponent<Cost> {
     public RuntimeGameObjectSet allFarmerBuildings;
     public Grimity.Data.IObservable<Cost> Have => _have;
     private readonly Observable<Cost> _have = new Observable<Cost>(new Cost());
@@ -64,12 +63,12 @@ public class ResourceManager : GrimitySingleton<ResourceManager>, ISavableCompon
 
     public string SaveKey => "resources";
 
-    public string Save() {
-        return _have.Value.ToJson();
+    public Cost Save() {
+        return _have.Value;
     }
 
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        _have.Set(rawData.FromJson<Cost>());
+    public void Load(Cost rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        _have.Set(rawData);
     }
 
     #endregion

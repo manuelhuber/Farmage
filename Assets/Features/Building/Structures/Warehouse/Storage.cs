@@ -5,11 +5,11 @@ using Features.Delivery;
 using Features.Items;
 using Features.Save;
 using Grimity.Data;
-using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Building.Structures.Warehouse {
-public class Storage : MonoBehaviour, IDeliveryAcceptor, IDeliveryDispenser, ISavableComponent {
+public class Storage : MonoBehaviour, IDeliveryAcceptor, IDeliveryDispenser,
+    ISavableComponent<StorageData> {
     public ItemType type;
     public int capacity;
     public int size = 10;
@@ -66,33 +66,33 @@ public class Storage : MonoBehaviour, IDeliveryAcceptor, IDeliveryDispenser, ISa
 
     public string SaveKey => "Storage";
 
-    public string Save() {
+    public StorageData Save() {
         var serializedItems = items.Select(item => new StoredItemData {
                 storable = item.Storable.getSaveID(),
                 reserved = item.Reserved
             })
             .ToArray();
-        return new StorageData {items = serializedItems}.ToJson();
+        return new StorageData {items = serializedItems};
     }
 
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        foreach (var item in rawData.FromJson<StorageData>().items) {
+    public void Load(StorageData rawData, IReadOnlyDictionary<string, GameObject> objects) {
+        foreach (var item in rawData.items) {
             var storable = objects[item.storable].GetComponent<Storable>();
             items.Add(new StoredItem {Reserved = item.reserved, Storable = storable});
         }
     }
 
-    [Serializable]
-    private struct StorageData {
-        public StoredItemData[] items;
-    }
-
-    [Serializable]
-    private struct StoredItemData {
-        public string storable;
-        public bool reserved;
-    }
-
     #endregion
+}
+
+[Serializable]
+public struct StorageData {
+    public StoredItemData[] items;
+}
+
+[Serializable]
+public struct StoredItemData {
+    public string storable;
+    public bool reserved;
 }
 }

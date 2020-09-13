@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Features.Save;
 using Features.Tasks;
 using Grimity.Collections;
 using Grimity.Data;
-using Ludiq.PeekCore.TinyJson;
 using UnityEngine;
 
 namespace Features.Units.Robots {
-public class Worker : MonoBehaviour, ISavableComponent {
+public class Worker : MonoBehaviour {
     [SerializeField] private TaskType[] typePriority = new TaskType[0];
     public TaskType[] TypePriority => typePriority;
 
@@ -99,30 +96,5 @@ public class Worker : MonoBehaviour, ISavableComponent {
         ResetBehaviour();
         TaskAbandoned?.Invoke(this, currentTask);
     }
-
-    #region Save
-
-    public string SaveKey => "workerbot";
-
-    public string Save() {
-        if (_activeBehaviour == null) return "";
-        var activeType = _behaviours.FirstOrDefault(pair => pair.Value == _activeBehaviour).Key;
-        // TODO serialise current task
-        return new WorkerData {active = activeType}.ToJson();
-    }
-
-    public void Load(string rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        if (rawData == "") return;
-        var data = rawData.FromJson<WorkerData>();
-        // TODO deserialise current task
-        SetTask(new SimpleTask {type = data.active});
-    }
-
-    [Serializable]
-    private struct WorkerData {
-        public TaskType active;
-    }
-
-    #endregion
 }
 }
