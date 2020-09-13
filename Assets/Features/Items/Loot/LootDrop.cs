@@ -1,6 +1,7 @@
 using Features.Delivery;
 using Features.Resources;
 using Features.Tasks;
+using Grimity.Data;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -26,7 +27,8 @@ public class LootDrop : MonoBehaviour {
 
     private void EnqueueDeliverTask(GameObject newLoot) {
         var storage = _resourceManager.GetBestStorage(newLoot.GetComponent<Storable>());
-        _taskManager.Enqueue(new DeliveryTask {type = TaskType.Deliver, Goods = newLoot, Target = storage});
+        var deliveryTask = new DeliveryTask(newLoot, Optional<GameObject>.NoValue(), storage.AsOptional());
+        _taskManager.Enqueue(deliveryTask);
     }
 }
 }

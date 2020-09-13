@@ -44,7 +44,7 @@ public class ResourceManager : GrimitySingleton<ResourceManager>, ISavableCompon
         var item = storage.ReserveItem(storable => storable.IsType(type));
         return !item.HasValue
             ? Optional<Tuple<Storable, Storage>>.NoValue()
-            : Optional<Tuple<Storable, Storage>>.Of(new Tuple<Storable, Storage>(item.Value, storage));
+            : new Tuple<Storable, Storage>(item.Value, storage).AsOptional();
     }
 
     public GameObject GetBestStorage(Storable newLoot) {

@@ -53,7 +53,7 @@ public class Worker : MonoBehaviour {
 
 
     public TaskResponse SetTask(BaseTask task) {
-        var newBehaviour = _behaviours.GetOrDefault(task.type, null);
+        var newBehaviour = _behaviours.GetOrDefault(task.Type, null);
         if (newBehaviour == null) {
             return TaskResponse.Declined;
         }

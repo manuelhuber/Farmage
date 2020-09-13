@@ -37,7 +37,7 @@ public class Storage : MonoBehaviour, IDeliveryAcceptor, IDeliveryDispenser,
         var index = items.IndexOf(storedItem);
         storedItem.Reserved = true;
         items[index] = storedItem;
-        return Optional<Storable>.Of(storedItem.Storable);
+        return storedItem.Storable.AsOptional();
     }
 
     private void PlaceItemInStorage(Component item) {

@@ -106,7 +106,7 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
         var constructionSite = constructionSiteGameObject.GetComponent<Construction.Construction>();
         constructionSite.Init(_selected);
 
-        _taskManager.Enqueue(new SimpleTask {type = TaskType.Build, Payload = constructionSiteGameObject});
+        _taskManager.Enqueue(new SimpleTask(constructionSiteGameObject, TaskType.Build));
     }
 
     private void DetachFromCursor() {

@@ -11,22 +11,27 @@ public class WorkerGui : MonoBehaviour, ISingleSelectionDetailGui {
 
     private void Update() {
         var task = _worker.CurrentTask;
-        if (task == null) {
-            text.text = "Waiting for work";
-        } else if (task is DeliveryTask deliveryTask) {
-            text.text = $"Delivering {deliveryTask.Goods.name} to {deliveryTask.Target.name}";
-        } else if (task is SimpleTask simpleTask) {
-            switch (task.type) {
-                case TaskType.Harvest:
-                    text.text = $"Harvesting from {simpleTask.Payload.name}";
-                    break;
-                case TaskType.Repair:
-                    text.text = $"Repairing {simpleTask.Payload.name}";
-                    break;
-                case TaskType.Build:
-                    text.text = $"Building {simpleTask.Payload.name}";
-                    break;
-            }
+        switch (task) {
+            case null:
+                text.text = "Waiting for work";
+                break;
+            case DeliveryTask deliveryTask:
+                text.text = $"Delivering {deliveryTask.Goods.name} to {deliveryTask.Destination.Value.name}";
+                break;
+            case SimpleTask simpleTask:
+                switch (task.Type) {
+                    case TaskType.Harvest:
+                        text.text = $"Harvesting from {simpleTask.Payload.name}";
+                        break;
+                    case TaskType.Repair:
+                        text.text = $"Repairing {simpleTask.Payload.name}";
+                        break;
+                    case TaskType.Build:
+                        text.text = $"Building {simpleTask.Payload.name}";
+                        break;
+                }
+
+                break;
         }
     }
 

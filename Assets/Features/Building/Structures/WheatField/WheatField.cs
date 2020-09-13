@@ -44,7 +44,7 @@ public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
 
     private void FinishGrowth() {
         _waitingForHarvest = true;
-        _taskManager.Enqueue(new SimpleTask {Payload = gameObject, type = TaskType.Harvest});
+        _taskManager.Enqueue(new SimpleTask(gameObject, TaskType.Harvest));
     }
 
     public void Harvest() {
@@ -52,11 +52,11 @@ public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
         _progress.Set(0);
         for (var i = 0; i < harvestCount; i++) {
             var wheat = Instantiate(wheatPrefab, dumpingPlace.position, dumpingPlace.rotation);
-            _taskManager.Enqueue(new DeliveryTask {
-                Goods = wheat,
-                type = TaskType.Deliver,
-                Target = _resourceManager.GetBestStorage(wheat.GetComponent<Storable>())
-            });
+            var storage = _resourceManager.GetBestStorage(wheat.GetComponent<Storable>());
+            _taskManager.Enqueue(new DeliveryTask(wheat,
+                Optional<GameObject>.NoValue(),
+                storage.AsOptional()
+            ));
         }
     }
 

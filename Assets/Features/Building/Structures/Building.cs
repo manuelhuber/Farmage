@@ -19,7 +19,7 @@ public class Building : MonoBehaviour, ISavableComponent<bool> {
             }
 
             if (_waitingForRepair) return;
-            TaskManager.Instance.Enqueue(new SimpleTask {type = TaskType.Repair, Payload = gameObject});
+            TaskManager.Instance.Enqueue(new SimpleTask(gameObject, TaskType.Repair));
             _waitingForRepair = true;
         });
     }

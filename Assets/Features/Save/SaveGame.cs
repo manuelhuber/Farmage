@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Features.Building.BuildMenu;
+using Grimity.Data;
 using Grimity.Singleton;
 using JetBrains.Annotations;
 using Ludiq.PeekCore;
@@ -49,7 +50,6 @@ public class SaveGame : GrimitySingleton<SaveGame> {
             }
         }
 
-
         LoadObjectStates(loadFile, loadedObjects);
     }
 
@@ -65,10 +65,7 @@ public class SaveGame : GrimitySingleton<SaveGame> {
     private Dictionary<string, GameObject> InstantiateSavedObjects(SaveData loadFile) {
         var loadedObjects = new Dictionary<string, GameObject>();
 
-        foreach (var loadFileObject in loadFile.Objects) {
-            var objectData = loadFileObject.Value;
-            var objectId = loadFileObject.Key;
-
+        foreach (var (objectId, objectData) in loadFile.Objects) {
             var prefabKey = objectData[SavableObject.PrefabKey];
             if (PrefabDict.ContainsKey(prefabKey)) {
                 var prefab = PrefabDict[prefabKey];

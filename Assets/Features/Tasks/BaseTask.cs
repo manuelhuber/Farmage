@@ -2,11 +2,11 @@ using System;
 
 namespace Features.Tasks {
 [Serializable]
-public class BaseTask {
-    public TaskType type;
+public abstract class BaseTask {
+    public abstract TaskType Type { get; }
 
     public override string ToString() {
-        return $"type={type}";
+        return $"type={Type}";
     }
 }
 }

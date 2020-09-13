@@ -10,34 +10,25 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask> {
     private GameObject _goods;
     private bool _isCarryingGoods;
     private MovementAgent _movementAgent;
-    private GameObject _originStorage;
+    private Optional<GameObject> _originStorage;
 
     private void Awake() {
         _movementAgent = GetComponent<MovementAgent>();
     }
 
-    private void CheckForArrival(Collider[] colliders) {
-        if (_goods == null) return;
-        var objectsInRange = colliders.Select(col => col.gameObject).ToArray();
-        var arrivedAtGoods = objectsInRange.Any(obj => obj == _goods.gameObject || obj == _originStorage);
-        var arrivedAtStorage = objectsInRange.Any(obj => obj == _destination.gameObject);
-        if (arrivedAtGoods) {
-            PickupLoot();
-        }
-
-        if (_isCarryingGoods && arrivedAtStorage) {
-            DeliverLoot();
-        }
-    }
-
     protected override TaskResponse InitImpl(DeliveryTask task, Observable<Collider[]> inRange) {
-        StartGathering(task.Goods, task.Target, task.From);
+        if (!task.Destination.HasValue) {
+            return TaskResponse.Declined;
+        }
+
+        StartGathering(task.Goods, task.Destination.Value, task.Origin);
         inRange.OnChange(CheckForArrival);
         return _goods == null ? TaskResponse.Completed : TaskResponse.Accepted;
     }
 
-
-    private void StartGathering(GameObject goods, GameObject destination, GameObject origin) {
+    private void StartGathering(GameObject goods,
+                                GameObject destination,
+                                Optional<GameObject> origin) {
         _goods = goods;
         _isCarryingGoods = false;
         _destination = destination;
@@ -45,6 +36,26 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask> {
         _movementAgent.SetDestination(_goods.transform.position, true);
         _movementAgent.IsStopped = false;
     }
+
+    private void CheckForArrival(Collider[] colliders) {
+        if (_goods == null) return;
+        var objectsInRange = colliders.Select(col => col.gameObject).ToArray();
+        var arrivedAtPickup = objectsInRange.Any(IsPickupLocation);
+        var arrivedAtDropOff = objectsInRange.Any(obj => obj == _destination.gameObject);
+        if (arrivedAtPickup) {
+            PickupLoot();
+        }
+
+        if (_isCarryingGoods && arrivedAtDropOff) {
+            DeliverLoot();
+        }
+    }
+
+    private bool IsPickupLocation(GameObject gameObj) {
+        return _goods.gameObject == gameObj ||
+               _originStorage.HasValue && _originStorage.Value == gameObj;
+    }
+
 
     private void DeliverLoot() {
         if (!_destination.GetComponent<IDeliveryAcceptor>().AcceptDelivery(_goods)) {
@@ -59,8 +70,8 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask> {
     }
 
     private void PickupLoot() {
-        if (_originStorage != null) {
-            var dispenser = _originStorage.GetComponent<IDeliveryDispenser>();
+        if (_originStorage.HasValue) {
+            var dispenser = _originStorage.Value.GetComponent<IDeliveryDispenser>();
             dispenser.DispenseDelivery(_goods);
         }
 

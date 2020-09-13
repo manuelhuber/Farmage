@@ -68,11 +68,11 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
             var item = _resourceManager.FindItem(itemType);
             if (!item.HasValue) return;
             var (storable, storage) = item.Value;
-            _taskManager.Enqueue(new DeliveryTask {
-                type = TaskType.Deliver, Target = gameObject,
-                Goods = storable.gameObject,
-                From = storage.gameObject
-            });
+            _taskManager.Enqueue(new DeliveryTask(
+                storable.gameObject,
+                gameObject.AsOptional(),
+                storage.gameObject.AsOptional()
+            ));
         };
     }
 
