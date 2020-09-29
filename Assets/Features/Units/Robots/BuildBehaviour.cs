@@ -9,6 +9,8 @@ using UnityEngine;
 
 namespace Features.Units.Robots {
 public class BuildBehaviour : UnitBehaviourBase<SimpleTask> {
+    [SerializeField] private int constructionProgress = 10;
+
     private PeriodicalAction _buildAction;
     private MovementAgent _movementAgent;
     private Construction _target;
@@ -23,7 +25,8 @@ public class BuildBehaviour : UnitBehaviourBase<SimpleTask> {
         _buildAction.initialDelay = true;
         _buildAction.getTime = () => _time.Time;
         _buildAction.action = () => {
-            if (_target.Build(10)) {
+            var buildCompleted = _target == null || _target.Build(constructionProgress);
+            if (buildCompleted) {
                 Complete();
             }
 
@@ -37,7 +40,9 @@ public class BuildBehaviour : UnitBehaviourBase<SimpleTask> {
     }
 
     protected override TaskResponse InitImpl(SimpleTask task, Observable<Collider[]> inRange) {
-        _target = task.Payload.GetComponent<Construction>();
+        var construction = task.Payload;
+        if (construction == null) return TaskResponse.Completed;
+        _target = construction.GetComponent<Construction>();
         _movementAgent.SetDestination(_target.transform.position, true);
         _movementAgent.IsStopped = false;
         inRange.OnChange(CheckColliders);
@@ -56,7 +61,7 @@ public class BuildBehaviour : UnitBehaviourBase<SimpleTask> {
     }
 
     private bool IsTarget(Component other) {
-        return _target != null && _target.gameObject == other.gameObject;
+        return _target != null && other != null && _target.gameObject == other.gameObject;
     }
 }
 }

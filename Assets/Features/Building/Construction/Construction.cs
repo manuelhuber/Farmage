@@ -22,8 +22,13 @@ public class Construction : MonoBehaviour, ISavableComponent<ConstructionData>, 
         return _actions;
     }
 
-    public bool Build(float effort) {
-        Progress += effort;
+    /// <summary>
+    ///     Advance the construction
+    /// </summary>
+    /// <param name="progress">The amount of progress that will be added</param>
+    /// <returns>True if the building is now completed</returns>
+    public bool Build(float progress) {
+        Progress += progress;
         if (Progress < progressTarget) return false;
         Finish();
         return true;
@@ -34,12 +39,7 @@ public class Construction : MonoBehaviour, ISavableComponent<ConstructionData>, 
         building.InitConstructionSite(gameObject);
         progressTarget = _building.buildingPrefab.GetComponent<Mortal>().MaxHitpoints;
         AddModel(_building.modelPrefab);
-        _actions.Set(new[] {
-            new ActionEntry {
-                Active = true,
-                OnSelect = Cancel
-            }
-        });
+        _actions.Set(new[] {new ActionEntry {Active = true, OnSelect = Cancel}});
     }
 
     private void AddModel(GameObject modelPrefab) {
@@ -51,7 +51,7 @@ public class Construction : MonoBehaviour, ISavableComponent<ConstructionData>, 
 
     private void Cancel() {
         ResourceManager.Instance.Add(_building.cost);
-        Destroy(this);
+        Destroy(gameObject);
     }
 
     private void Finish() {

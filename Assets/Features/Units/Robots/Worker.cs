@@ -38,12 +38,15 @@ public class Worker : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         _inRange.Add(other);
-        _inRange.RemoveAll(obj => obj == null);
-        _inRangeObservable.Set(_inRange.ToArray());
+        UpdateInRangeObservable();
     }
 
     private void OnTriggerExit(Collider other) {
         _inRange.Remove(other);
+        UpdateInRangeObservable();
+    }
+
+    private void UpdateInRangeObservable() {
         _inRange.RemoveAll(obj => obj == null);
         _inRangeObservable.Set(_inRange.ToArray());
     }
