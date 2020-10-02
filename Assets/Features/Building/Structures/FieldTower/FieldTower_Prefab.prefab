@@ -27,7 +27,7 @@ PrefabInstance:
     - target: {fileID: 6047475558733921518, guid: c4552ea606d94a24da2d15f6cc82bb73,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.200001
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6047475558733921518, guid: c4552ea606d94a24da2d15f6cc82bb73,
         type: 3}
@@ -37,7 +37,7 @@ PrefabInstance:
     - target: {fileID: 6047475558733921518, guid: c4552ea606d94a24da2d15f6cc82bb73,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6047475558733921518, guid: c4552ea606d94a24da2d15f6cc82bb73,
         type: 3}
@@ -96,7 +96,7 @@ PrefabInstance:
     - target: {fileID: 990117219375781617, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: m_Name
-      value: FieldTowerPrefab
+      value: FieldTower_Prefab
       objectReference: {fileID: 0}
     - target: {fileID: 8703393173598853011, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}

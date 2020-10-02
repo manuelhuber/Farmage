@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: FieldTower_MenuEntry
   m_EditorClassIdentifier: 
   buildingName: Field Tower
-  buildingPrefab: {fileID: 8958712014341238561, guid: c4552ea606d94a24da2d15f6cc82bb73,
+  buildingPrefab: {fileID: 8932857904367113411, guid: 0d8937e74882d174db41aabd06eabc0d,
     type: 3}
-  modelPrefab: {fileID: 8932857904367113411, guid: 0d8937e74882d174db41aabd06eabc0d,
+  modelPrefab: {fileID: 8958712014341238561, guid: c4552ea606d94a24da2d15f6cc82bb73,
     type: 3}
   size:
     x: 1

@@ -152,11 +152,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: HQ_Prefab
       objectReference: {fileID: 0}
-    - target: {fileID: 990117219375781617, guid: 367f8f4e80502e14a8ef8a46497b32b7,
-        type: 3}
-      propertyPath: m_TagString
-      value: HQ
-      objectReference: {fileID: 0}
     - target: {fileID: 2744936451345570462, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: uiDetailPrefab
