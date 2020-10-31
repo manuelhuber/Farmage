@@ -9,12 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3422980397616220992}
-  - component: {fileID: 4803615821640408873}
   - component: {fileID: 216447116440646007}
   - component: {fileID: 4559078122192643616}
   - component: {fileID: -6654236955291886222}
+  - component: {fileID: -2388949347727230650}
   m_Layer: 0
-  m_Name: MeatLoot
+  m_Name: AlientMeatPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,19 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4803615821640408873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2944708649086578826}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe2bead74eecc284a97ec95a73b237da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 0
 --- !u!65 &216447116440646007
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -90,6 +77,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PrefabName: MeatCube
+--- !u!114 &-2388949347727230650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2944708649086578826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c028deae7f20418eae216b4f82ced70b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resource: {fileID: 11400000, guid: dc25a0d6a3546c846a7f61eadc72d4f6, type: 2}
+  count: 1
 --- !u!1 &8373831559297018435
 GameObject:
   m_ObjectHideFlags: 0

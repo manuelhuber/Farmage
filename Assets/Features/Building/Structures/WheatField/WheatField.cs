@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Features.Delivery;
-using Features.Items;
 using Features.Resources;
 using Features.Save;
 using Features.Tasks;
@@ -11,7 +9,7 @@ using UnityEngine;
 
 namespace Features.Building.Structures.WheatField {
 public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
-    public GameObject wheatPrefab;
+    public Resource wheatResource;
     public Transform dumpingPlace;
     public int harvestCount;
     public int growthDurationInSeconds;
@@ -50,14 +48,9 @@ public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
     public void Harvest() {
         _waitingForHarvest = false;
         _progress.Set(0);
-        for (var i = 0; i < harvestCount; i++) {
-            var wheat = Instantiate(wheatPrefab, dumpingPlace.position, dumpingPlace.rotation);
-            var storage = _resourceManager.GetBestStorage(wheat.GetComponent<Storable>());
-            _taskManager.Enqueue(new DeliveryTask(wheat,
-                Optional<GameObject>.NoValue(),
-                storage.AsOptional()
-            ));
-        }
+        var wheat = wheatResource.CreateResourceObject(harvestCount);
+        wheat.transform.position = dumpingPlace.position;
+        _resourceManager.RegisterNewResource(wheat);
     }
 
     #region Save

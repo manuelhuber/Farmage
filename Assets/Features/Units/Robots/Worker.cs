@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Features.Tasks;
+using Features.Ui.Actions;
 using Grimity.Collections;
 using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Units.Robots {
-public class Worker : MonoBehaviour {
+public class Worker : MonoBehaviour, IHasActions {
     [SerializeField] private TaskType[] typePriority = new TaskType[0];
     public TaskType[] TypePriority => typePriority;
 
@@ -20,9 +21,10 @@ public class Worker : MonoBehaviour {
     private readonly Observable<Collider[]> _inRangeObservable =
         new Observable<Collider[]>(new Collider[] { });
 
+    private readonly Observable<ActionEntry[]> actions = new Observable<ActionEntry[]>(new ActionEntry[] { });
+
     private IUnitBehaviourBase<BaseTask> _activeBehaviour;
 
-    // Start is called before the first frame update
     private void Awake() {
         // When duplicating a object during play the active behaviour isn't null on Awake...
         _activeBehaviour = null;
@@ -30,6 +32,8 @@ public class Worker : MonoBehaviour {
         _behaviours[TaskType.Harvest] = gameObject.GetComponent<HarvestBehaviour>();
         _behaviours[TaskType.Repair] = gameObject.GetComponent<RepairBehaviour>();
         _behaviours[TaskType.Build] = gameObject.GetComponent<BuildBehaviour>();
+        actions.Set(new[]
+            {new ActionEntry {Active = true, OnSelect = () => _activeBehaviour?.AbandonTask()}});
     }
 
     private void Update() {
@@ -46,6 +50,16 @@ public class Worker : MonoBehaviour {
         UpdateInRangeObservable();
     }
 
+
+    public Grimity.Data.IObservable<ActionEntry[]> GetActions() {
+        return actions;
+    }
+
+    /// <summary>
+    ///     This is a hacky workaround. We keep a list of all colliders. If a collider gets destroyed we don't
+    ///     know. We manually filter out destroyed collider at some important times. We should have a proper
+    ///     callback to always correctly remove destroyed colliders instead.
+    /// </summary>
     private void UpdateInRangeObservable() {
         _inRange.RemoveAll(obj => obj == null);
         _inRangeObservable.Set(_inRange.ToArray());
@@ -61,6 +75,7 @@ public class Worker : MonoBehaviour {
             return TaskResponse.Declined;
         }
 
+        UpdateInRangeObservable();
         var taskResponse = newBehaviour.Init(task, _inRangeObservable);
 
         if (taskResponse == TaskResponse.Accepted) {

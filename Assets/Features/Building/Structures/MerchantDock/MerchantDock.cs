@@ -1,6 +1,6 @@
 using System;
+using System.Linq;
 using Features.Delivery;
-using Features.Items;
 using Features.Resources;
 using Features.Tasks;
 using Features.Time;
@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Features.Building.Structures.MerchantDock {
 public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
     public int visitIntervalsInSeconds;
-    public SalesPrices prices;
+    public Resource[] SellableResources;
 
     public bool TradeInProgress { get; private set; }
 
@@ -27,12 +27,7 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
         _taskManager = TaskManager.Instance;
         _gameTime = GameTime.Instance;
         _resourceManager = ResourceManager.Instance;
-        _actions.Set(new[] {
-            new ActionEntry {
-                Active = true,
-                OnSelect = EnqueueTask(ItemType.Wheat)
-            }
-        });
+        _actions.Set(SellableResources.Select(CreateActionEntry).ToArray());
     }
 
     private void Start() {
@@ -48,14 +43,10 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
 
 
     public bool AcceptDelivery(GameObject goods) {
-        var itemType = goods.GetComponent<Storable>().type;
-        if (!prices.Prices.ContainsKey(itemType)) {
-            return false;
-        }
-
-        _resourceManager.Add(prices.Prices[itemType]);
+        var resourceObject = goods.GetComponent<ResourceObject>();
+        var price = resourceObject.resource.worth;
+        _resourceManager.Add(price);
         Destroy(goods);
-
         return true;
     }
 
@@ -63,15 +54,22 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
         return _actions;
     }
 
-    private Action EnqueueTask(ItemType itemType) {
+    private ActionEntry CreateActionEntry(Resource itemType) {
+        return new ActionEntry {
+            Active = true,
+            OnSelect = EnqueueTask(itemType)
+        };
+    }
+
+    private Action EnqueueTask(Resource resource) {
         return () => {
-            var item = _resourceManager.FindItem(itemType);
+            var item = _resourceManager.ReserveItem(resource);
             if (!item.HasValue) return;
             var (storable, storage) = item.Value;
             _taskManager.Enqueue(new DeliveryTask(
                 storable.gameObject,
-                gameObject.AsOptional(),
-                storage.gameObject.AsOptional()
+                storage.gameObject.AsOptional(),
+                gameObject.AsOptional()
             ));
         };
     }

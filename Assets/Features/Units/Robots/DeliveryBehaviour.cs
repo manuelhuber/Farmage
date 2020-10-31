@@ -18,6 +18,7 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask> {
 
     protected override TaskResponse InitImpl(DeliveryTask task, Observable<Collider[]> inRange) {
         if (!task.Destination.HasValue) {
+            Debug.LogWarning($"Received delivery task for goods={task.Goods.name} without destination");
             return TaskResponse.Declined;
         }
 
@@ -33,7 +34,8 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask> {
         _isCarryingGoods = false;
         _destination = destination;
         _originStorage = origin;
-        _movementAgent.SetDestination(_goods.transform.position, true);
+        var firstLocation = origin.HasValue ? origin.Value : goods;
+        _movementAgent.SetDestination(firstLocation.transform.position, true);
         _movementAgent.IsStopped = false;
     }
 
@@ -52,8 +54,7 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask> {
     }
 
     private bool IsPickupLocation(GameObject gameObj) {
-        return _goods.gameObject == gameObj ||
-               _originStorage.HasValue && _originStorage.Value == gameObj;
+        return _originStorage.HasValue ? _originStorage.Value == gameObj : _goods.gameObject == gameObj;
     }
 
 
@@ -76,17 +77,21 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask> {
         }
 
         _goods.transform.parent = transform;
+        _goods.transform.localPosition = Vector3.zero;
         _isCarryingGoods = true;
         _movementAgent.SetDestination(_destination.transform.position, true);
     }
 
     public override void AbandonTask() {
+        // TODO - if we abandon a task with origin store after we've picked up the item already we'll
+        // be in a weird state that will most likely cause bugs
         DropLoot();
         _movementAgent.IsStopped = true;
         base.AbandonTask();
     }
 
     private void DropLoot() {
+        _isCarryingGoods = false;
         if (_goods == null) return;
         _goods.transform.parent = null;
         _goods = null;

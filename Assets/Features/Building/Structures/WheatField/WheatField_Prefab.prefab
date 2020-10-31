@@ -42,11 +42,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff87c52125c76dc4aa2d9e43a0802b0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheatPrefab: {fileID: 3072298920336211751, guid: 67a65b8d91f6d57468f5a4176e034f67,
-    type: 3}
+  wheatResource: {fileID: 11400000, guid: e549ce805fa76904284347b183ac86db, type: 2}
   dumpingPlace: {fileID: 1674167459292746322}
   harvestCount: 5
-  queue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
   growthDurationInSeconds: 60
 --- !u!1001 &5954848439930908
 PrefabInstance:

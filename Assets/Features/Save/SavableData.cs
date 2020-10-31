@@ -35,7 +35,7 @@ public abstract class SavableData : MonoBehaviour {
     }
 
     /// <summary>
-    ///     Returns all MonoBehaviours that implement
+    ///     Returns all MonoBehaviours that implement ISavableComponent
     /// </summary>
     /// <returns></returns>
     private IEnumerable<MonoBehaviour> GetSavableComponents() {

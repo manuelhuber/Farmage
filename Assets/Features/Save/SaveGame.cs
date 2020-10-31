@@ -75,6 +75,9 @@ public class SaveGame : GrimitySingleton<SaveGame> {
                 var building = Instantiate(menuEntry.buildingPrefab);
                 menuEntry.InitBuilding(building);
                 loadedObjects[objectId] = building;
+            } else {
+                Debug.LogWarning(
+                    $"Couldn't find prefab with key={prefabKey}");
             }
         }
 

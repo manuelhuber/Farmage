@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visitIntervalsInSeconds: 50
-  prices: {fileID: 11400000, guid: cd3a989df6d3e9a4e942bc0df398c6a9, type: 2}
-  queue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
+  SellableResources:
+  - {fileID: 11400000, guid: e549ce805fa76904284347b183ac86db, type: 2}
 --- !u!1001 &664419944725218271
 PrefabInstance:
   m_ObjectHideFlags: 0

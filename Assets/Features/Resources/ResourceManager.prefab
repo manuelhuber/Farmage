@@ -44,6 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf8a39316297944a97f8422996630d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingCash:
+    cash: 500
+  allFarmerBuildings: {fileID: 0}
 --- !u!114 &4960544995974298224
 MonoBehaviour:
   m_ObjectHideFlags: 0

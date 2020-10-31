@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79d0f7b5e57f1464da8b5eae3cd52793, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 1
+  resources:
+  - {fileID: 11400000, guid: e549ce805fa76904284347b183ac86db, type: 2}
   capacity: 250
-  items: []
-  size: 10
 --- !u!1001 &162177638290836236
 PrefabInstance:
   m_ObjectHideFlags: 0
