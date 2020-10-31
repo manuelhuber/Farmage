@@ -1,57 +1,62 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Features.Ui.UserInput;
 using Grimity.Data;
 using Grimity.Singleton;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static Grimity.Cursor.CursorUtil;
 
 namespace Features.Ui.Selection {
-public class SelectionManager : GrimitySingleton<SelectionManager> {
-    public LayerMask clickableLayers;
-
+public class SelectionManager : GrimitySingleton<SelectionManager>, IInputReceiver {
     public Observable<List<Selectable>> Selection { get; } =
         new Observable<List<Selectable>>(new List<Selectable>());
 
-    private readonly List<Selectable> _all = new List<Selectable>();
-    private UnityEngine.Camera _camera;
+    #region InputReceiver
 
-    private void Start() {
-        _camera = UnityEngine.Camera.main;
-    }
+    public event EventHandler YieldControl;
 
-    private void Update() {
-        var clickedOnUi = EventSystem.current.IsPointerOverGameObject();
-        if (clickedOnUi) return;
-        var rightClick = Input.GetMouseButtonUp(1);
-        var leftClickDown = Input.GetMouseButtonDown(0);
-        var leftClickUp = Input.GetMouseButtonUp(0);
-        if (!rightClick && !leftClickDown && !leftClickUp) return;
-
-        if (rightClick) {
-            var target = MouseToTerrain();
-            if (Selection.Value.Count == 0) return;
-            Debug.Log($"Right clicked with selection on {target.ToString()}");
-        } else if (leftClickDown) {
-            GetCursorLocation(out var target, _camera);
-            var unit = target.transform.gameObject.GetComponent<Selectable>();
-            Select(unit);
-        } else if (leftClickUp) {
-            // TODO
+    public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+        if (keys.Contains(KeyCode.Mouse0)) {
+            // TODO Start box dragging
         }
     }
 
-    public void Register(Selectable selectable) {
-        _all.Add(selectable);
+    public void OnKeyPressed(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
     }
 
-    private void Select(Selectable selectable) {
-        var units = selectable == null ? new List<Selectable>() : new List<Selectable> {selectable};
-        Selection.Set(units);
+    public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+        if (keys.Contains(KeyCode.Mouse0)) {
+            var selection = FinishSelection(mouseLocation);
+            if (keys.Contains(KeyCode.LeftShift)) {
+            } else {
+                Select(selection);
+            }
+        }
+
+        if (keys.Contains(KeyCode.Mouse1)) {
+            foreach (var selectable in Selection.Value) {
+                // pass right click to selection?
+            }
+        }
+
+        if (keys.Contains(KeyCode.Escape)) {
+            Unselect();
+        }
     }
 
-    private RaycastHit MouseToTerrain() {
-        GetCursorLocation(out var terrainHit, _camera, clickableLayers);
-        return terrainHit;
+    #endregion
+
+    private List<Selectable> FinishSelection(MouseLocation mouseLocation) {
+        // TODO get selection from box dragging
+        var selectable = mouseLocation.Collision.GetComponent<Selectable>();
+        return selectable == null ? new List<Selectable>() : new List<Selectable> {selectable};
+    }
+
+    private void Unselect() {
+        Select(new List<Selectable>());
+    }
+
+    private void Select(List<Selectable> selectable) {
+        Selection.Set(selectable);
     }
 }
 }

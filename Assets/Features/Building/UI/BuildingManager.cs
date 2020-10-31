@@ -1,34 +1,38 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Features.Building.BuildMenu;
 using Features.Building.Placement;
 using Features.Resources;
 using Features.Tasks;
 using Features.Ui.Actions;
+using Features.Ui.UserInput;
 using Grimity.Data;
 using Grimity.Singleton;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Features.Building.UI {
-public class BuildingManager : GrimitySingleton<BuildingManager> {
+public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver {
     public static readonly int GridSize = 4;
 
     [SerializeField] private PlacementSettings placementSettings;
     [SerializeField] private GameObject constructionSitePrefab;
     [SerializeField] private LayerMask terrainLayer = 0;
     [SerializeField] private BuildMenu.BuildMenu buildMenu;
-    public IObservable<ActionEntry[]> BuildingOptions => _buildingOptions;
+    public Grimity.Data.IObservable<ActionEntry[]> BuildingOptions => _buildingOptions;
 
     private readonly Observable<ActionEntry[]> _buildingOptions =
         new Observable<ActionEntry[]>(new ActionEntry[0]);
 
     private bool _hasActivePlaceable;
+    private InputManager _inputManager;
     private Placeable _placeable;
     private ResourceManager _resourceManager;
     private BuildingMenuEntry _selected;
     private TaskManager _taskManager;
 
     private void Awake() {
+        _inputManager = InputManager.Instance;
         _taskManager = TaskManager.Instance;
         _resourceManager = ResourceManager.Instance;
     }
@@ -40,16 +44,32 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
         });
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+    #region InputReceiver
+
+    public event EventHandler YieldControl;
+
+    public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    }
+
+    public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+        if (keys.Contains(KeyCode.Escape)) {
             DetachFromCursor();
+            YieldControl?.Invoke(this, EventArgs.Empty);
         }
 
-        if (!_hasActivePlaceable || !Input.GetMouseButtonDown(0)) return;
-        var clickedOnUi = EventSystem.current.IsPointerOverGameObject();
-        if (clickedOnUi) return;
-        PlaceBuilding();
+        if (keys.Contains(KeyCode.Mouse0) && _hasActivePlaceable) {
+            var createdBuilding = PlaceBuilding();
+            var keepBuilding = keys.Contains(KeyCode.LeftShift);
+            if (createdBuilding && !keepBuilding) {
+                DetachFromCursor();
+            }
+        }
     }
+
+    public void OnKeyPressed(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    }
+
+    #endregion
 
     private void UpdateSelectedBuilding() {
         if (!_hasActivePlaceable) return;
@@ -65,6 +85,10 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
     }
 
     private void SelectBuilding(BuildingMenuEntry menuEntry) {
+        if (!_inputManager.RequestControl(this)) {
+            return;
+        }
+
         if (_hasActivePlaceable) {
             DetachFromCursor();
         }
@@ -81,22 +105,20 @@ public class BuildingManager : GrimitySingleton<BuildingManager> {
         _hasActivePlaceable = true;
     }
 
-    private void PlaceBuilding() {
+    private bool PlaceBuilding() {
         if (!_placeable.CanBePlaced) {
             Debug.Log("Can't build here!");
-            return;
+            return false;
         }
 
-        if (_resourceManager.Pay(_selected.cost)) {
-            _placeable.OccupyTerrain();
-            CreateConstructionSite();
-            if (!Input.GetKey(KeyCode.LeftShift)) {
-                DetachFromCursor();
-            }
-        } else {
-            // TODO handle error case
+        if (!_resourceManager.Pay(_selected.cost)) {
             Debug.Log("Can't pay!");
+            return false;
         }
+
+        _placeable.OccupyTerrain();
+        CreateConstructionSite();
+        return true;
     }
 
     private void CreateConstructionSite() {

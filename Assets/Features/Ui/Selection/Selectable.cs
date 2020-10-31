@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Features.Ui.Selection {
@@ -8,16 +7,10 @@ public class Selectable : MonoBehaviour {
     public string displayName;
     public GameObject uiDetailPrefab;
 
-    public readonly List<Action> onDestroyCallbacks = new List<Action>();
-
-    private void Start() {
-        SelectionManager.Instance.Register(this);
-    }
-
     private void OnDestroy() {
-        foreach (var onDestroyCallback in onDestroyCallbacks) {
-            onDestroyCallback();
-        }
+        Destroyed?.Invoke(this, EventArgs.Empty);
     }
+
+    public event EventHandler Destroyed;
 }
 }
