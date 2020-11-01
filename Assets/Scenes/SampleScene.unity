@@ -3872,11 +3872,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2114556322}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99a3a4b86407432db6c1599d30caff4c, type: 3}
+  m_Script: {fileID: 11500000, guid: 50ab143af6784ee98de363db8f125d8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  control: {fileID: 11400000, guid: e63fffe40934775459058dddec188ad3, type: 2}
-  hotkeys: {fileID: 11400000, guid: e74726f171a27b54995be97795b9914d, type: 2}
+  control: {fileID: 11400000, guid: 925b90e5147e9a6429634ef0c4f0f9e2, type: 2}
+  hotkeys: {fileID: 11400000, guid: 149fc341a738712488f02611fb57dcc7, type: 2}
 --- !u!4 &2114556324
 Transform:
   m_ObjectHideFlags: 0

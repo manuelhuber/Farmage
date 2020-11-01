@@ -1,4 +1,4 @@
-﻿using Features.Common.Settings;
+﻿using Features.Ui.Settings;
 using UnityEngine;
 
 namespace Features.Camera {

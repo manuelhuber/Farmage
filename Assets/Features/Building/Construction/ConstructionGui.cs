@@ -1,4 +1,5 @@
-﻿using Features.Ui.Selection;
+﻿using Features.Common;
+using Features.Ui.Selection;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,8 +19,8 @@ public class ConstructionGui : MonoBehaviour, ISingleSelectionDetailGui {
     }
 
     private void UpdateProgress() {
-        var progressPercentage = _target < 0.1 ? 0 : _construction.Progress / _target * 100;
-        progressText.text = $"Progress: {progressPercentage:00}%";
+        var percentage = TextUtil.PercentageString(_construction.progressTarget, _target);
+        progressText.text = $"Progress: {percentage}";
     }
 }
 }

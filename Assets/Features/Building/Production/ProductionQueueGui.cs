@@ -1,4 +1,5 @@
-﻿using Features.Ui.Selection;
+﻿using Features.Common;
+using Features.Ui.Selection;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,8 +27,8 @@ public class ProductionQueueGui : MonoBehaviour, ISingleSelectionDetailGui {
         if (_production.Current == null) return;
         var target = _production.Current.productionTimeInSeconds;
         var progress = _production.Progress;
-        var percentage = progress / target * 100;
-        currentProductionText.text = $"Progress: {percentage:00}%";
+        var percentage = TextUtil.PercentageString(progress, target);
+        currentProductionText.text = $"Progress: {percentage}";
         currentProductionIcon.sprite = _production.Current.icon;
     }
 

@@ -1,4 +1,5 @@
-﻿using Features.Ui.Selection;
+﻿using Features.Common;
+using Features.Ui.Selection;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,8 +20,8 @@ public class WheatFieldGui : MonoBehaviour, ISingleSelectionDetailGui {
     }
 
     private void SetProgress(float currentGrowth) {
-        var progressPercentage = _growthGoal < 0.1 ? 0 : currentGrowth / _growthGoal * 100;
-        progessText.text = $"Growth: {progressPercentage:00}%";
+        var percentage = TextUtil.PercentageString(currentGrowth, _growthGoal);
+        progessText.text = $"Growth: {percentage}%";
     }
 }
 }

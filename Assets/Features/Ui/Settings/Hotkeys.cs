@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-namespace Features.Common.Settings {
+namespace Features.Ui.Settings {
 [CreateAssetMenu(menuName = "Settings/Hotkeys")]
 public class Hotkeys : ScriptableObject {
     public KeyCode buildings = KeyCode.B;
