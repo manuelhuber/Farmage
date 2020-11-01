@@ -63,6 +63,10 @@ public class InputManager : GrimitySingleton<InputManager> {
 
     private void OnYieldControl(object sender, EventArgs e) {
         RequestControl(_defaultReceiver);
+        // Send input to the next receiver in the same frame
+        // This way if someone yields control on a mouse0 down the new receiver will immediately get the
+        // mouse0 down event too
+        SendInputToActiveReceiver();
     }
 
 

@@ -1,13 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Features.Resources;
 using Features.Time;
 using Features.Ui.Actions;
+using Features.Ui.UserInput;
 using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Building.Production {
-public class Production : MonoBehaviour, IHasActions {
+public class Production : MonoBehaviour, IHasActions, IInputReceiver {
     public int queueSize;
     public UnitProductionEntry[] entries;
     public Transform spawnPoint;
@@ -43,7 +45,24 @@ public class Production : MonoBehaviour, IHasActions {
         }
     }
 
-    public IObservable<ActionEntry[]> GetActions() {
+    #region InputReceiver
+
+    public event EventHandler YieldControl;
+
+    public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+        if (keys.Contains(KeyCode.Mouse0)) YieldControl?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+        if (keys.Contains(KeyCode.Mouse1)) spawnPoint.transform.position = mouseLocation.Position;
+    }
+
+    public void OnKeyPressed(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    }
+
+    #endregion
+
+    public Grimity.Data.IObservable<ActionEntry[]> GetActions() {
         return _options;
     }
 

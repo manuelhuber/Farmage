@@ -10,6 +10,12 @@ public class SelectionManager : GrimitySingleton<SelectionManager>, IInputReceiv
     public Observable<List<Selectable>> Selection { get; } =
         new Observable<List<Selectable>>(new List<Selectable>());
 
+    private InputManager _inputManager;
+
+    private void Start() {
+        _inputManager = InputManager.Instance;
+    }
+
     #region InputReceiver
 
     public event EventHandler YieldControl;
@@ -57,6 +63,12 @@ public class SelectionManager : GrimitySingleton<SelectionManager>, IInputReceiv
 
     private void Select(List<Selectable> selectable) {
         Selection.Set(selectable);
+        if (selectable.Count == 1) {
+            var selectedUnit = selectable[0].GetComponent<IInputReceiver>();
+            if (selectedUnit != null) {
+                _inputManager.RequestControl(selectedUnit);
+            }
+        }
     }
 }
 }
