@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: -299588837507417560}
   - component: {fileID: -8155420910916292377}
   - component: {fileID: 6714567697864151312}
-  - component: {fileID: 5920640029651094403}
   - component: {fileID: 6531610023188834774}
   - component: {fileID: 1489985236975754127}
   - component: {fileID: 6723573975505299911}
@@ -135,21 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cabe5e97b96040a8a6d29691d5ca6217, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lootQueue: {fileID: 11400000, guid: 0baf0309864bcfe439c8a44112f83452, type: 2}
   lootTable: {fileID: 11400000, guid: acd6bdf59d7ca984785f1f6b91a7291b, type: 2}
---- !u!135 &5920640029651094403
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3895268208643040504}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.2
-  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!114 &6531610023188834774
 MonoBehaviour:
   m_ObjectHideFlags: 0

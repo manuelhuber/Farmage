@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Features.Common;
 using Features.Health;
 using Features.Save;
 using Features.Time;
@@ -31,13 +32,16 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
             if (_victim != null) _victim.TakeDamage(damage);
             return true;
         };
+        var rangeCollider = RangeCollider.AddTo(gameObject, 1.2f);
+        rangeCollider.OnEnter(OnEnterRange);
+        rangeCollider.OnExit(OnExitRange);
     }
 
     private void Start() {
         FindNewTarget();
     }
 
-    private void OnTriggerEnter(Collider other) {
+    private void OnEnterRange(Collider other) {
         var destructible = other.gameObject.GetComponent<Mortal>();
         if (destructible == null || destructible.team == Team.Aliens) return;
         transform.LookAt(destructible.transform);
@@ -45,7 +49,7 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
         SetTarget(destructible);
     }
 
-    private void OnTriggerExit(Collider other) {
+    private void OnExitRange(Collider other) {
         var victim = _victim;
         if (victim == null) return;
         if (other.gameObject != victim.gameObject) return;

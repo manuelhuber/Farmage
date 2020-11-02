@@ -40,6 +40,16 @@ public class RangeCollider : MonoBehaviour {
         }
     }
 
+
+    public static RangeCollider AddTo(GameObject parent, float range) {
+        var rangeObject = new GameObject("Range");
+        rangeObject.transform.SetParent(parent.transform);
+        rangeObject.transform.localPosition = Vector3.zero;
+        var rangeCollider = rangeObject.AddComponent<RangeCollider>();
+        rangeCollider.Range = range;
+        return rangeCollider;
+    }
+
     public void OnEnter(Action<Collider> callback) {
         _onEnter.Add(callback);
     }

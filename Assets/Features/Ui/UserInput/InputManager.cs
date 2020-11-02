@@ -12,9 +12,10 @@ namespace Features.Ui.UserInput {
 public class InputManager : GrimitySingleton<InputManager> {
     public LayerMask clickableLayers;
     public LayerMask terrainLayers;
+    private readonly Stack<IInputReceiver> _memory = new Stack<IInputReceiver>();
+
 
     private IInputReceiver _activeReceiver;
-
     private UnityEngine.Camera _camera;
     private IInputReceiver _defaultReceiver;
 
@@ -54,15 +55,34 @@ public class InputManager : GrimitySingleton<InputManager> {
         keys.Remove(KeyCode.Mouse1);
     }
 
-    public bool RequestControl(IInputReceiver activeReceiver) {
-        _activeReceiver.YieldControl -= OnYieldControl;
-        _activeReceiver = activeReceiver;
-        _activeReceiver.YieldControl += OnYieldControl;
+    public bool RequestControl(IInputReceiver newReceiver) {
+        _activeReceiver.YieldControl -= GiveControlDoDefault;
+        _activeReceiver.YieldControl -= PopMemory;
+        _activeReceiver = newReceiver;
+        _activeReceiver.YieldControl += GiveControlDoDefault;
         return true;
     }
 
-    private void OnYieldControl(object sender, EventArgs e) {
-        RequestControl(_defaultReceiver);
+    public bool RequestControlWithMemory(IInputReceiver newReceiver) {
+        _memory.Push(_activeReceiver);
+        _activeReceiver.YieldControl -= GiveControlDoDefault;
+        _activeReceiver.YieldControl -= PopMemory;
+
+        _activeReceiver = newReceiver;
+        _activeReceiver.YieldControl += PopMemory;
+        return true;
+    }
+
+    private void PopMemory(object sender, EventArgs e) {
+        SetReceiver(_memory.Count > 0 ? _memory.Pop() : _defaultReceiver);
+    }
+
+    private void GiveControlDoDefault(object sender, EventArgs e) {
+        SetReceiver(_defaultReceiver);
+    }
+
+    private void SetReceiver(IInputReceiver receiver) {
+        RequestControl(receiver);
         // Send input to the next receiver in the same frame
         // This way if someone yields control on a mouse0 down the new receiver will immediately get the
         // mouse0 down event too
