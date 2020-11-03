@@ -53,15 +53,14 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver
 
     public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Escape)) {
-            DetachFromCursor();
-            YieldControl?.Invoke(this, EventArgs.Empty);
+            FinishBuilding();
         }
 
         if (keys.Contains(KeyCode.Mouse0) && _hasActivePlaceable) {
             var createdBuilding = PlaceBuilding();
-            var keepBuilding = keys.Contains(KeyCode.LeftShift);
-            if (createdBuilding && !keepBuilding) {
-                DetachFromCursor();
+            var continueBuilding = keys.Contains(KeyCode.LeftShift);
+            if (createdBuilding && !continueBuilding) {
+                FinishBuilding();
             }
         }
     }
@@ -85,12 +84,10 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver
     }
 
     private void SelectBuilding(BuildingMenuEntry menuEntry) {
-        if (!_inputManager.RequestControl(this)) {
-            return;
-        }
+        _inputManager.RequestControl(this);
 
         if (_hasActivePlaceable) {
-            DetachFromCursor();
+            RemoveActivePlaceable();
         }
 
         _selected = menuEntry;
@@ -131,7 +128,12 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver
         _taskManager.Enqueue(new SimpleTask(constructionSiteGameObject, TaskType.Build));
     }
 
-    private void DetachFromCursor() {
+    private void FinishBuilding() {
+        RemoveActivePlaceable();
+        YieldControl?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void RemoveActivePlaceable() {
         _hasActivePlaceable = false;
         if (_placeable != null) {
             Destroy(_placeable.gameObject);
