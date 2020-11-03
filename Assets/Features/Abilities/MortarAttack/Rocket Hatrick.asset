@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db74e8073d143459ccada8818babd95, type: 3}
+  m_Name: Rocket Hatrick
+  m_EditorClassIdentifier: 
+  cooldown: 15
+  abilityName: Rocket Hatrick
+  description: 1 Walker 3 Missles
+  icon: {fileID: 0}
+  splat: {fileID: 11487906, guid: e8d038476a8dad643b8e87791868999b, type: 3}
+  projectileCount: 3
+  projectile: {fileID: 4482226981002742114, guid: 62e9a85a4935ee84e948e0b7d16bdee8,
+    type: 3}
+  radius: 5
+  damage: 10

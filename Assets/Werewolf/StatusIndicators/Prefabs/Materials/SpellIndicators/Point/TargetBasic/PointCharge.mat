@@ -42,7 +42,7 @@ Material:
     m_Floats:
     - _Blur: 0.015
     - _Expand: 0
-    - _Fill: 0.371
+    - _Fill: 1
     - _InvFade: 1
     - _Offset: 0.26669502
     m_Colors:

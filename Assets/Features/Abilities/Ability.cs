@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Features.Units.Walkers.Abilities {
+namespace Features.Abilities {
 public abstract class Ability : ScriptableObject {
     public float cooldown;
     public string abilityName;

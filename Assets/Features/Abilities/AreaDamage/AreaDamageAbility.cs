@@ -1,22 +1,17 @@
 using UnityEngine;
+using Werewolf.StatusIndicators.Components;
 
-namespace Features.Units.Walkers.Abilities {
+namespace Features.Abilities.AreaDamage {
 [CreateAssetMenu(menuName = "abilities/area damage")]
 public class AreaDamageAbility : Ability {
     /// <summary>
-    ///     Total arc in degree. 360 means everything
+    ///     Total arc in degree. 360 means = full circle
     /// </summary>
     public float arc;
 
     public float radius;
     public int damage;
-
-    /// <summary>
-    ///     Time between activation and execution
-    /// </summary>
-    public float chargeTime;
-
-    public GameObject splat;
+    public Cone splat;
 
     public override IAbilityExecutor AddExecutor(GameObject gameObject) {
         var areaDamageExecutor = gameObject.AddComponent<AreaDamageExecutor>();

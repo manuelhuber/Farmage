@@ -56,28 +56,27 @@ public class InputManager : GrimitySingleton<InputManager> {
     }
 
     public bool RequestControl(IInputReceiver newReceiver) {
-        _activeReceiver.YieldControl -= GiveControlDoDefault;
+        _activeReceiver.YieldControl -= GiveControlToDefaultReceiver;
         _activeReceiver.YieldControl -= PopMemory;
         _activeReceiver = newReceiver;
-        _activeReceiver.YieldControl += GiveControlDoDefault;
+        _activeReceiver.YieldControl += GiveControlToDefaultReceiver;
         return true;
     }
 
-    public bool RequestControlWithMemory(IInputReceiver newReceiver) {
+    public void RequestControlWithMemory(IInputReceiver newReceiver) {
         _memory.Push(_activeReceiver);
-        _activeReceiver.YieldControl -= GiveControlDoDefault;
+        _activeReceiver.YieldControl -= GiveControlToDefaultReceiver;
         _activeReceiver.YieldControl -= PopMemory;
 
         _activeReceiver = newReceiver;
         _activeReceiver.YieldControl += PopMemory;
-        return true;
     }
 
     private void PopMemory(object sender, EventArgs e) {
         SetReceiver(_memory.Count > 0 ? _memory.Pop() : _defaultReceiver);
     }
 
-    private void GiveControlDoDefault(object sender, EventArgs e) {
+    private void GiveControlToDefaultReceiver(object sender, EventArgs e) {
         SetReceiver(_defaultReceiver);
     }
 

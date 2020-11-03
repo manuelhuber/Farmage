@@ -7,8 +7,8 @@ using Features.Ui.UserInput;
 using UnityEngine;
 using Werewolf.StatusIndicators.Components;
 
-namespace Features.Units.Walkers.Abilities {
-public class AreaDamageExecutor : MonoBehaviour, IAbilityExecutor {
+namespace Features.Abilities.AreaDamage {
+public class AreaDamageExecutor : MonoBehaviour, IAbilityExecutor, IInputReceiver {
     private string SplatName => $"{_ability.name} - area damage splat";
 
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
@@ -22,10 +22,6 @@ public class AreaDamageExecutor : MonoBehaviour, IAbilityExecutor {
     private void Awake() {
         _gameTime = GameTime.Instance;
         _splatManager = GetComponentInChildren<SplatManager>();
-    }
-
-    private void OnDrawGizmos() {
-        Gizmos.DrawSphere(transform.position, _ability.radius);
     }
 
     #region InputReceiver
@@ -49,15 +45,15 @@ public class AreaDamageExecutor : MonoBehaviour, IAbilityExecutor {
 
     public void Init(Ability ability) {
         _ability = ability as AreaDamageAbility;
-        var instantiate = Instantiate(_ability.splat, _splatManager.transform);
-        instantiate.name = SplatName;
-        _coneSplat = instantiate.GetComponent<Cone>();
+        _coneSplat = Instantiate(_ability.splat, _splatManager.transform);
+        _coneSplat.gameObject.name = SplatName;
         _coneSplat.Angle = _ability.arc;
         _coneSplat.Scale = 2 * _ability.radius;
         _splatManager.Initialize();
     }
 
     public void Activate() {
+        InputManager.Instance.RequestControlWithMemory(this);
         _splatManager.SelectSpellIndicator(SplatName);
     }
 
@@ -92,10 +88,6 @@ public class AreaDamageExecutor : MonoBehaviour, IAbilityExecutor {
             var leftAngle = 360 - angleOnSingleSide;
             var angle = Vector3.Angle(casterToSpellIndicator, casterToTarget);
             var isInArc = angle <= angleOnSingleSide || angle >= leftAngle;
-            if (isInArc) {
-                Debug.DrawLine(position, target.transform.position, Color.red, 10);
-            }
-
             return isInArc;
         }
 
