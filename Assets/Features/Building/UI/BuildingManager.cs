@@ -39,6 +39,8 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver
 
     private void Start() {
         _resourceManager.Have.OnChange(cost => {
+            // TODO: It's not necessary to rebuild entire options here - would be enough to just update the
+            // Active property based on available resources
             UpdateBuildingOptions();
             UpdateSelectedBuilding();
         });

@@ -8,8 +8,10 @@ using UnityEngine;
 using Werewolf.StatusIndicators.Components;
 
 namespace Features.Abilities.AreaDamage {
-public class AreaDamageExecutor : MonoBehaviour, IAbilityExecutor, IInputReceiver {
+public class AreaDamageExecutor : AbilityExecutor, IInputReceiver {
     private string SplatName => $"{_ability.name} - area damage splat";
+
+    public override bool CanActivate => _gameTime.getTime() >= _nextActivationPossible;
 
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
 
@@ -41,9 +43,7 @@ public class AreaDamageExecutor : MonoBehaviour, IAbilityExecutor, IInputReceive
 
     #endregion
 
-    public bool CanActivate => _gameTime.getTime() >= _nextActivationPossible;
-
-    public void Init(Ability ability) {
+    public override void Init(Ability ability) {
         _ability = ability as AreaDamageAbility;
         _coneSplat = Instantiate(_ability.splat, _splatManager.transform);
         _coneSplat.gameObject.name = SplatName;
@@ -52,7 +52,7 @@ public class AreaDamageExecutor : MonoBehaviour, IAbilityExecutor, IInputReceive
         _splatManager.Initialize();
     }
 
-    public void Activate() {
+    public override void Activate() {
         InputManager.Instance.RequestControlWithMemory(this);
         _splatManager.SelectSpellIndicator(SplatName);
     }
@@ -62,8 +62,7 @@ public class AreaDamageExecutor : MonoBehaviour, IAbilityExecutor, IInputReceive
         YieldControl?.Invoke(this, EventArgs.Empty);
     }
 
-    public void Execute() {
-        // TODO handle delay
+    private void Execute() {
         DealDamage();
         _nextActivationPossible = _gameTime.getTime() + _ability.cooldown;
     }

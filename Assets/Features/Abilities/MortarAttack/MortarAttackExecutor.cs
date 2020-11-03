@@ -7,8 +7,10 @@ using UnityEngine;
 using Werewolf.StatusIndicators.Components;
 
 namespace Features.Abilities.MortarAttack {
-public class MortarAttackExecutor : MonoBehaviour, IAbilityExecutor, IInputReceiver {
+public class MortarAttackExecutor : AbilityExecutor, IInputReceiver {
     private string SplatName => _ability.name + " Mortar Attack Splat";
+
+    public override bool CanActivate => true;
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
     private MortarAttackAbility _ability;
     private int _alreadyFired;
@@ -32,9 +34,7 @@ public class MortarAttackExecutor : MonoBehaviour, IAbilityExecutor, IInputRecei
 
     #endregion
 
-    public bool CanActivate => true;
-
-    public void Init(Ability ability) {
+    public override void Init(Ability ability) {
         _splatManager = GetComponentInChildren<SplatManager>();
         _ability = ability as MortarAttackAbility;
         _splat = Instantiate(_ability.splat, _splatManager.transform);
@@ -44,7 +44,7 @@ public class MortarAttackExecutor : MonoBehaviour, IAbilityExecutor, IInputRecei
         _splatManager.Initialize();
     }
 
-    public void Activate() {
+    public override void Activate() {
         _alreadyFired = 0;
         _splatManager.SelectSpellIndicator(SplatName);
         InputManager.Instance.RequestControlWithMemory(this);

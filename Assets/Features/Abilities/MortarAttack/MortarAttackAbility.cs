@@ -10,7 +10,7 @@ public class MortarAttackAbility : Ability {
     public float radius;
     public int damage;
 
-    public override IAbilityExecutor AddExecutor(GameObject gameObject) {
+    public override AbilityExecutor AddExecutor(GameObject gameObject) {
         var mortarAttackExecutor = gameObject.AddComponent<MortarAttackExecutor>();
         mortarAttackExecutor.Init(this);
         return mortarAttackExecutor;

@@ -7,6 +7,6 @@ public abstract class Ability : ScriptableObject {
     public string description;
     public Sprite icon;
 
-    public abstract IAbilityExecutor AddExecutor(GameObject gameObject);
+    public abstract AbilityExecutor AddExecutor(GameObject gameObject);
 }
 }
