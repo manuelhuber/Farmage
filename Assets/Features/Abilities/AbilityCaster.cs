@@ -12,10 +12,12 @@ public class AbilityCaster : MonoBehaviour, IHasActions {
     private readonly Observable<ActionEntry[]>
         _actionsObservable = new Observable<ActionEntry[]>(new ActionEntry[] { });
 
-    private Dictionary<AbilityExecutor, ActionEntry>
-        _actionDict = new Dictionary<AbilityExecutor, ActionEntry>();
+    private Dictionary<IAbilityExecutor, ActionEntry>
+        _actionDict = new Dictionary<IAbilityExecutor, ActionEntry>();
 
-    private Dictionary<Ability, AbilityExecutor> _executors = new Dictionary<Ability, AbilityExecutor>();
+    private Dictionary<Ability, IAbilityExecutor> _executors =
+        new Dictionary<Ability, IAbilityExecutor>();
+
     private MovementAgent _movementAgent;
 
     private void Start() {
@@ -34,7 +36,7 @@ public class AbilityCaster : MonoBehaviour, IHasActions {
 
     private void UpdateAbilities() {
         foreach (var (oldAbility, executor) in _executors) {
-            if (!abilities.Contains(oldAbility)) Destroy(executor);
+            if (!abilities.Contains(oldAbility)) Destroy(executor as Object);
         }
 
         _executors = abilities.ToDictionary(ability => ability,

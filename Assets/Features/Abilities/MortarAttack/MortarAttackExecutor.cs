@@ -6,10 +6,9 @@ using UnityEngine;
 using Werewolf.StatusIndicators.Components;
 
 namespace Features.Abilities.MortarAttack {
-public class MortarAttackExecutor : AbilityExecutor, IInputReceiver {
+public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IInputReceiver {
     private string SplatName => _ability.name + " Mortar Attack Splat";
 
-    public override bool CanActivate => true;
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
     private MortarAttackAbility _ability;
     private int _alreadyFired;
@@ -33,9 +32,9 @@ public class MortarAttackExecutor : AbilityExecutor, IInputReceiver {
 
     #endregion
 
-    public override void Init(Ability ability) {
+    protected override void InitImpl(MortarAttackAbility ability) {
         _splatManager = GetComponentInChildren<SplatManager>();
-        _ability = ability as MortarAttackAbility;
+        _ability = ability;
         _splat = Instantiate(_ability.splat, _splatManager.transform);
         _splat.gameObject.name = SplatName;
         _splat.Scale = 2 * _ability.radius;
@@ -50,6 +49,10 @@ public class MortarAttackExecutor : AbilityExecutor, IInputReceiver {
     }
 
     private void Deactivate() {
+        if (_alreadyFired > 0) {
+            CalculateNextCooldown();
+        }
+
         _splatManager.CancelSpellIndicator();
         YieldControl?.Invoke(this, new YieldControlEventArgs());
     }

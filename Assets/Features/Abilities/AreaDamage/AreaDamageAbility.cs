@@ -13,7 +13,7 @@ public class AreaDamageAbility : Ability {
     public int damage;
     public Cone splat;
 
-    public override AbilityExecutor AddExecutor(GameObject gameObject) {
+    public override IAbilityExecutor AddExecutor(GameObject gameObject) {
         var areaDamageExecutor = gameObject.AddComponent<AreaDamageExecutor>();
         areaDamageExecutor.Init(this);
         return areaDamageExecutor;

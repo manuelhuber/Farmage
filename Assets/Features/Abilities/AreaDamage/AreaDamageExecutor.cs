@@ -1,29 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using Features.Health;
-using Features.Time;
 using Features.Ui.UserInput;
 using UnityEngine;
 using Werewolf.StatusIndicators.Components;
 
 namespace Features.Abilities.AreaDamage {
-public class AreaDamageExecutor : AbilityExecutor, IInputReceiver {
+public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IInputReceiver {
     private string SplatName => $"{_ability.name} - area damage splat";
-
-    public override bool CanActivate => _gameTime.getTime() >= _nextActivationPossible;
 
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
 
     private AreaDamageAbility _ability;
     private Cone _coneSplat;
-    private GameTime _gameTime;
-    private float _nextActivationPossible;
     private SplatManager _splatManager;
-
-    private void Awake() {
-        _gameTime = GameTime.Instance;
-        _splatManager = GetComponentInChildren<SplatManager>();
-    }
 
     #region InputReceiver
 
@@ -42,8 +32,9 @@ public class AreaDamageExecutor : AbilityExecutor, IInputReceiver {
 
     #endregion
 
-    public override void Init(Ability ability) {
-        _ability = ability as AreaDamageAbility;
+    protected override void InitImpl(AreaDamageAbility ability) {
+        _splatManager = GetComponentInChildren<SplatManager>();
+        _ability = ability;
         _coneSplat = Instantiate(_ability.splat, _splatManager.transform);
         _coneSplat.gameObject.name = SplatName;
         _coneSplat.Angle = _ability.arc;
@@ -63,7 +54,7 @@ public class AreaDamageExecutor : AbilityExecutor, IInputReceiver {
 
     private void Execute() {
         DealDamage();
-        _nextActivationPossible = _gameTime.getTime() + _ability.cooldown;
+        CalculateNextCooldown();
     }
 
     private void DealDamage() {
@@ -81,11 +72,10 @@ public class AreaDamageExecutor : AbilityExecutor, IInputReceiver {
 
         bool IsInArc(Collider target) {
             var casterToTarget = (target.transform.position - position).normalized;
-            // 180 degree arc, change 0 to 0.5 for a 90 degree "pie"
-            var angleOnSingleSide = _ability.arc / 2;
-            var leftAngle = 360 - angleOnSingleSide;
+            var rightAngle = _ability.arc / 2;
+            var leftAngle = 360 - rightAngle;
             var angle = Vector3.Angle(casterToSpellIndicator, casterToTarget);
-            var isInArc = angle <= angleOnSingleSide || angle >= leftAngle;
+            var isInArc = angle <= rightAngle || angle >= leftAngle;
             return isInArc;
         }
 
