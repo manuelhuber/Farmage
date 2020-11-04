@@ -18,10 +18,10 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver
     [SerializeField] private GameObject constructionSitePrefab;
     [SerializeField] private LayerMask terrainLayer = 0;
     [SerializeField] private BuildMenu.BuildMenu buildMenu;
-    public IObservable<ActionEntry[]> BuildingOptions => _buildingOptions;
+    public IObservable<ActionEntryData[]> BuildingOptions => _buildingOptions;
 
-    private readonly Observable<ActionEntry[]> _buildingOptions =
-        new Observable<ActionEntry[]>(new ActionEntry[0]);
+    private readonly Observable<ActionEntryData[]> _buildingOptions =
+        new Observable<ActionEntryData[]>(new ActionEntryData[0]);
 
     private bool _hasActivePlaceable;
     private InputManager _inputManager;
@@ -77,7 +77,7 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver
     }
 
     private void UpdateBuildingOptions() {
-        _buildingOptions.Set(buildMenu.entries.Select(menuEntry => new ActionEntry {
+        _buildingOptions.Set(buildMenu.entries.Select(menuEntry => new ActionEntryData {
                 Image = menuEntry.image, Active = _resourceManager.CanBePayed(menuEntry.cost),
                 OnSelect = () => SelectBuilding(menuEntry)
             })

@@ -21,7 +21,8 @@ public class Worker : MonoBehaviour, IHasActions {
     private readonly Observable<Collider[]> _inRangeObservable =
         new Observable<Collider[]>(new Collider[] { });
 
-    private readonly Observable<ActionEntry[]> actions = new Observable<ActionEntry[]>(new ActionEntry[] { });
+    private readonly Observable<ActionEntryData[]> actions =
+        new Observable<ActionEntryData[]>(new ActionEntryData[] { });
 
     private IUnitBehaviourBase<BaseTask> _activeBehaviour;
 
@@ -33,7 +34,7 @@ public class Worker : MonoBehaviour, IHasActions {
         _behaviours[TaskType.Repair] = gameObject.GetComponent<RepairBehaviour>();
         _behaviours[TaskType.Build] = gameObject.GetComponent<BuildBehaviour>();
         actions.Set(new[]
-            {new ActionEntry {Active = true, OnSelect = () => _activeBehaviour?.AbandonTask()}});
+            {new ActionEntryData {Active = true, OnSelect = () => _activeBehaviour?.AbandonTask()}});
     }
 
     private void Update() {
@@ -51,7 +52,7 @@ public class Worker : MonoBehaviour, IHasActions {
     }
 
 
-    public Grimity.Data.IObservable<ActionEntry[]> GetActions() {
+    public Grimity.Data.IObservable<ActionEntryData[]> GetActions() {
         return actions;
     }
 

@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace Features.Abilities {
 public abstract class AbilityExecutor<T> : MonoBehaviour, IAbilityExecutor where T : Ability {
-    public T Ability;
+    public T ability;
     public bool IsOnCooldown => GameTime.getTime() < NextCooldown;
-    public float CooldownRemaining => Math.Max(0, NextCooldown - GameTime.getTime());
     protected GameTime GameTime;
     protected float NextCooldown;
 
@@ -14,17 +13,19 @@ public abstract class AbilityExecutor<T> : MonoBehaviour, IAbilityExecutor where
         GameTime = GameTime.Instance;
     }
 
+    public float CooldownRemaining => Math.Max(0, NextCooldown - GameTime.getTime());
+
     public virtual bool CanActivate => !IsOnCooldown;
 
     public abstract void Activate();
 
     protected void CalculateNextCooldown() {
-        NextCooldown = GameTime.getTime() + Ability.cooldown;
+        NextCooldown = GameTime.getTime() + ability.cooldown;
     }
 
-    public void Init(T ability) {
-        Ability = ability;
-        InitImpl(ability);
+    public void Init(T ab) {
+        ability = ab;
+        InitImpl(ab);
     }
 
     protected abstract void InitImpl(T ability);
@@ -32,6 +33,7 @@ public abstract class AbilityExecutor<T> : MonoBehaviour, IAbilityExecutor where
 
 public interface IAbilityExecutor {
     bool CanActivate { get; }
+    float CooldownRemaining { get; }
     void Activate();
 }
 }

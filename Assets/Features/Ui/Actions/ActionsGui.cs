@@ -2,23 +2,24 @@ using System.Collections.Generic;
 using Grimity.Data;
 using MonKey.Extensions;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Features.Ui.Actions {
 public class ActionsGui : MonoBehaviour {
-    public GameObject iconPrefab;
+    public ActionEntry iconPrefab;
 
     [SerializeField] private GameObject root;
-    private readonly Dictionary<ActionEntry, Image> _actions = new Dictionary<ActionEntry, Image>();
+
+    private readonly Dictionary<ActionEntryData, ActionEntry> _actions =
+        new Dictionary<ActionEntryData, ActionEntry>();
 
 
     private void Update() {
-        foreach (var (action, icon) in _actions) {
-            icon.color = action.Active ? Color.white : Color.red;
+        foreach (var (data, actionEntry) in _actions) {
+            actionEntry.SetCooldown(data.Cooldown);
         }
     }
 
-    public void BuildUi(IEnumerable<ActionEntry> actions) {
+    public void BuildUi(IEnumerable<ActionEntryData> actions) {
         foreach (var child in root.transform.GetChildren()) {
             Destroy(child.gameObject);
         }
@@ -26,16 +27,16 @@ public class ActionsGui : MonoBehaviour {
         _actions.Clear();
 
         foreach (var action in actions) {
-            var button = Instantiate(iconPrefab, root.transform, false);
-            var buttonClickedEvent = new Button.ButtonClickedEvent();
-            buttonClickedEvent.AddListener(() => {
+            var actionEntry = Instantiate(iconPrefab, root.transform, false);
+
+            actionEntry.OnClick(() => {
                 if (action.Active) action.OnSelect.Invoke();
             });
-            button.GetComponent<Button>().onClick = buttonClickedEvent;
+            if (action.Image != null) {
+                actionEntry.icon.sprite = action.Image;
+            }
 
-            var icon = button.GetComponent<Image>();
-            icon.sprite = action.Image;
-            _actions[action] = icon;
+            _actions[action] = actionEntry;
         }
     }
 }

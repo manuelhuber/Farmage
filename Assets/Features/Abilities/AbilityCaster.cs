@@ -9,11 +9,11 @@ namespace Features.Abilities {
 public class AbilityCaster : MonoBehaviour, IHasActions {
     public List<Ability> abilities;
 
-    private readonly Observable<ActionEntry[]>
-        _actionsObservable = new Observable<ActionEntry[]>(new ActionEntry[] { });
+    private readonly Observable<ActionEntryData[]>
+        _actionsObservable = new Observable<ActionEntryData[]>(new ActionEntryData[] { });
 
-    private Dictionary<IAbilityExecutor, ActionEntry>
-        _actionDict = new Dictionary<IAbilityExecutor, ActionEntry>();
+    private Dictionary<IAbilityExecutor, ActionEntryData>
+        _actionDict = new Dictionary<IAbilityExecutor, ActionEntryData>();
 
     private Dictionary<Ability, IAbilityExecutor> _executors =
         new Dictionary<Ability, IAbilityExecutor>();
@@ -27,10 +27,11 @@ public class AbilityCaster : MonoBehaviour, IHasActions {
     private void Update() {
         foreach (var (executor, actionEntry) in _actionDict) {
             actionEntry.Active = executor.CanActivate;
+            actionEntry.Cooldown = executor.CooldownRemaining;
         }
     }
 
-    public IObservable<ActionEntry[]> GetActions() {
+    public IObservable<ActionEntryData[]> GetActions() {
         return _actionsObservable;
     }
 
@@ -51,7 +52,7 @@ public class AbilityCaster : MonoBehaviour, IHasActions {
         _actionDict = _executors.ToDictionary(pair => pair.Value,
             pair => {
                 var (ability, executor) = pair;
-                return new ActionEntry {
+                return new ActionEntryData {
                     Active = executor.CanActivate,
                     Image = ability.icon,
                     OnSelect = () => { executor.Activate(); }

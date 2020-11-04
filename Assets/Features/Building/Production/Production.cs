@@ -15,8 +15,8 @@ public class Production : MonoBehaviour, IHasActions, IInputReceiver {
     public UnitProductionEntry Current { get; private set; }
     public float Progress { get; private set; }
 
-    private readonly Observable<ActionEntry[]> _options =
-        new Observable<ActionEntry[]>(new ActionEntry[] { });
+    private readonly Observable<ActionEntryData[]> _options =
+        new Observable<ActionEntryData[]>(new ActionEntryData[] { });
 
     public readonly Queue<UnitProductionEntry> Queue =
         new Queue<UnitProductionEntry>();
@@ -61,7 +61,7 @@ public class Production : MonoBehaviour, IHasActions, IInputReceiver {
 
     #endregion
 
-    public IObservable<ActionEntry[]> GetActions() {
+    public IObservable<ActionEntryData[]> GetActions() {
         return _options;
     }
 
@@ -72,7 +72,7 @@ public class Production : MonoBehaviour, IHasActions, IInputReceiver {
     }
 
     private void UpdateOptions(Cost _) {
-        var options = entries.Select(entry => new ActionEntry {
+        var options = entries.Select(entry => new ActionEntryData {
             Image = entry.icon, Active = _resourceManager.CanBePayed(entry.cost),
             OnSelect = () => AddToQueue(entry)
         });

@@ -15,8 +15,8 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
 
     public bool TradeInProgress { get; private set; }
 
-    private readonly Observable<ActionEntry[]>
-        _actions = new Observable<ActionEntry[]>(new ActionEntry[0]);
+    private readonly Observable<ActionEntryData[]>
+        _actions = new Observable<ActionEntryData[]>(new ActionEntryData[0]);
 
     private GameTime _gameTime;
     private float _nextTradeTimestamp;
@@ -50,12 +50,12 @@ public class MerchantDock : MonoBehaviour, IDeliveryAcceptor, IHasActions {
         return true;
     }
 
-    public Grimity.Data.IObservable<ActionEntry[]> GetActions() {
+    public Grimity.Data.IObservable<ActionEntryData[]> GetActions() {
         return _actions;
     }
 
-    private ActionEntry CreateActionEntry(Resource itemType) {
-        return new ActionEntry {
+    private ActionEntryData CreateActionEntry(Resource itemType) {
+        return new ActionEntryData {
             Active = true,
             OnSelect = EnqueueTask(itemType)
         };

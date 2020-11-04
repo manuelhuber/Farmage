@@ -10,8 +10,8 @@ namespace Features.Ui.Selection {
 public class SelectionManagerGui : MonoBehaviour {
     [SerializeField] private ActionsGui actionsGui;
 
-    private readonly Observable<List<ActionEntry>> _currentActions =
-        new Observable<List<ActionEntry>>(new List<ActionEntry>());
+    private readonly Observable<List<ActionEntryData>> _currentActions =
+        new Observable<List<ActionEntryData>>(new List<ActionEntryData>());
 
     private readonly List<Action> _onDeactivate = new List<Action>();
 
@@ -109,7 +109,7 @@ public class SelectionManagerGui : MonoBehaviour {
         _singleSelectionGui.CurrentHp = i;
     }
 
-    private void BuildProductionUi(ActionEntry[] options) {
+    private void BuildProductionUi(ActionEntryData[] options) {
         actionsGui.BuildUi(options);
     }
 }

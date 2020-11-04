@@ -15,10 +15,12 @@ public class Construction : MonoBehaviour, ISavableComponent<ConstructionData>, 
     public Material material;
     public float Progress { get; private set; }
 
-    private readonly Observable<ActionEntry[]> _actions = new Observable<ActionEntry[]>(new ActionEntry[0]);
+    private readonly Observable<ActionEntryData[]> _actions =
+        new Observable<ActionEntryData[]>(new ActionEntryData[0]);
+
     private BuildingMenuEntry _building;
 
-    public Grimity.Data.IObservable<ActionEntry[]> GetActions() {
+    public Grimity.Data.IObservable<ActionEntryData[]> GetActions() {
         return _actions;
     }
 
@@ -39,7 +41,7 @@ public class Construction : MonoBehaviour, ISavableComponent<ConstructionData>, 
         building.InitConstructionSite(gameObject);
         progressTarget = _building.buildingPrefab.GetComponent<Mortal>().MaxHitpoints;
         AddModel(_building.modelPrefab);
-        _actions.Set(new[] {new ActionEntry {Active = true, OnSelect = Cancel}});
+        _actions.Set(new[] {new ActionEntryData {Active = true, OnSelect = Cancel}});
     }
 
     private void AddModel(GameObject modelPrefab) {
