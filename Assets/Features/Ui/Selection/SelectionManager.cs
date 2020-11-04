@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Features.Ui.UserInput;
 using Grimity.Data;
 using Grimity.Singleton;
@@ -18,7 +17,7 @@ public class SelectionManager : GrimitySingleton<SelectionManager>, IInputReceiv
 
     #region InputReceiver
 
-    public event EventHandler YieldControl;
+    public event YieldControlHandler YieldControl;
 
     public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Mouse0)) {

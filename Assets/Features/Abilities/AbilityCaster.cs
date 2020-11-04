@@ -16,7 +16,6 @@ public class AbilityCaster : MonoBehaviour, IHasActions {
         _actionDict = new Dictionary<AbilityExecutor, ActionEntry>();
 
     private Dictionary<Ability, AbilityExecutor> _executors = new Dictionary<Ability, AbilityExecutor>();
-
     private MovementAgent _movementAgent;
 
     private void Start() {

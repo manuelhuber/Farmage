@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Features.Building.BuildMenu;
@@ -19,7 +18,7 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver
     [SerializeField] private GameObject constructionSitePrefab;
     [SerializeField] private LayerMask terrainLayer = 0;
     [SerializeField] private BuildMenu.BuildMenu buildMenu;
-    public Grimity.Data.IObservable<ActionEntry[]> BuildingOptions => _buildingOptions;
+    public IObservable<ActionEntry[]> BuildingOptions => _buildingOptions;
 
     private readonly Observable<ActionEntry[]> _buildingOptions =
         new Observable<ActionEntry[]>(new ActionEntry[0]);
@@ -48,7 +47,7 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver
 
     #region InputReceiver
 
-    public event EventHandler YieldControl;
+    public event YieldControlHandler YieldControl;
 
     public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
     }
@@ -132,7 +131,7 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver
 
     private void FinishBuilding() {
         RemoveActivePlaceable();
-        YieldControl?.Invoke(this, EventArgs.Empty);
+        YieldControl?.Invoke(this, new YieldControlEventArgs(true));
     }
 
     private void RemoveActivePlaceable() {

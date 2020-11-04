@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Features.Ui.Selection;
 using Grimity.Singleton;
@@ -72,20 +71,22 @@ public class InputManager : GrimitySingleton<InputManager> {
         _activeReceiver.YieldControl += PopMemory;
     }
 
-    private void PopMemory(object sender, EventArgs e) {
-        SetReceiver(_memory.Count > 0 ? _memory.Pop() : _defaultReceiver);
+    private void PopMemory(IInputReceiver inputReceiver, YieldControlEventArgs args) {
+        SetReceiver(_memory.Count > 0 ? _memory.Pop() : _defaultReceiver, args);
     }
 
-    private void GiveControlToDefaultReceiver(object sender, EventArgs e) {
-        SetReceiver(_defaultReceiver);
+    private void GiveControlToDefaultReceiver(IInputReceiver inputReceiver, YieldControlEventArgs args) {
+        SetReceiver(_defaultReceiver, args);
     }
 
-    private void SetReceiver(IInputReceiver receiver) {
+    private void SetReceiver(IInputReceiver receiver, YieldControlEventArgs yieldArgs) {
         RequestControl(receiver);
-        // Send input to the next receiver in the same frame
-        // This way if someone yields control on a mouse0 down the new receiver will immediately get the
-        // mouse0 down event too
-        SendInputToActiveReceiver();
+        if (!yieldArgs.ConsumedKeyEvent) {
+            // Send input to the next receiver in the same frame
+            // This way if someone yields control on a mouse0 down the new receiver will immediately get the
+            // mouse0 down event too
+            SendInputToActiveReceiver();
+        }
     }
 
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Features.Resources;
@@ -47,10 +46,10 @@ public class Production : MonoBehaviour, IHasActions, IInputReceiver {
 
     #region InputReceiver
 
-    public event EventHandler YieldControl;
+    public event YieldControlHandler YieldControl;
 
     public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
-        if (keys.Contains(KeyCode.Mouse0)) YieldControl?.Invoke(this, EventArgs.Empty);
+        if (keys.Contains(KeyCode.Mouse0)) YieldControl?.Invoke(this, new YieldControlEventArgs());
     }
 
     public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
@@ -62,7 +61,7 @@ public class Production : MonoBehaviour, IHasActions, IInputReceiver {
 
     #endregion
 
-    public Grimity.Data.IObservable<ActionEntry[]> GetActions() {
+    public IObservable<ActionEntry[]> GetActions() {
         return _options;
     }
 

@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Features.Units.Robots {
 public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask> {
+    public GameObject itemHolder;
     private GameObject _destination;
     private GameObject _goods;
     private bool _isCarryingGoods;
@@ -14,6 +15,7 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask> {
 
     private void Awake() {
         _movementAgent = GetComponent<MovementAgent>();
+        if (itemHolder is null) itemHolder = gameObject;
     }
 
     protected override TaskResponse InitImpl(DeliveryTask task, Observable<Collider[]> inRange) {
@@ -76,7 +78,7 @@ public class DeliveryBehaviour : UnitBehaviourBase<DeliveryTask> {
             dispenser.DispenseDelivery(_goods);
         }
 
-        _goods.transform.parent = transform;
+        _goods.transform.parent = itemHolder.transform;
         _goods.transform.localPosition = Vector3.zero;
         _isCarryingGoods = true;
         _movementAgent.SetDestination(_destination.transform.position, true);

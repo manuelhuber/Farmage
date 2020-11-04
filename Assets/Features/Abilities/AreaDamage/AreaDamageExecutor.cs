@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Features.Health;
@@ -28,7 +27,7 @@ public class AreaDamageExecutor : AbilityExecutor, IInputReceiver {
 
     #region InputReceiver
 
-    public event EventHandler YieldControl;
+    public event YieldControlHandler YieldControl;
 
     public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
     }
@@ -59,7 +58,7 @@ public class AreaDamageExecutor : AbilityExecutor, IInputReceiver {
 
     private void Deactivate() {
         _splatManager.CancelSpellIndicator();
-        YieldControl?.Invoke(this, EventArgs.Empty);
+        YieldControl?.Invoke(this, new YieldControlEventArgs());
     }
 
     private void Execute() {
