@@ -7,10 +7,8 @@ using Werewolf.StatusIndicators.Components;
 
 namespace Features.Abilities.MortarAttack {
 public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IInputReceiver {
-    private string SplatName => _ability.name + " Mortar Attack Splat";
-
+    private string SplatName => ability.name + " Mortar Attack Splat";
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
-    private MortarAttackAbility _ability;
     private int _alreadyFired;
     private Point _splat;
     private SplatManager _splatManager;
@@ -32,12 +30,11 @@ public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IInput
 
     #endregion
 
-    protected override void InitImpl(MortarAttackAbility ability) {
+    protected override void InitImpl() {
         _splatManager = GetComponentInChildren<SplatManager>();
-        _ability = ability;
-        _splat = Instantiate(_ability.splat, _splatManager.transform);
+        _splat = Instantiate(ability.splat, _splatManager.transform);
         _splat.gameObject.name = SplatName;
-        _splat.Scale = 2 * _ability.radius;
+        _splat.Scale = 2 * ability.radius;
         _splat.Progress = 1;
         _splatManager.Initialize();
     }
@@ -59,16 +56,16 @@ public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IInput
 
     private void FireProjectile() {
         var target = _splatManager.GetSpellCursorPosition();
-        var hits = Physics.OverlapSphere(target, _ability.radius);
+        var hits = Physics.OverlapSphere(target, ability.radius);
         var enemies = hits
             .Select(hit => hit.transform.gameObject.GetComponent<Mortal>())
             .Where(o => o != null && o.team != Team.Farmers);
         foreach (var enemy in enemies) {
-            enemy.TakeDamage(new Damage {Amount = _ability.damage});
+            enemy.TakeDamage(new Damage {Amount = ability.damage});
         }
 
         _alreadyFired++;
-        if (_alreadyFired == _ability.projectileCount) {
+        if (_alreadyFired == ability.projectileCount) {
             Deactivate();
         }
     }

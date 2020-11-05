@@ -25,10 +25,10 @@ public abstract class AbilityExecutor<T> : MonoBehaviour, IAbilityExecutor where
 
     public void Init(T ab) {
         ability = ab;
-        InitImpl(ab);
+        InitImpl();
     }
 
-    protected abstract void InitImpl(T ability);
+    protected abstract void InitImpl();
 }
 
 public interface IAbilityExecutor {

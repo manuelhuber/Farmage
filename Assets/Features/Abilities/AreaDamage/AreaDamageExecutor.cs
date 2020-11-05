@@ -7,11 +7,8 @@ using Werewolf.StatusIndicators.Components;
 
 namespace Features.Abilities.AreaDamage {
 public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IInputReceiver {
-    private string SplatName => $"{_ability.name} - area damage splat";
-
+    private string SplatName => $"{ability.name} - area damage splat";
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
-
-    private AreaDamageAbility _ability;
     private Cone _coneSplat;
     private SplatManager _splatManager;
 
@@ -32,13 +29,12 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IInputRece
 
     #endregion
 
-    protected override void InitImpl(AreaDamageAbility ability) {
+    protected override void InitImpl() {
         _splatManager = GetComponentInChildren<SplatManager>();
-        _ability = ability;
-        _coneSplat = Instantiate(_ability.splat, _splatManager.transform);
+        _coneSplat = Instantiate(ability.splat, _splatManager.transform);
         _coneSplat.gameObject.name = SplatName;
-        _coneSplat.Angle = _ability.arc;
-        _coneSplat.Scale = 2 * _ability.radius;
+        _coneSplat.Angle = ability.arc;
+        _coneSplat.Scale = 2 * ability.radius;
         _splatManager.Initialize();
     }
 
@@ -60,7 +56,7 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IInputRece
     private void DealDamage() {
         var enemies = GetEnemiesInRange();
         foreach (var mortal in enemies) {
-            mortal.TakeDamage(new Damage {Amount = _ability.damage});
+            mortal.TakeDamage(new Damage {Amount = ability.damage});
         }
 
         Deactivate();
@@ -72,7 +68,7 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IInputRece
 
         bool IsInArc(Collider target) {
             var casterToTarget = (target.transform.position - position).normalized;
-            var rightAngle = _ability.arc / 2;
+            var rightAngle = ability.arc / 2;
             var leftAngle = 360 - rightAngle;
             var angle = Vector3.Angle(casterToSpellIndicator, casterToTarget);
             var isInArc = angle <= rightAngle || angle >= leftAngle;
@@ -80,7 +76,7 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IInputRece
         }
 
 
-        var hits = Physics.OverlapSphere(position, _ability.radius);
+        var hits = Physics.OverlapSphere(position, ability.radius);
         return hits
             .Where(IsInArc)
             .Select(hit => hit.transform.gameObject.GetComponent<Mortal>())

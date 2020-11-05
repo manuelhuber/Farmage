@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using Features.Save;
 using Features.Ui.Actions;
 using Features.Units.Common;
 using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Abilities {
-public class AbilityCaster : MonoBehaviour, IHasActions {
+public class AbilityCaster : MonoBehaviour, IHasActions, ISavableComponent<AbilityCasterData> {
     public List<Ability> abilities;
 
     private readonly Observable<ActionEntryData[]>
@@ -53,12 +54,34 @@ public class AbilityCaster : MonoBehaviour, IHasActions {
             pair => {
                 var (ability, executor) = pair;
                 return new ActionEntryData {
-                    Active = executor.CanActivate,
                     Image = ability.icon,
                     OnSelect = () => { executor.Activate(); }
                 };
             });
         _actionsObservable.Set(_actionDict.Values.ToArray());
     }
+
+    #region Save
+
+    public string SaveKey => "Ability Caster";
+
+    public AbilityCasterData Save() {
+        return new AbilityCasterData {
+            AbilityNames = abilities.Select(ability => ability.abilityName).ToArray()
+        };
+    }
+
+    public void Load(AbilityCasterData data, IReadOnlyDictionary<string, GameObject> objects) {
+        var abilitiesDict = UnityEngine.Resources.FindObjectsOfTypeAll<Ability>()
+            .ToDictionary(ability => ability.abilityName, ability => ability);
+        abilities = data.AbilityNames.Select(name => abilitiesDict[name]).ToList();
+        UpdateAbilities();
+    }
+
+    #endregion
+}
+
+public struct AbilityCasterData {
+    public string[] AbilityNames;
 }
 }
