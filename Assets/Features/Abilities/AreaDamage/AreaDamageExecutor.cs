@@ -60,7 +60,7 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IInputRece
     private void DealDamage() {
         var enemies = GetEnemiesInRange();
         foreach (var mortal in enemies) {
-            mortal.TakeDamage(_ability.damage);
+            mortal.TakeDamage(new Damage {Amount = _ability.damage});
         }
 
         Deactivate();

@@ -29,7 +29,7 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
         _attack.interval = attackSpeed;
         _attack.getTime = () => _time.Time;
         _attack.action = () => {
-            if (_victim != null) _victim.TakeDamage(damage);
+            if (_victim != null) _victim.TakeDamage(new Damage {Amount = damage});
             return true;
         };
         var rangeCollider = RangeCollider.AddTo(gameObject, 1.2f);

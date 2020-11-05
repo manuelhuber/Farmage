@@ -40,7 +40,7 @@ public class Turret : MonoBehaviour, ISavableComponent<TurretData> {
     }
 
     private bool Shoot() {
-        _currentTarget.TakeDamage(damage);
+        _currentTarget.TakeDamage(new Damage {Amount = damage});
         return true;
     }
 

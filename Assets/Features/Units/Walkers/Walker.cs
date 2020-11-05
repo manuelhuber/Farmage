@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Features.Health;
 using Features.Ui.UserInput;
 using Features.Units.Common;
+using Grimity.Actions;
 using UnityEngine;
 
 namespace Features.Units.Walkers {
@@ -10,6 +12,9 @@ public class Walker : MonoBehaviour, IInputReceiver {
 
     private void Start() {
         _movementAgent = GetComponent<MovementAgent>();
+        var mortal = GetComponent<Mortal>();
+        mortal.ChangeMaxShield(50);
+        this.Do(() => mortal.ChangeMaxShield(-50)).After(8);
     }
 
     #region InputReceiver

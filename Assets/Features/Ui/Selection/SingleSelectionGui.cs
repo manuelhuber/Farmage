@@ -32,6 +32,22 @@ public class SingleSelectionGui : MonoBehaviour {
         }
     }
 
+    public int CurrentShield {
+        get => _currentShield;
+        set {
+            _currentShield = value;
+            UpdateHp();
+        }
+    }
+
+    public int MaxShield {
+        get => _maxShield;
+        set {
+            _maxShield = value;
+            UpdateHp();
+        }
+    }
+
     public Sprite Icon {
         get => _icon;
         set {
@@ -41,12 +57,15 @@ public class SingleSelectionGui : MonoBehaviour {
     }
 
     private int _currentHp;
+    private int _currentShield;
     private string _displayName;
     private Sprite _icon;
     private int _maxHp;
+    private int _maxShield;
 
     private void UpdateHp() {
-        hpText.text = $"{_currentHp} / {_maxHp}";
+        var shieldText = _maxShield > 0 ? $"(+{_currentShield} / {_maxShield} shield)" : "";
+        hpText.text = $"{_currentHp} / {_maxHp} {shieldText}".Trim();
     }
 }
 }

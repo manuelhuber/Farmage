@@ -39,13 +39,13 @@ public class FieldTower : MonoBehaviour, ISavableComponent<FieldTowerData> {
         var sphere = Instantiate(spherePrefab, transform).AddComponent<Mortal>();
         sphere.tag = Tags.SphereTag;
         sphere.MaxHitpoints = sphereHp;
-        sphere.TakeDamage(-initialHp);
+        sphere.TakeDamage(new Damage {Amount = -initialHp});
         sphere.onDeath.AddListener(() => {
             _shieldRegeneration.action = null;
             RebuildSphere();
         });
         _shieldRegeneration.action = () => {
-            sphere.TakeDamage(-regenPerSecond);
+            sphere.TakeDamage(new Damage {Amount = -regenPerSecond});
             return true;
         };
     }

@@ -102,11 +102,25 @@ public class SelectionManagerGui : MonoBehaviour {
         if (mortal == null) return;
         _singleSelectionGui.MaxHp = mortal.MaxHitpoints;
         mortal.Hitpoints.OnChange(SetSingleUnitCurrentHp);
-        _onDeactivate.Add(() => mortal.Hitpoints.RemoveOnChange(SetSingleUnitCurrentHp));
+        mortal.Shield.OnChange(SetSingleUnitCurrentShield);
+        mortal.MaxShield.OnChange(SetSingleUnitMaxShield);
+        _onDeactivate.Add(() => {
+            mortal.Hitpoints.RemoveOnChange(SetSingleUnitCurrentHp);
+            mortal.Shield.RemoveOnChange(SetSingleUnitCurrentShield);
+            mortal.MaxShield.RemoveOnChange(SetSingleUnitMaxShield);
+        });
     }
 
     private void SetSingleUnitCurrentHp(int i) {
         _singleSelectionGui.CurrentHp = i;
+    }
+
+    private void SetSingleUnitCurrentShield(int i) {
+        _singleSelectionGui.CurrentShield = i;
+    }
+
+    private void SetSingleUnitMaxShield(int i) {
+        _singleSelectionGui.MaxShield = i;
     }
 
     private void BuildProductionUi(ActionEntryData[] options) {
