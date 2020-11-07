@@ -13,7 +13,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
     public float speed = 3f;
     public float stoppingDistance = 1f;
     public float turnSpeed = 10f;
-
+    public bool IsMoving => !IsStopped && _currentNode > 0;
     public bool HasArrived { get; private set; }
     public bool IsStopped { get; set; }
 
@@ -25,14 +25,13 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
     private GameTime _time;
 
     private void Awake() {
-        HasArrived = true;
         _mapManager = MapManager.Instance;
         _time = GameTime.Instance;
         _rigidbody = GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate() {
-        if (IsStopped || _currentNode < 0) return;
+        if (!IsMoving) return;
         var nextTarget = _path[_currentNode];
         var trans = transform;
         var position = trans.position;
@@ -68,8 +67,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
             To = pos,
             Movement = transform,
             Callback = path => {
-                var legitPath = path;
-                _path = bruteMove ? legitPath.Prepend(pos).ToArray() : legitPath;
+                _path = bruteMove ? path.Prepend(pos).ToArray() : path;
                 _currentNode = _path.Length - 1;
                 if (_currentNode == -1) HasArrived = true;
             }

@@ -21,7 +21,7 @@ public class AbilityCaster : MonoBehaviour, IHasActions, ISavableComponent<Abili
 
     private MovementAgent _movementAgent;
 
-    private void Start() {
+    private void Awake() {
         UpdateAbilities();
     }
 
@@ -74,7 +74,7 @@ public class AbilityCaster : MonoBehaviour, IHasActions, ISavableComponent<Abili
     public void Load(AbilityCasterData data, IReadOnlyDictionary<string, GameObject> objects) {
         var abilitiesDict = UnityEngine.Resources.FindObjectsOfTypeAll<Ability>()
             .ToDictionary(ability => ability.abilityName, ability => ability);
-        abilities = data.AbilityNames.Select(name => abilitiesDict[name]).ToList();
+        abilities = data.AbilityNames.Select(abilityName => abilitiesDict[abilityName]).ToList();
         UpdateAbilities();
     }
 

@@ -11,7 +11,7 @@ using Grimity.Singleton;
 using UnityEngine;
 
 namespace Features.Building.UI {
-public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver {
+public class BuildingManager : GrimitySingleton<BuildingManager>, IOnKeyUp {
     public static readonly int GridSize = 4;
 
     [SerializeField] private PlacementSettings placementSettings;
@@ -49,9 +49,6 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver
 
     public event YieldControlHandler YieldControl;
 
-    public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
-    }
-
     public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Escape)) {
             FinishBuilding();
@@ -64,9 +61,6 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IInputReceiver
                 FinishBuilding();
             }
         }
-    }
-
-    public void OnKeyPressed(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
     }
 
     #endregion

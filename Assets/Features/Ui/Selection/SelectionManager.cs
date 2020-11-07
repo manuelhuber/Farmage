@@ -5,7 +5,7 @@ using Grimity.Singleton;
 using UnityEngine;
 
 namespace Features.Ui.Selection {
-public class SelectionManager : GrimitySingleton<SelectionManager>, IInputReceiver {
+public class SelectionManager : GrimitySingleton<SelectionManager>, IOnKeyDown, IOnKeyUp {
     public Observable<List<Selectable>> Selection { get; } =
         new Observable<List<Selectable>>(new List<Selectable>());
 
@@ -23,9 +23,6 @@ public class SelectionManager : GrimitySingleton<SelectionManager>, IInputReceiv
         if (keys.Contains(KeyCode.Mouse0)) {
             // TODO Start box dragging
         }
-    }
-
-    public void OnKeyPressed(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
     }
 
     public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {

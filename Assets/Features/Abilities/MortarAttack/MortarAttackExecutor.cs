@@ -6,7 +6,7 @@ using UnityEngine;
 using Werewolf.StatusIndicators.Components;
 
 namespace Features.Abilities.MortarAttack {
-public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IInputReceiver {
+public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IOnKeyDown, IOnKeyUp {
     private string SplatName => ability.name + " Mortar Attack Splat";
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
     private int _alreadyFired;
@@ -23,9 +23,6 @@ public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IInput
 
     public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Mouse0)) FireProjectile();
-    }
-
-    public void OnKeyPressed(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
     }
 
     #endregion

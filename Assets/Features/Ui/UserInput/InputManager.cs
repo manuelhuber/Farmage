@@ -44,9 +44,9 @@ public class InputManager : GrimitySingleton<InputManager> {
             RemoveMouseEvents(downKeys);
         }
 
-        _activeReceiver.OnKeyDown(downKeys, mouseLocation);
-        _activeReceiver.OnKeyPressed(pressedKeys, mouseLocation);
-        _activeReceiver.OnKeyUp(upKeys, mouseLocation);
+        (_activeReceiver as IOnKeyDown)?.OnKeyDown(downKeys, mouseLocation);
+        (_activeReceiver as IOnKeyPressed)?.OnKeyPressed(pressedKeys, mouseLocation);
+        (_activeReceiver as IOnKeyUp)?.OnKeyUp(upKeys, mouseLocation);
     }
 
     private void RemoveMouseEvents(ICollection<KeyCode> keys) {
@@ -56,30 +56,31 @@ public class InputManager : GrimitySingleton<InputManager> {
 
     public bool RequestControl(IInputReceiver newReceiver) {
         _activeReceiver.YieldControl -= GiveControlToDefaultReceiver;
-        _activeReceiver.YieldControl -= PopMemory;
+        _activeReceiver.YieldControl -= GiveControlToPreviousReceiver;
         _activeReceiver = newReceiver;
         _activeReceiver.YieldControl += GiveControlToDefaultReceiver;
+        (_activeReceiver as IOnReceiveControl)?.OnReceiveControl();
         return true;
     }
 
     public void RequestControlWithMemory(IInputReceiver newReceiver) {
         _memory.Push(_activeReceiver);
         _activeReceiver.YieldControl -= GiveControlToDefaultReceiver;
-        _activeReceiver.YieldControl -= PopMemory;
+        _activeReceiver.YieldControl -= GiveControlToPreviousReceiver;
 
         _activeReceiver = newReceiver;
-        _activeReceiver.YieldControl += PopMemory;
+        _activeReceiver.YieldControl += GiveControlToPreviousReceiver;
     }
 
-    private void PopMemory(IInputReceiver inputReceiver, YieldControlEventArgs args) {
-        SetReceiver(_memory.Count > 0 ? _memory.Pop() : _defaultReceiver, args);
+    private void GiveControlToPreviousReceiver(IInputReceiver inputReceiver, YieldControlEventArgs args) {
+        SetReceiverAfterYield(_memory.Count > 0 ? _memory.Pop() : _defaultReceiver, args);
     }
 
     private void GiveControlToDefaultReceiver(IInputReceiver inputReceiver, YieldControlEventArgs args) {
-        SetReceiver(_defaultReceiver, args);
+        SetReceiverAfterYield(_defaultReceiver, args);
     }
 
-    private void SetReceiver(IInputReceiver receiver, YieldControlEventArgs yieldArgs) {
+    private void SetReceiverAfterYield(IInputReceiver receiver, YieldControlEventArgs yieldArgs) {
         RequestControl(receiver);
         if (!yieldArgs.ConsumedKeyEvent) {
             // Send input to the next receiver in the same frame

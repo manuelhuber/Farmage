@@ -7,7 +7,7 @@ using UnityEngine;
 using Werewolf.StatusIndicators.Components;
 
 namespace Features.Abilities.AreaDamage {
-public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IInputReceiver {
+public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IOnKeyUp {
     private string SplatName => $"{ability.name} - area damage splat";
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
     private Cone _coneSplat;
@@ -17,15 +17,9 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IInputRece
 
     public event YieldControlHandler YieldControl;
 
-    public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
-    }
-
     public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Mouse0)) Execute();
         if (_cancelKeys.Any(keys.Contains)) Deactivate();
-    }
-
-    public void OnKeyPressed(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
     }
 
     #endregion

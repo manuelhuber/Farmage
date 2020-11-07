@@ -8,7 +8,7 @@ using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Building.Production {
-public class Production : MonoBehaviour, IHasActions, IInputReceiver {
+public class Production : MonoBehaviour, IHasActions, IOnKeyDown, IOnKeyUp {
     public int queueSize;
     public UnitProductionEntry[] entries;
     public Transform spawnPoint;
@@ -54,9 +54,6 @@ public class Production : MonoBehaviour, IHasActions, IInputReceiver {
 
     public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Mouse1)) spawnPoint.transform.position = mouseLocation.Position;
-    }
-
-    public void OnKeyPressed(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
     }
 
     #endregion
