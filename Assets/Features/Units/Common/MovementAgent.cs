@@ -56,6 +56,10 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
         }
     }
 
+    public void AbandonDestination() {
+        _currentNode = -1;
+    }
+
     public void SetDestination(Vector3 pos, bool bruteMove = false) {
         HasArrived = false;
         _cancelPath?.Invoke();

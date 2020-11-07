@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Features.Building.UI;
 using Features.Health;
 using Features.Ui.Actions;
@@ -58,11 +59,11 @@ public class SelectionManagerGui : MonoBehaviour {
     }
 
     private void ActivateNoSelectionGui() {
-        _buildingManager.BuildingOptions.OnChange(BuildProductionUi);
-        _onDeactivate.Add(() => _buildingManager.BuildingOptions.RemoveOnChange(BuildProductionUi));
+        _buildingManager.BuildingOptions.OnChange(BuildActionUi);
+        _onDeactivate.Add(() => _buildingManager.BuildingOptions.RemoveOnChange(BuildActionUi));
     }
 
-    private void ActivateMultipleUnitsGui(List<Selectable> set) {
+    private void ActivateMultipleUnitsGui(List<Selectable> _) {
         // TODO
     }
 
@@ -82,12 +83,19 @@ public class SelectionManagerGui : MonoBehaviour {
     }
 
     private void InitActionUi(Selectable current) {
-        var production = current.GetComponent<IHasActions>();
-        if (production == null) return;
+        var allActionComponents = current.GetComponents<IHasActions>();
+        if (allActionComponents.Length == 0) return;
 
-        var actions = production.GetActions();
-        actions.OnChange(BuildProductionUi);
-        _onDeactivate.Add(() => actions.RemoveOnChange(BuildProductionUi));
+        void SetAllActions(ActionEntryData[] _) {
+            var allActions = allActionComponents.SelectMany(hasActions => hasActions.GetActions().Value)
+                .ToArray();
+            BuildActionUi(allActions);
+        }
+
+        foreach (var hasActions in allActionComponents) {
+            hasActions.GetActions().OnChange(SetAllActions);
+            _onDeactivate.Add(() => hasActions.GetActions().RemoveOnChange(SetAllActions));
+        }
     }
 
     private void InitDetailUi(Selectable current) {
@@ -123,7 +131,7 @@ public class SelectionManagerGui : MonoBehaviour {
         _singleSelectionGui.MaxShield = i;
     }
 
-    private void BuildProductionUi(ActionEntryData[] options) {
+    private void BuildActionUi(ActionEntryData[] options) {
         actionsGui.BuildUi(options);
     }
 }

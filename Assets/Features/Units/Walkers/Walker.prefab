@@ -408,7 +408,7 @@ MonoBehaviour:
     m_Bits: 1
   MouseRaycast:
     serializedVersion: 2
-    m_Bits: 823
+    m_Bits: 819
 --- !u!1 &8603867666482143420
 GameObject:
   m_ObjectHideFlags: 0

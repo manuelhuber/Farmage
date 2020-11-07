@@ -1,15 +1,25 @@
 using System.Collections.Generic;
+using Features.Ui.Actions;
 using Features.Ui.UserInput;
 using Features.Units.Common;
+using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Units.Walkers {
 [RequireComponent(typeof(MovementAgent))]
-public class Walker : MonoBehaviour, IInputReceiver {
+public class Walker : MonoBehaviour, IInputReceiver, IHasActions {
+    private readonly Observable<ActionEntryData[]> _actionsObservable =
+        new Observable<ActionEntryData[]>(new ActionEntryData[] { });
+
     private MovementAgent _movementAgent;
 
     private void Start() {
         _movementAgent = GetComponent<MovementAgent>();
+        _actionsObservable.Set(new[] {
+            new ActionEntryData {
+                Active = true, Cooldown = 0, OnSelect = () => _movementAgent.AbandonDestination()
+            }
+        });
     }
 
     #region InputReceiver
@@ -28,5 +38,9 @@ public class Walker : MonoBehaviour, IInputReceiver {
     }
 
     #endregion
+
+    public IObservable<ActionEntryData[]> GetActions() {
+        return _actionsObservable;
+    }
 }
 }
