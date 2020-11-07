@@ -246,6 +246,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &79266837
@@ -258,7 +263,7 @@ PrefabInstance:
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.099081
+      value: -28.68
       objectReference: {fileID: 0}
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
@@ -268,7 +273,7 @@ PrefabInstance:
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -28.48808
+      value: -28.61
       objectReference: {fileID: 0}
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
@@ -314,6 +319,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (15)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -372,7 +382,7 @@ PrefabInstance:
     - target: {fileID: 8210299142625514572, guid: 1ee3ac81ca98227499df4a39ffac218a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8210299142625514572, guid: 1ee3ac81ca98227499df4a39ffac218a,
         type: 3}
@@ -457,6 +467,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (20)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -679,6 +694,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (23)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &300318711
@@ -748,6 +768,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &322485332
@@ -795,7 +820,7 @@ PrefabInstance:
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
@@ -816,6 +841,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -982,6 +1012,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (29)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &457962179
@@ -1029,7 +1064,7 @@ PrefabInstance:
     - target: {fileID: 770371645470792347, guid: 939ac5b7c3fbee045824ec5fbf62dcfe,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 770371645470792347, guid: 939ac5b7c3fbee045824ec5fbf62dcfe,
         type: 3}
@@ -1149,6 +1184,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (24)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -1312,6 +1352,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (27)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &642939186
@@ -1381,6 +1426,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &672486724
@@ -1449,6 +1499,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -1611,6 +1666,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &885852409
@@ -1680,6 +1740,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &912957870
@@ -1748,6 +1813,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (25)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -1894,6 +1964,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -2077,6 +2152,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (19)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -2291,6 +2371,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8155420910916292377, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: <MaxHitpoints>k__BackingField
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2420,6 +2505,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (18)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &1222731308
@@ -2488,6 +2578,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -2558,6 +2653,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (22)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &1265794750
@@ -2626,6 +2726,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (26)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -2696,6 +2801,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (17)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &1382162582
@@ -2708,7 +2818,7 @@ PrefabInstance:
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.509081
+      value: -44.7
       objectReference: {fileID: 0}
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
@@ -2718,7 +2828,7 @@ PrefabInstance:
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -26.74808
+      value: -27.9
       objectReference: {fileID: 0}
     - target: {fileID: 215742062677165939, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
@@ -2764,6 +2874,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (14)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -2833,6 +2948,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -3051,6 +3171,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &1545509907
@@ -3108,7 +3233,7 @@ PrefabInstance:
     - target: {fileID: 8829450321588460703, guid: 0b7b9a02d93b58a4a82f7a62581ca250,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8829450321588460703, guid: 0b7b9a02d93b58a4a82f7a62581ca250,
         type: 3}
@@ -3302,6 +3427,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -3550,6 +3680,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (21)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!4 &1841934950 stripped
@@ -3625,6 +3760,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bobling (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
 --- !u!1001 &1935417226
@@ -3693,6 +3833,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (13)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -3842,6 +3987,23 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6859268409047782799, guid: 016f3ff2592c1604ba1de6711423a6f9,
+        type: 3}
+      propertyPath: abilities.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6859268409047782799, guid: 016f3ff2592c1604ba1de6711423a6f9,
+        type: 3}
+      propertyPath: abilities.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: dbea7338393edea46b20f3de3fbf1080,
+        type: 2}
+    - target: {fileID: 6859268409047782799, guid: 016f3ff2592c1604ba1de6711423a6f9,
+        type: 3}
+      propertyPath: abilities.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: dbea7338393edea46b20f3de3fbf1080,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 016f3ff2592c1604ba1de6711423a6f9, type: 3}
 --- !u!1001 &2065872671
@@ -3904,7 +4066,7 @@ PrefabInstance:
     - target: {fileID: 6091970428858222737, guid: 1a1bed11c3a3ef2409df7e8264180e66,
         type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 6091970428858222737, guid: 1a1bed11c3a3ef2409df7e8264180e66,
         type: 3}
@@ -4119,6 +4281,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
