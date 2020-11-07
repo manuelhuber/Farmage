@@ -25,6 +25,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
     private GameTime _time;
 
     private void Awake() {
+        HasArrived = true;
         _mapManager = MapManager.Instance;
         _time = GameTime.Instance;
         _rigidbody = GetComponent<Rigidbody>();

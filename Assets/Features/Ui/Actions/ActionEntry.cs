@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,7 +28,9 @@ public class ActionEntry : MonoBehaviour {
         var onCooldown = cooldown > 0;
         cooldownParent.SetActive(onCooldown);
         if (!onCooldown) return;
-        cooldownText.text = math.ceil(cooldown).ToString(CultureInfo.CurrentCulture);
+        var roundedCooldown = math.ceil(cooldown).ToString("0");
+        var exactCooldown = cooldown.ToString("0.0");
+        cooldownText.text = cooldown > 10 ? roundedCooldown : exactCooldown;
     }
 }
 }

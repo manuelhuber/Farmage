@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db74e8073d143459ccada8818babd95, type: 3}
   m_Name: Rocket Hatrick
   m_EditorClassIdentifier: 
-  cooldown: 15
+  cooldownInS: 15
   abilityName: Rocket Hatrick
   description: 1 Walker 3 Missles
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: d196c665ac6e51e4ebec0c43f3d157ec, type: 3}
   splat: {fileID: 11487906, guid: e8d038476a8dad643b8e87791868999b, type: 3}
   projectileCount: 3
   projectile: {fileID: 4482226981002742114, guid: 62e9a85a4935ee84e948e0b7d16bdee8,

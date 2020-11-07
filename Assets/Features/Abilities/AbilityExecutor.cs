@@ -20,7 +20,7 @@ public abstract class AbilityExecutor<T> : MonoBehaviour, IAbilityExecutor where
     public abstract void Activate();
 
     protected void CalculateNextCooldown() {
-        NextCooldown = GameTime.getTime() + ability.cooldown;
+        NextCooldown = GameTime.getTime() + ability.cooldownInS;
     }
 
     public void Init(T ab) {
