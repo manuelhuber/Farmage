@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Features.Health;
 using Features.Ui.UserInput;
+using Grimity.Math;
 using UnityEngine;
 using Werewolf.StatusIndicators.Components;
 
@@ -67,12 +68,10 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IInputRece
         var casterToSpellIndicator = _coneSplat.Manager.transform.forward;
 
         bool IsInArc(Collider target) {
-            var casterToTarget = (target.transform.position - position).normalized;
-            var rightAngle = ability.arc / 2;
-            var leftAngle = 360 - rightAngle;
-            var angle = Vector3.Angle(casterToSpellIndicator, casterToTarget);
-            var isInArc = angle <= rightAngle || angle >= leftAngle;
-            return isInArc;
+            return GeometryUtil.IsInView(position,
+                casterToSpellIndicator,
+                target.transform.position,
+                ability.arc);
         }
 
 
