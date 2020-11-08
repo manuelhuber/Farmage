@@ -6,9 +6,10 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace Features.Health {
-public class Mortal : MonoBehaviour, ISavableComponent<MortalData> {
+public class Mortal : MonoBehaviour, ISavableComponent<MortalData>, ITeam {
     public UnityEvent onDeath = new UnityEvent();
-    public Team team;
+    public Team Team => team;
+    [SerializeField] private Team team;
 
     [field: SerializeField] public int MaxHitpoints { get; set; }
 

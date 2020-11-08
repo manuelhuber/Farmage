@@ -61,7 +61,7 @@ public class Turret : MonoBehaviour, ISavableComponent<TurretData> {
 
     private void OnEnterRange(Collider other) {
         var target = other.gameObject.GetComponent<Mortal>();
-        if (target == null || target.team != Team.Aliens) return;
+        if (target == null || target.Team != Team.Aliens) return;
 
         target.onDeath.AddListener(() => { RemoveTarget(target); });
 

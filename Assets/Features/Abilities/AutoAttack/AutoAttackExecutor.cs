@@ -7,6 +7,7 @@ using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Abilities.AutoAttack {
+[RequireComponent(typeof(ITeam))]
 public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
     public IObservable<IReadOnlyList<Mortal>> EnemiesInRange => _enemiesInRangeObservable;
 
@@ -16,31 +17,14 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
         new Observable<IReadOnlyList<Mortal>>(new Mortal[] { });
 
     private Optional<Mortal> _currentTarget = Optional<Mortal>.NoValue();
+    private Optional<Mortal> _priorityTarget = Optional<Mortal>.NoValue();
     private Optional<MovementAgent> _movementAgent;
+    private Team _team;
 
     private void Update() {
         if (!IsOnCooldown) {
-            Attack();
+            Activate();
         }
-    }
-
-    public override void Activate() {
-    }
-
-    private void Attack() {
-        var isMoving = _movementAgent.HasValue && !_movementAgent.Value.IsStopped &&
-                       !_movementAgent.Value.HasArrived;
-        var canAttack = !isMoving || ability.shootDuringMove;
-        var noTargetAvailable = !_currentTarget.HasValue && !FindNewTarget();
-        if (!canAttack || noTargetAvailable) return;
-
-        _currentTarget.Value.TakeDamage(new Damage {Amount = ability.damage});
-        CalculateNextCooldown();
-    }
-
-    private bool FindNewTarget() {
-        _currentTarget = _enemiesInRange.FirstOrDefault().AsOptional();
-        return _currentTarget.HasValue;
     }
 
     protected override void InitImpl() {
@@ -48,11 +32,42 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
         rangeCollider.OnEnter(AddEnemy);
         rangeCollider.OnExit(RemoveEnemy);
         _movementAgent = GetComponent<MovementAgent>().AsOptional();
+        _team = GetComponent<ITeam>().Team;
+    }
+
+    public override void Activate() {
+        var isMoving = _movementAgent.HasValue && _movementAgent.Value.IsMoving;
+        var canAttack = !isMoving || ability.shootDuringMove;
+        var target = GetTarget();
+        if (!canAttack || !target.HasValue) return;
+
+        target.Value.TakeDamage(new Damage {Amount = ability.damage});
+        CalculateNextCooldown();
+    }
+
+    public void SetPriorityTarget(Mortal priority) {
+        _priorityTarget = priority.AsOptional();
+    }
+
+    public bool IsInRangeOf(Mortal target) {
+        return _enemiesInRange.Contains(target);
+    }
+
+    private Optional<Mortal> GetTarget() {
+        if (_priorityTarget.HasValue && _enemiesInRange.Contains(_priorityTarget.Value)) {
+            return _priorityTarget;
+        }
+
+        if (!_currentTarget.HasValue) {
+            _currentTarget = _enemiesInRange.FirstOrDefault().AsOptional();
+        }
+
+        return _currentTarget;
     }
 
     private void AddEnemy(Collider col) {
         var mortal = col.GetComponent<Mortal>();
-        if (mortal == null || mortal.team != Team.Aliens) return;
+        if (mortal == null || mortal.Team == _team) return;
         mortal.onDeath.AddListener(() => RemoveEnemy(mortal));
         _enemiesInRange.Add(mortal);
         _enemiesInRangeObservable.Set(_enemiesInRange.ToArray());

@@ -73,7 +73,7 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IOnKeyUp {
         return hits
             .Where(IsInArc)
             .Select(hit => hit.transform.gameObject.GetComponent<Mortal>())
-            .Where(o => o != null && o.team != Team.Farmers);
+            .Where(o => o != null && o.Team != Team.Farmers);
     }
 }
 }

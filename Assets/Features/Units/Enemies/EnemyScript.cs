@@ -43,7 +43,7 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
 
     private void OnEnterRange(Collider other) {
         var destructible = other.gameObject.GetComponent<Mortal>();
-        if (destructible == null || destructible.team == Team.Aliens) return;
+        if (destructible == null || destructible.Team == Team.Aliens) return;
         transform.LookAt(destructible.transform);
         _movementAgent.IsStopped = true;
         SetTarget(destructible);

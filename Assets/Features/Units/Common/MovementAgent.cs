@@ -16,6 +16,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
     public bool IsMoving => !IsStopped && _currentNode > 0;
     public bool HasArrived { get; private set; }
     public bool IsStopped { get; set; }
+    public Vector3 CurrentDestination { get; private set; }
 
     private Action _cancelPath;
     private int _currentNode = -1;
@@ -59,7 +60,8 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
         _currentNode = -1;
     }
 
-    public void SetDestination(Vector3 pos, bool bruteMove = false) {
+    public void SetDestination(Vector3 pos, bool bruteMove = true) {
+        CurrentDestination = pos;
         HasArrived = false;
         _cancelPath?.Invoke();
         _cancelPath = _mapManager.RequestPath(new PathRequest {

@@ -6,12 +6,15 @@ using UnityEngine;
 using Werewolf.StatusIndicators.Components;
 
 namespace Features.Abilities.MortarAttack {
+[RequireComponent(typeof(ITeam))]
 public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IOnKeyDown, IOnKeyUp {
     private string SplatName => ability.name + " Mortar Attack Splat";
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
     private int _alreadyFired;
     private Point _splat;
     private SplatManager _splatManager;
+    private Team _team;
+
 
     #region InputReceiver
 
@@ -28,6 +31,7 @@ public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IOnKey
     #endregion
 
     protected override void InitImpl() {
+        _team = GetComponent<ITeam>().Team;
         _splatManager = GetComponentInChildren<SplatManager>();
         _splat = Instantiate(ability.splat, _splatManager.transform);
         _splat.gameObject.name = SplatName;
@@ -56,7 +60,7 @@ public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IOnKey
         var hits = Physics.OverlapSphere(target, ability.radius);
         var enemies = hits
             .Select(hit => hit.transform.gameObject.GetComponent<Mortal>())
-            .Where(o => o != null && o.team != Team.Farmers);
+            .Where(enemy => enemy != null && enemy.Team != _team);
         foreach (var enemy in enemies) {
             enemy.TakeDamage(new Damage {Amount = ability.damage});
         }
