@@ -15,7 +15,7 @@ public class HarvestBehaviour : UnitBehaviourBase<SimpleTask> {
 
     protected override TaskResponse InitImpl(SimpleTask task, Observable<Collider[]> inRange) {
         _target = task.Payload;
-        _movementAgent.SetDestination(_target.transform.position);
+        _movementAgent.SetDestination(_target.transform.position, true);
         _movementAgent.IsStopped = false;
         return TaskResponse.Accepted;
     }

@@ -13,7 +13,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
     public float speed = 3f;
     public float stoppingDistance = 1f;
     public float turnSpeed = 10f;
-    public bool IsMoving => !IsStopped && _currentNode > 0;
+    public bool IsMoving => !IsStopped && _currentNode > -1;
     public bool HasArrived { get; private set; }
     public bool IsStopped { get; set; }
     public Vector3 CurrentDestination { get; private set; }
@@ -60,7 +60,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
         _currentNode = -1;
     }
 
-    public void SetDestination(Vector3 pos, bool bruteMove = true) {
+    public void SetDestination(Vector3 pos, bool bruteMove) {
         CurrentDestination = pos;
         HasArrived = false;
         _cancelPath?.Invoke();
@@ -91,7 +91,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
 
     public void Load(MovementAgentData data, IReadOnlyDictionary<string, GameObject> objects) {
         if (data.hasDestination) {
-            SetDestination(data.destination.To());
+            SetDestination(data.destination.To(),true);
         }
 
         IsStopped = data.isStopped;

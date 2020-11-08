@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: -1530088961022039333}
   - component: {fileID: 6349337612622607645}
   - component: {fileID: 6859268409047782799}
+  - component: {fileID: 5028860787348379859}
+  - component: {fileID: 2866685105377466184}
   m_Layer: 0
   m_Name: Walker
   m_TagString: Untagged
@@ -173,6 +175,31 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aaadf7077835de94fbff81869a047c27, type: 2}
   - {fileID: 11400000, guid: 2ecd312c29155b347afb9d9dbf68702b, type: 2}
   - {fileID: 11400000, guid: d5f37127b7b47af46be0a9f3a5a7e168, type: 2}
+--- !u!114 &5028860787348379859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3004080222666722163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22eca743c34e4d3aa1df405a5210da1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ability: {fileID: 11400000, guid: dbea7338393edea46b20f3de3fbf1080, type: 2}
+--- !u!114 &2866685105377466184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3004080222666722163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a6fb5b103ef4d90a899255ccf45bc2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3515414720273852194
 GameObject:
   m_ObjectHideFlags: 0
