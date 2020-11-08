@@ -30,7 +30,6 @@ public class ResourceManager : GrimitySingleton<ResourceManager>, ISavableCompon
         _taskManager = TaskManager.Instance;
         Add(startingCash);
         allFarmerBuildings.OnChange += OnBuildingChange;
-        allFarmerBuildings.OnChange += OnBuildingChange;
     }
 
     public Cost Add(Cost change) {

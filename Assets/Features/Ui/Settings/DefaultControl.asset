@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0069a68c1614717a88f11c1e6cec159, type: 3}
   m_Name: DefaultControl
   m_EditorClassIdentifier: 
-  cameraMovementSpeed: 1
+  cameraMovementSpeed: 0.5
   cameraRotateSpeed: 1
-  zoomSpeed: 1
+  zoomSpeed: 2

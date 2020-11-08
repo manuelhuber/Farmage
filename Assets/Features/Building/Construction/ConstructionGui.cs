@@ -19,7 +19,7 @@ public class ConstructionGui : MonoBehaviour, ISingleSelectionDetailGui {
     }
 
     private void UpdateProgress() {
-        var percentage = TextUtil.PercentageString(_construction.progressTarget, _target);
+        var percentage = TextUtil.PercentageString(_construction.Progress, _target);
         progressText.text = $"Progress: {percentage}";
     }
 }

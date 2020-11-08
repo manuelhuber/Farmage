@@ -51,14 +51,14 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IOnKeyUp {
 
     public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Escape)) {
-            FinishBuilding();
+            StopBuilding();
         }
 
         if (keys.Contains(KeyCode.Mouse0) && _hasActivePlaceable) {
             var createdBuilding = PlaceBuilding();
             var continueBuilding = keys.Contains(KeyCode.LeftShift);
             if (createdBuilding && !continueBuilding) {
-                FinishBuilding();
+                StopBuilding();
             }
         }
     }
@@ -123,7 +123,7 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IOnKeyUp {
         _taskManager.Enqueue(new SimpleTask(constructionSiteGameObject, TaskType.Build));
     }
 
-    private void FinishBuilding() {
+    private void StopBuilding() {
         RemoveActivePlaceable();
         YieldControl?.Invoke(this, new YieldControlEventArgs(true));
     }

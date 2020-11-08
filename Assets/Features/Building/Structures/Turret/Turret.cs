@@ -30,11 +30,7 @@ public class Turret : MonoBehaviour, ISavableComponent<TurretData> {
     }
 
     private void CreateRangeCollider() {
-        var rangeObject = new GameObject("Range");
-        rangeObject.transform.SetParent(transform);
-        rangeObject.transform.localPosition = Vector3.zero;
-        var rangeCollider = rangeObject.AddComponent<RangeCollider>();
-        rangeCollider.Range = range;
+        var rangeCollider = RangeCollider.AddTo(gameObject, range);
         rangeCollider.OnEnter(OnEnterRange);
         rangeCollider.OnExit(OnLeaveRange);
     }
