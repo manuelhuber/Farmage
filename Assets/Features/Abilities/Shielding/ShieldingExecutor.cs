@@ -9,8 +9,5 @@ public class ShieldingExecutor : AbilityExecutor<ShieldingAbility> {
         this.Do(() => mortal.ChangeMaxShield(-ability.shieldAmount)).After(ability.durationInS);
         CalculateNextCooldown();
     }
-
-    protected override void InitImpl() {
-    }
 }
 }

@@ -30,7 +30,7 @@ public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IOnKey
 
     #endregion
 
-    protected override void InitImpl() {
+    private void Start() {
         _team = GetComponent<ITeam>().Team;
         _splatManager = GetComponentInChildren<SplatManager>();
         _splat = Instantiate(ability.splat, _splatManager.transform);

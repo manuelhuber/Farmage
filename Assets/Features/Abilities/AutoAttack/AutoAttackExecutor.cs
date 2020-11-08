@@ -18,7 +18,7 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
 
     private Optional<Mortal> _currentTarget = Optional<Mortal>.NoValue();
     private Optional<Mortal> _priorityTarget = Optional<Mortal>.NoValue();
-    private Optional<MovementAgent> _movementAgent;
+    private Optional<MovementAgent> _movementAgent = Optional<MovementAgent>.NoValue();
     private Team _team;
 
     private void Update() {
@@ -27,7 +27,7 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
         }
     }
 
-    protected override void InitImpl() {
+    private void Start() {
         var rangeCollider = RangeCollider.AddTo(gameObject, ability.range);
         rangeCollider.OnEnter(AddEnemy);
         rangeCollider.OnExit(RemoveEnemy);

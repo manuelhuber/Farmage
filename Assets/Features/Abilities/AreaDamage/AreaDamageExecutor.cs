@@ -24,7 +24,7 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IOnKeyUp {
 
     #endregion
 
-    protected override void InitImpl() {
+    private void Start() {
         _splatManager = GetComponentInChildren<SplatManager>();
         _coneSplat = Instantiate(ability.splat, _splatManager.transform);
         _coneSplat.gameObject.name = SplatName;
