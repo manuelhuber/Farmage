@@ -14,6 +14,7 @@ public class TaskManager : GrimitySingleton<TaskManager>, ISavableComponent<Task
     public RuntimeGameObjectSet allWorkers;
     private readonly List<BaseTask> _availableTasks = new List<BaseTask>();
     private readonly Dictionary<Worker, WorkerData> _workers = new Dictionary<Worker, WorkerData>();
+    private readonly List<BaseTask> _cancelledTasks = new List<BaseTask>();
 
     private void Awake() {
         UpdateAllWorkerList(allWorkers.Items);
@@ -51,6 +52,16 @@ public class TaskManager : GrimitySingleton<TaskManager>, ISavableComponent<Task
         }
     }
 
+    public void CancelTask(BaseTask task) {
+        if (task == null || _availableTasks.Remove(task)) return;
+        _cancelledTasks.Add(task);
+        foreach (var (worker, data) in _workers) {
+            if (!data.Task.HasValue || data.Task.Value != task) continue;
+            worker.AbandonCurrentTask();
+            break;
+        }
+    }
+
     private void OnTaskCompleted(Worker worker, BaseTask task) {
         Debug.Log($"Worker={worker.getSaveID()} completed task={task.Type}");
         FreeWorker(worker);
@@ -60,7 +71,10 @@ public class TaskManager : GrimitySingleton<TaskManager>, ISavableComponent<Task
     private void OnTaskAbandoned(Worker worker, BaseTask baseTask) {
         FreeWorker(worker);
         FindTaskForWorker(worker);
-        Enqueue(baseTask);
+        var taskWasCancelled = _cancelledTasks.Remove(baseTask);
+        if (!taskWasCancelled) {
+            Enqueue(baseTask);
+        }
     }
 
     private void FreeWorker(Worker worker) {

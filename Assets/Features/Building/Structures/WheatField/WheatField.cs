@@ -20,6 +20,7 @@ public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
     private TaskManager _taskManager;
     private GameTime _time;
     private bool _waitingForHarvest;
+    private SimpleTask _harvestTask;
 
     private void Awake() {
         _time = GameTime.Instance;
@@ -42,7 +43,12 @@ public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
 
     private void FinishGrowth() {
         _waitingForHarvest = true;
-        _taskManager.Enqueue(new SimpleTask(gameObject, TaskType.Harvest));
+        _harvestTask = new SimpleTask(gameObject, TaskType.Harvest);
+        _taskManager.Enqueue(_harvestTask);
+    }
+
+    private void OnDestroy() {
+        _taskManager.CancelTask(_harvestTask);
     }
 
     public void Harvest() {

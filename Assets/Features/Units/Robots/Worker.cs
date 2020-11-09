@@ -34,7 +34,11 @@ public class Worker : MonoBehaviour, IHasActions {
         _behaviours[TaskType.Repair] = gameObject.GetComponent<RepairBehaviour>();
         _behaviours[TaskType.Build] = gameObject.GetComponent<BuildBehaviour>();
         actions.Set(new[]
-            {new ActionEntryData {Active = true, OnSelect = () => _activeBehaviour?.AbandonTask()}});
+            {new ActionEntryData {Active = true, OnSelect = AbandonCurrentTask}});
+    }
+
+    public void AbandonCurrentTask() {
+        _activeBehaviour?.AbandonTask();
     }
 
     private void Update() {
