@@ -40,6 +40,7 @@ Transform:
   m_Children:
   - {fileID: 8873444327121991100}
   - {fileID: 2271177681876417596}
+  - {fileID: 4472251320502230442}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -468,3 +469,58 @@ Transform:
   m_Father: {fileID: 2107718181067057400}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1197980891715651027
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2107718181067057400}
+    m_Modifications:
+    - target: {fileID: 3364388652970170489, guid: f82b8d2e4396ff24da8997a0dccf11fb,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364388652970170489, guid: f82b8d2e4396ff24da8997a0dccf11fb,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364388652970170489, guid: f82b8d2e4396ff24da8997a0dccf11fb,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364388652970170489, guid: f82b8d2e4396ff24da8997a0dccf11fb,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364388652970170489, guid: f82b8d2e4396ff24da8997a0dccf11fb,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364388652970170489, guid: f82b8d2e4396ff24da8997a0dccf11fb,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517774832166701300, guid: f82b8d2e4396ff24da8997a0dccf11fb,
+        type: 3}
+      propertyPath: m_Name
+      value: Minimap Icon
+      objectReference: {fileID: 0}
+    - target: {fileID: 6795687935776261379, guid: f82b8d2e4396ff24da8997a0dccf11fb,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b9da355263909194a9db240882079996, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f82b8d2e4396ff24da8997a0dccf11fb, type: 3}
+--- !u!4 &4472251320502230442 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3364388652970170489, guid: f82b8d2e4396ff24da8997a0dccf11fb,
+    type: 3}
+  m_PrefabInstance: {fileID: 1197980891715651027}
+  m_PrefabAsset: {fileID: 0}
