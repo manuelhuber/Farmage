@@ -21,7 +21,7 @@ public class AdvancedMovementController : MonoBehaviour {
     private bool _selectingAttackMove;
     private AutoAttackExecutor _autoAttack;
 
-    private void Start() {
+    private void Awake() {
         _movementAgent = GetComponent<MovementAgent>();
 
         _autoAttack = GetComponent<AutoAttackExecutor>();
@@ -49,21 +49,25 @@ public class AdvancedMovementController : MonoBehaviour {
     public void Stop() {
         if (_huntTargetMortal.HasValue) _huntTargetMortal.Value.onDeath.RemoveListener(Stop);
         _movementAgent.AbandonDestination();
+        _moveMode = MoveMode.Move;
     }
 
     public void AttackMoveTo(Vector3 pos) {
         _moveMode = MoveMode.AttackMove;
         _movementAgent.SetDestination(pos, false);
+        _movementAgent.IsStopped = false;
     }
 
     public void MoveTo(Vector3 pos) {
         _movementAgent.SetDestination(pos, false);
         _moveMode = MoveMode.Move;
+        _movementAgent.IsStopped = false;
     }
 
     public void ChaseTarget(Transform target) {
         _huntTarget = target;
         _moveMode = MoveMode.Chase;
+        _movementAgent.IsStopped = false;
         _huntTargetMortal = target.GetComponent<Mortal>().AsOptional();
         if (!_huntTargetMortal.HasValue) return;
         _autoAttack.SetPriorityTarget(_huntTargetMortal.Value);

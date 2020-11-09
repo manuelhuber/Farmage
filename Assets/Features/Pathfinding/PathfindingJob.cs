@@ -14,10 +14,7 @@ public struct PathfindingJob : IJob {
     public int2 MapSize;
     public int2 StartPosition;
     public int2 EndPosition;
-
     public NativeList<PathNode> Path;
-    // public NativeList<int>? visited;
-
     public int MoveDiagonalCost;
     public int MoveStraightCost;
 
