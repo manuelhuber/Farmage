@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using Features.Ui.Selection;
 using Grimity.Singleton;
 using Grimity.UserInput;
-using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static Grimity.Cursor.CursorUtil;
@@ -15,8 +15,13 @@ public class InputManager : GrimitySingleton<InputManager> {
 
 
     private IInputReceiver _activeReceiver;
+    private readonly HashSet<IInputReceiver> _permanentReceiver = new HashSet<IInputReceiver>();
     private UnityEngine.Camera _camera;
     private IInputReceiver _defaultReceiver;
+    private HashSet<KeyCode> _pressedKeys;
+    private HashSet<KeyCode> _downKeys;
+    private HashSet<KeyCode> _upKeys;
+    private MouseLocation _mouseLocation;
 
     private void Awake() {
         _camera = UnityEngine.Camera.main;
@@ -25,42 +30,57 @@ public class InputManager : GrimitySingleton<InputManager> {
     }
 
     private void Update() {
-        SendInputToActiveReceiver();
-    }
-
-    private void SendInputToActiveReceiver() {
-        if (_activeReceiver == null) return;
-
-        var mouseLocation = GetMouseLocation();
-
-        var pressedKeys = InputUtils.GetCurrentKeys().ToHashSet();
-        var downKeys = InputUtils.GetCurrentKeysDown().ToHashSet();
-        var upKeys = InputUtils.GetCurrentKeysUp().ToHashSet();
-
-        var mouseOverUi = EventSystem.current.IsPointerOverGameObject();
-        if (mouseOverUi) {
-            RemoveMouseEvents(pressedKeys);
-            RemoveMouseEvents(upKeys);
-            RemoveMouseEvents(downKeys);
+        UpdateCurrentInput();
+        if (_activeReceiver != null) {
+            SendCurrentInputToReceiver(_activeReceiver);
         }
 
-        (_activeReceiver as IOnKeyDown)?.OnKeyDown(downKeys, mouseLocation);
-        (_activeReceiver as IOnKeyPressed)?.OnKeyPressed(pressedKeys, mouseLocation);
-        (_activeReceiver as IOnKeyUp)?.OnKeyUp(upKeys, mouseLocation);
+        foreach (var inputReceiver in _permanentReceiver) {
+            SendCurrentInputToReceiver(inputReceiver);
+        }
     }
 
-    private void RemoveMouseEvents(ICollection<KeyCode> keys) {
+    private void UpdateCurrentInput() {
+        _mouseLocation = GetMouseLocation();
+        _pressedKeys = InputUtils.GetCurrentKeys();
+        _downKeys = InputUtils.GetCurrentKeysDown();
+        _upKeys = InputUtils.GetCurrentKeysUp();
+        var mouseOverUi = EventSystem.current.IsPointerOverGameObject();
+        if (!mouseOverUi) return;
+        RemoveMouseEvents(_pressedKeys);
+        RemoveMouseEvents(_upKeys);
+        RemoveMouseEvents(_downKeys);
+    }
+
+    private static void RemoveMouseEvents(ICollection<KeyCode> keys) {
         keys.Remove(KeyCode.Mouse0);
         keys.Remove(KeyCode.Mouse1);
     }
 
-    public bool RequestControl(IInputReceiver newReceiver) {
+    private void SendCurrentInputToReceiver(IInputReceiver receiver) {
+        if (_downKeys.Count > 0) {
+            (receiver as IOnKeyDown)?.OnKeyDown(_downKeys, _mouseLocation);
+        }
+
+        if (_pressedKeys.Count > 0) {
+            (receiver as IOnKeyPressed)?.OnKeyPressed(_pressedKeys, _mouseLocation);
+        }
+
+        if (_upKeys.Count > 0) {
+            (receiver as IOnKeyUp)?.OnKeyUp(_upKeys, _mouseLocation);
+        }
+    }
+
+    public void RegisterForPermanentInput(IInputReceiver receiver) {
+        _permanentReceiver.Add(receiver);
+    }
+
+    public void RequestControl(IInputReceiver newReceiver) {
         _activeReceiver.YieldControl -= GiveControlToDefaultReceiver;
         _activeReceiver.YieldControl -= GiveControlToPreviousReceiver;
         _activeReceiver = newReceiver;
         _activeReceiver.YieldControl += GiveControlToDefaultReceiver;
         (_activeReceiver as IOnReceiveControl)?.OnReceiveControl();
-        return true;
     }
 
     public void RequestControlWithMemory(IInputReceiver newReceiver) {
@@ -86,7 +106,7 @@ public class InputManager : GrimitySingleton<InputManager> {
             // Send input to the next receiver in the same frame
             // This way if someone yields control on a mouse0 down the new receiver will immediately get the
             // mouse0 down event too
-            SendInputToActiveReceiver();
+            SendCurrentInputToReceiver(receiver);
         }
     }
 

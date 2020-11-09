@@ -10,6 +10,9 @@ namespace Features.Units.Walkers {
 [RequireComponent(typeof(AdvancedMovementController))]
 [RequireComponent(typeof(ITeam))]
 public class Walker : MonoBehaviour, IOnKeyDown, IOnKeyUp, IOnReceiveControl, IHasActions {
+    public Sprite attackMoveIcon;
+    public Sprite stopIcon;
+
     private readonly Observable<ActionEntryData[]> _actionsObservable =
         new Observable<ActionEntryData[]>(new ActionEntryData[] { });
 
@@ -22,8 +25,8 @@ public class Walker : MonoBehaviour, IOnKeyDown, IOnKeyUp, IOnReceiveControl, IH
         _team = GetComponent<ITeam>().Team;
 
         _actionsObservable.Set(new[] {
-            new ActionEntryData {OnSelect = () => _movementController.Stop()},
-            new ActionEntryData {OnSelect = () => _selectingAttackMove = true}
+            new ActionEntryData {OnSelect = () => _movementController.Stop(), Image = stopIcon},
+            new ActionEntryData {OnSelect = () => _selectingAttackMove = true, Image = attackMoveIcon}
         });
     }
 

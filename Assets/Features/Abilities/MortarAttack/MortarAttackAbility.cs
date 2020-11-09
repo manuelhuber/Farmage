@@ -9,6 +9,7 @@ public class MortarAttackAbility : Ability {
     public GameObject projectile;
     public float radius;
     public int damage;
+    public float range;
 
     public override IAbilityExecutor AddExecutor(GameObject gameObject) {
         var mortarAttackExecutor = gameObject.AddComponent<MortarAttackExecutor>();

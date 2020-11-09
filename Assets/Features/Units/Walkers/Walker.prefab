@@ -160,6 +160,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b01cb0ae51c84ea0856948646d70805c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackMoveIcon: {fileID: 21300000, guid: cb3479f0730f1ec40ae8a0ea6dc4f69a, type: 3}
+  stopIcon: {fileID: 21300000, guid: 8b055da90539e204b9d2a2474a5b1fe1, type: 3}
 --- !u!114 &6859268409047782799
 MonoBehaviour:
   m_ObjectHideFlags: 0

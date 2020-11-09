@@ -36,6 +36,7 @@ public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IOnKey
         _splat = Instantiate(ability.splat, _splatManager.transform);
         _splat.gameObject.name = SplatName;
         _splat.Scale = 2 * ability.radius;
+        _splat.Range = ability.range;
         _splat.Progress = 1;
         _splatManager.Initialize();
     }

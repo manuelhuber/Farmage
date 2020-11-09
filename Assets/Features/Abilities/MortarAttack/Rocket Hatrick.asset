@@ -22,3 +22,4 @@ MonoBehaviour:
     type: 3}
   radius: 5
   damage: 10
+  range: 20
