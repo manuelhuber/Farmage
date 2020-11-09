@@ -28,7 +28,7 @@ public class RepairBehaviour : UnitBehaviourBase<SimpleTask> {
         _repairAction.action = () => {
             if (!_resourceManager.Pay(new Cost {cash = 10})) return false;
 
-            _target.TakeDamage(new Damage {Amount = -10});
+            _target.TakeDamage(new Damage {Source = gameObject, Amount = -10});
             return true;
         };
     }

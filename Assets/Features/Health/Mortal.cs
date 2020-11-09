@@ -16,6 +16,8 @@ public class Mortal : MonoBehaviour, ISavableComponent<MortalData>, ITeam {
     public Grimity.Data.IObservable<int> Hitpoints => _hitpoints;
     public Grimity.Data.IObservable<int> Shield => _shield;
     public Grimity.Data.IObservable<int> MaxShield => _maxShield;
+
+    public readonly List<Func<Damage, Damage>> OnDamageInterceptor = new List<Func<Damage, Damage>>();
     private readonly Observable<int> _hitpoints = new Observable<int>(0);
     private readonly Observable<int> _maxShield = new Observable<int>(0);
     private readonly Observable<int> _shield = new Observable<int>(0);
@@ -33,6 +35,10 @@ public class Mortal : MonoBehaviour, ISavableComponent<MortalData>, ITeam {
     }
 
     public void TakeDamage(Damage damage) {
+        foreach (var interceptor in OnDamageInterceptor) {
+            damage = interceptor.Invoke(damage);
+        }
+
         var absorbed = 0;
         if (!damage.IsHeal && _shield.Value > 0) {
             absorbed = Math.Min(damage.Amount, _shield.Value);

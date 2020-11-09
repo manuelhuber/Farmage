@@ -51,7 +51,7 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IOnKeyUp {
     private void DealDamage() {
         var enemies = GetEnemiesInRange();
         foreach (var mortal in enemies) {
-            mortal.TakeDamage(new Damage {Amount = ability.damage});
+            mortal.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage});
         }
 
         Deactivate();

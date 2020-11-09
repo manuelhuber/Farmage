@@ -62,7 +62,7 @@ public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IOnKey
             .Select(hit => hit.transform.gameObject.GetComponent<Mortal>())
             .Where(enemy => enemy != null && enemy.Team != _team);
         foreach (var enemy in enemies) {
-            enemy.TakeDamage(new Damage {Amount = ability.damage});
+            enemy.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage});
         }
 
         _alreadyFired++;

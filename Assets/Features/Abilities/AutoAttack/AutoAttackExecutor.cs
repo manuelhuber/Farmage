@@ -41,7 +41,7 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
         var target = GetTarget();
         if (!canAttack || !target.HasValue) return;
 
-        target.Value.TakeDamage(new Damage {Amount = ability.damage});
+        target.Value.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage});
         CalculateNextCooldown();
     }
 
