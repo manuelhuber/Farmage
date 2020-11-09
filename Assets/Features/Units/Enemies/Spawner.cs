@@ -6,7 +6,6 @@ using Features.Time;
 using Grimity.Collections;
 using Grimity.ScriptableObject;
 using MonKey.Extensions;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Features.Units.Enemies {
@@ -17,8 +16,8 @@ public class Spawner : MonoBehaviour {
     public GameObject[] spawnPoints;
     public float waveInterval = 5f;
 
-    [InfoBox("Min/Max number of enemies spawned per wave")]
-    public RangeInt SpawnCount = new RangeInt(1, 1);
+    public int minSpawnCount;
+    public int maxSpawnCount;
 
     private float _lastSpawn;
     private GameTime _time;
@@ -38,7 +37,7 @@ public class Spawner : MonoBehaviour {
         if (_availableBuildings.IsEmpty()) return;
         var target = _availableBuildings.GetRandomElement();
         var spawnLocation = spawnPoints.GetRandomElement().transform;
-        var count = Random.Range(SpawnCount.start, SpawnCount.end);
+        var count = Random.Range(minSpawnCount, maxSpawnCount);
         var offset = 0;
         for (var i = 0; i < count; i++) {
             var offsetLocation = spawnLocation.position + new Vector3(0, 0, offset);
