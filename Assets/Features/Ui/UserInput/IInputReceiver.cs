@@ -7,7 +7,7 @@ public interface IOnReceiveControl : IInputReceiver {
 }
 
 public interface IOnKeyDown : IInputReceiver {
-    void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation);
+    void OnKeyDown(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation);
 }
 
 public interface IOnKeyPressed : IInputReceiver {
@@ -15,7 +15,7 @@ public interface IOnKeyPressed : IInputReceiver {
 }
 
 public interface IOnKeyUp : IInputReceiver {
-    void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation);
+    void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation);
 }
 
 public interface IInputReceiver {

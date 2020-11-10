@@ -20,11 +20,11 @@ public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IOnKey
 
     public event YieldControlHandler YieldControl;
 
-    public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    public void OnKeyDown(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         if (_cancelKeys.Any(keys.Contains)) Deactivate();
     }
 
-    public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    public void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Mouse0)) FireProjectile();
     }
 

@@ -59,15 +59,15 @@ public class InputManager : GrimitySingleton<InputManager> {
 
     private void SendCurrentInputToReceiver(IInputReceiver receiver) {
         if (_downKeys.Count > 0) {
-            (receiver as IOnKeyDown)?.OnKeyDown(_downKeys, _mouseLocation);
+            (receiver as IOnKeyDown)?.OnKeyDown(_downKeys, _pressedKeys, _mouseLocation);
         }
 
-        if (_pressedKeys.Count > 0) {
+        if (_pressedKeys.Count > 0 || Input.mouseScrollDelta.y != 0) {
             (receiver as IOnKeyPressed)?.OnKeyPressed(_pressedKeys, _mouseLocation);
         }
 
         if (_upKeys.Count > 0) {
-            (receiver as IOnKeyUp)?.OnKeyUp(_upKeys, _mouseLocation);
+            (receiver as IOnKeyUp)?.OnKeyUp(_upKeys, _pressedKeys, _mouseLocation);
         }
     }
 

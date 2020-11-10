@@ -19,16 +19,17 @@ public class SelectionManager : GrimitySingleton<SelectionManager>, IOnKeyDown, 
 
     public event YieldControlHandler YieldControl;
 
-    public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    public void OnKeyDown(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Mouse0)) {
             // TODO Start box dragging
         }
     }
 
-    public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    public void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Mouse0)) {
             var selection = FinishSelection(mouseLocation);
             if (keys.Contains(KeyCode.LeftShift)) {
+                // TODO add to selection
             } else {
                 Select(selection);
             }

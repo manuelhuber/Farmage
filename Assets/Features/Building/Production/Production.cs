@@ -48,11 +48,11 @@ public class Production : MonoBehaviour, IHasActions, IOnKeyDown, IOnKeyUp {
 
     public event YieldControlHandler YieldControl;
 
-    public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    public void OnKeyDown(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Mouse0)) YieldControl?.Invoke(this, new YieldControlEventArgs());
     }
 
-    public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    public void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Mouse1)) spawnPoint.transform.position = mouseLocation.Position;
     }
 

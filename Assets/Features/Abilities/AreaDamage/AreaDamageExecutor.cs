@@ -17,7 +17,7 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IOnKeyUp {
 
     public event YieldControlHandler YieldControl;
 
-    public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    public void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Mouse0)) Execute();
         if (_cancelKeys.Any(keys.Contains)) Deactivate();
     }

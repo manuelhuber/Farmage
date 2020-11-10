@@ -49,14 +49,14 @@ public class BuildingManager : GrimitySingleton<BuildingManager>, IOnKeyUp {
 
     public event YieldControlHandler YieldControl;
 
-    public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    public void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Escape)) {
             StopBuilding();
         }
 
         if (keys.Contains(KeyCode.Mouse0) && _hasActivePlaceable) {
             var createdBuilding = PlaceBuilding();
-            var continueBuilding = keys.Contains(KeyCode.LeftShift);
+            var continueBuilding = pressedKeys.Contains(KeyCode.LeftShift);
             if (createdBuilding && !continueBuilding) {
                 StopBuilding();
             }

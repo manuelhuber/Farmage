@@ -57,7 +57,7 @@ public class ActionsGui : MonoBehaviour, IOnKeyUp {
 
     public event YieldControlHandler YieldControl;
 
-    public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    public void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         for (var i = 0; i < Math.Min(_actions.Count, _hotkeys.Length); i++) {
             if (keys.Contains(_hotkeys[i])) {
                 _actions[i].Item1.OnSelect.Invoke();

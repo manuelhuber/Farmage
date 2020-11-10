@@ -38,7 +38,7 @@ public class Walker : MonoBehaviour, IOnKeyDown, IOnKeyUp, IOnReceiveControl, IH
         _selectingAttackMove = false;
     }
 
-    public void OnKeyDown(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    public void OnKeyDown(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Escape)) {
             if (_selectingAttackMove) {
                 _selectingAttackMove = false;
@@ -50,7 +50,7 @@ public class Walker : MonoBehaviour, IOnKeyDown, IOnKeyUp, IOnReceiveControl, IH
         if (keys.Contains(KeyCode.Mouse0)) YieldControl?.Invoke(this, new YieldControlEventArgs());
     }
 
-    public void OnKeyUp(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
+    public void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         if (!keys.Contains(KeyCode.Mouse1)) return;
         _movementController.Stop();
         var clickTarget = mouseLocation.Collision.GetComponent<Mortal>();
