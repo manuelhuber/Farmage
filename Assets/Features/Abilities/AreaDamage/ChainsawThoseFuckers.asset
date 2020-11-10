@@ -15,8 +15,9 @@ MonoBehaviour:
   cooldownInS: 2
   abilityName: Chainsaw
   description: WRRRRRRRR GRRRRRRR!
+  animationTrigger: 
   icon: {fileID: 21300000, guid: 72567a41ad6d35b4f9b48f956856b9d7, type: 3}
   arc: 90
-  radius: 6
+  radius: 10
   damage: 8
   splat: {fileID: 11461902, guid: adce6e2ff24dea840a6d42da0559d597, type: 3}

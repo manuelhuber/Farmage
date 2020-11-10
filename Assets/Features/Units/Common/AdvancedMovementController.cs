@@ -39,9 +39,9 @@ public class AdvancedMovementController : MonoBehaviour {
                 break;
             case MoveMode.Chase:
                 var huntTargetPosition = _huntTarget.position;
+                _movementAgent.IsStopped = false;
                 if (_movementAgent.CurrentDestination == huntTargetPosition) return;
                 _movementAgent.SetDestination(huntTargetPosition, false);
-                _movementAgent.IsStopped = false;
                 break;
         }
     }

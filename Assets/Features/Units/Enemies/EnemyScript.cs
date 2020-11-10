@@ -17,6 +17,8 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
         }
     }
 
+    [SerializeField] public Mortal initialTarget;
+
     private Optional<Mortal> _threateningTarget = Optional<Mortal>.NoValue();
     private AdvancedMovementController _movementController;
     private Optional<Mortal> _defaultTarget;
@@ -25,6 +27,9 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
     private void Awake() {
         _movementController = GetComponent<AdvancedMovementController>();
         GetComponent<Mortal>().OnDamageInterceptor.Add(OnDamage);
+        if (initialTarget != null) {
+            DefaultTarget = initialTarget;
+        }
     }
 
 

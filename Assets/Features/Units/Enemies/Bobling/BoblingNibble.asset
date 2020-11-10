@@ -15,7 +15,8 @@ MonoBehaviour:
   cooldownInS: 1.5
   abilityName: Nibble
   description: 
+  animationTrigger: nibble
   icon: {fileID: 0}
   damage: 2
-  range: 4
+  range: 2
   shootDuringMove: 0
