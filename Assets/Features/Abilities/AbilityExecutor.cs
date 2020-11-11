@@ -10,11 +10,11 @@ public abstract class AbilityExecutor<T> : MonoBehaviour, IAbilityExecutor where
     public bool IsOnCooldown => GameTime.getTime() < NextCooldown;
     protected GameTime GameTime;
     protected float NextCooldown;
-    protected AnimationHandler _animationHandler;
+    protected AnimationHandler AnimationHandler;
 
     public virtual void Awake() {
         GameTime = GameTime.Instance;
-        _animationHandler = gameObject.GetComponentInChildren<AnimationHandler>();
+        AnimationHandler = gameObject.GetComponentInChildren<AnimationHandler>();
     }
 
     public float CooldownRemaining => Math.Max(0, NextCooldown - GameTime.getTime());

@@ -21,6 +21,8 @@ public class AdvancedMovementController : MonoBehaviour {
     private bool _selectingAttackMove;
     private AutoAttackExecutor _autoAttack;
 
+    public IObservable<bool> IsMoving => _movementAgent.IsMoving;
+
     private void Awake() {
         _movementAgent = GetComponent<MovementAgent>();
 

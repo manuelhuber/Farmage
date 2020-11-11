@@ -5,6 +5,7 @@ using Features.Common;
 using Features.Pathfinding;
 using Features.Save;
 using Features.Time;
+using Grimity.Data;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
     public float speed = 3f;
     public float stoppingDistance = 1f;
     public float turnSpeed = 10f;
-    public bool IsMoving => !IsStopped && _currentNode > -1;
+    public Grimity.Data.IObservable<bool> IsMoving => _isMovingObservable;
     public bool HasArrived { get; private set; }
     public bool IsStopped { get; set; }
     public Vector3 CurrentDestination { get; private set; }
@@ -24,6 +25,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
     private Vector3[] _path = new Vector3[0];
     private Rigidbody _rigidbody;
     private GameTime _time;
+    private readonly Observable<bool> _isMovingObservable = new Observable<bool>(false);
 
     private void Awake() {
         _mapManager = MapManager.Instance;
@@ -32,7 +34,9 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
     }
 
     private void FixedUpdate() {
-        if (!IsMoving) return;
+        var isMoving = !IsStopped && _currentNode > -1;
+        _isMovingObservable.Set(isMoving);
+        if (!isMoving) return;
         var nextTarget = _path[_currentNode];
         var trans = transform;
         var position = trans.position;
@@ -64,10 +68,11 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
         CurrentDestination = pos;
         HasArrived = false;
         _cancelPath?.Invoke();
+        var trans = transform;
         _cancelPath = _mapManager.RequestPath(new PathRequest {
-            From = transform.position,
+            From = trans.position,
             To = pos,
-            Movement = transform,
+            Movement = trans,
             Callback = path => {
                 _path = bruteMove ? path.Prepend(pos).ToArray() : path;
                 _currentNode = _path.Length - 1;
@@ -91,7 +96,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
 
     public void Load(MovementAgentData data, IReadOnlyDictionary<string, GameObject> objects) {
         if (data.hasDestination) {
-            SetDestination(data.destination.To(),true);
+            SetDestination(data.destination.To(), true);
         }
 
         IsStopped = data.isStopped;

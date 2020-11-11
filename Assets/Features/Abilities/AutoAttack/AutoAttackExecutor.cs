@@ -36,36 +36,35 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
     }
 
     public override void Activate() {
+        if (!GetAttackTarget().HasValue) return;
         if (string.IsNullOrEmpty(ability.animationTrigger)) {
             DealDamage();
         } else {
-            _animationHandler.Trigger(ability.animationTrigger);
+            // This requires the animation not to be able to transition to itself
+            // Otherwise it'll trigger it every frame
+            AnimationHandler.SetTrigger(ability.animationTrigger);
         }
     }
 
     protected override void AnimationCallbackImpl() {
+        // Reset to make sure the animation isn't played twice
+        AnimationHandler.ResetTrigger(ability.animationTrigger);
         DealDamage();
     }
 
 
     private void DealDamage() {
-        var isMoving = _movementAgent.HasValue && _movementAgent.Value.IsMoving;
-        var canAttack = !isMoving || ability.shootDuringMove;
-        var target = GetTarget();
-        if (!canAttack || !target.HasValue) return;
+        var target = GetAttackTarget();
+        if (!target.HasValue) return;
         target.Value.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage});
         CalculateNextCooldown();
     }
 
-    public void SetPriorityTarget(Mortal priority) {
-        _priorityTarget = priority.AsOptional();
-    }
+    private Optional<Mortal> GetAttackTarget() {
+        var isMoving = _movementAgent.HasValue && _movementAgent.Value.IsMoving.Value;
+        var canAttack = !isMoving || ability.shootDuringMove;
+        if (!canAttack) return Optional<Mortal>.NoValue();
 
-    public bool IsInRangeOf(Mortal target) {
-        return _enemiesInRange.Contains(target);
-    }
-
-    private Optional<Mortal> GetTarget() {
         if (_priorityTarget.HasValue && _enemiesInRange.Contains(_priorityTarget.Value)) {
             return _priorityTarget;
         }
@@ -75,6 +74,14 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
         }
 
         return _currentTarget;
+    }
+
+    public void SetPriorityTarget(Mortal priority) {
+        _priorityTarget = priority.AsOptional();
+    }
+
+    public bool IsInRangeOf(Mortal target) {
+        return _enemiesInRange.Contains(target);
     }
 
     private void AddEnemy(Collider col) {

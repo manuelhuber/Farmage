@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Features.Animations;
 using Features.Health;
 using Features.Save;
 using Features.Units.Common;
@@ -26,10 +27,16 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
 
     private void Awake() {
         _movementController = GetComponent<AdvancedMovementController>();
+
         GetComponent<Mortal>().OnDamageInterceptor.Add(OnDamage);
         if (initialTarget != null) {
             DefaultTarget = initialTarget;
         }
+    }
+
+    private void Start() {
+        var animator = gameObject.GetComponentInChildren<AnimationHandler>();
+        _movementController.IsMoving.OnChange(isMoving => animator.SetBool("isMoving", isMoving));
     }
 
 
