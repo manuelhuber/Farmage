@@ -13,6 +13,7 @@ public class Turret : MonoBehaviour, ISavableComponent<TurretData> {
     public float attackSpeed;
     public int damage;
     public int range;
+    public GameObject turret;
     private readonly List<Mortal> _targets = new List<Mortal>();
     private PeriodicalAction _attack;
     private Mortal _currentTarget;
@@ -27,6 +28,15 @@ public class Turret : MonoBehaviour, ISavableComponent<TurretData> {
         _attack.interval = attackSpeed;
         _attack.getTime = () => _time.Time;
         CreateRangeCollider();
+    }
+
+    private void Update() {
+        if (_currentTarget != null) {
+            var turretTransform = turret.transform;
+            turretTransform.LookAt(_currentTarget.transform);
+            turretTransform.eulerAngles =
+                new Vector3(0, turretTransform.eulerAngles.y, 0); // lock x and z axis to zero
+        }
     }
 
     private void CreateRangeCollider() {

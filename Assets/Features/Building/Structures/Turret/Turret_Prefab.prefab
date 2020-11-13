@@ -15,6 +15,7 @@ MonoBehaviour:
   attackSpeed: 3
   damage: 5
   range: 25
+  turret: {fileID: 5276590107733473373}
 --- !u!114 &5299649950924735061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41,6 +42,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Turret_Prefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775064199641335406, guid: 367f8f4e80502e14a8ef8a46497b32b7,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8703393173598853011, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
@@ -200,3 +206,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dba058e4a21168f41a5b6694df4d3c09, type: 3}
+--- !u!1 &5276590107733473373 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3551803582804971397, guid: dba058e4a21168f41a5b6694df4d3c09,
+    type: 3}
+  m_PrefabInstance: {fileID: 8678643418932967384}
+  m_PrefabAsset: {fileID: 0}
