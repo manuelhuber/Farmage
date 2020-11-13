@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Features.Building.BuildMenu;
+using Features.Common;
 using Grimity.Data;
-using Grimity.Singleton;
 using JetBrains.Annotations;
 using Ludiq.PeekCore;
 using UnityEditor;
@@ -11,7 +11,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Features.Save {
-public class SaveGame : GrimitySingleton<SaveGame> {
+public class SaveGame : Manager<SaveGame> {
     public Dictionary<string, GameObject> PrefabDict { get; private set; }
     private Dictionary<string, BuildingMenuEntry> _buildingDict;
 
@@ -31,7 +31,7 @@ public class SaveGame : GrimitySingleton<SaveGame> {
         save.Data = saveData;
         save.Objects = saveObjects;
 
-        new SaveFileWriter().SaveFile(save);
+        SaveFile.Write(save, "/save.dat");
     }
 
     [UsedImplicitly]
@@ -39,7 +39,7 @@ public class SaveGame : GrimitySingleton<SaveGame> {
         PrefabDict = GetSavePrefabs();
         _buildingDict = GetBuildingMenuEntries();
 
-        var loadFile = new SaveFileWriter().LoadFile<SaveData>();
+        var loadFile = SaveFile.Load<SaveData>("/save.dat");
         var saveData = loadFile.Data;
 
         var loadedObjects = InstantiateSavedObjects(loadFile);

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using Features.Common;
 using Features.Save;
-using Grimity.Singleton;
 using UnityEngine;
 
 namespace Features.Time {
-public class GameTime : GrimitySingleton<GameTime>, ISavableComponent<float> {
+public class GameTime : Manager<GameTime>, ISavableComponent<float> {
     [SerializeField] private float _speed = 1;
     public float Time { get; private set; }
 

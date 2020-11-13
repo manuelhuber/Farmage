@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Features.Animations {
 /// <summary>
 /// Copy pasted this from the decompiled unity animator so that I could auto-generate all of these function

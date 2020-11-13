@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using Features.Common;
 using Features.Ui.UserInput;
 using Grimity.Data;
-using Grimity.Singleton;
 using UnityEngine;
 
 namespace Features.Ui.Selection {
-public class SelectionManager : GrimitySingleton<SelectionManager>, IOnKeyDown, IOnKeyUp {
+public class SelectionManager : Manager<SelectionManager>, IOnKeyDown, IOnKeyUp {
     public Observable<List<Selectable>> Selection { get; } =
         new Observable<List<Selectable>>(new List<Selectable>());
 

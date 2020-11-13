@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Features.Health {
+[RequireComponent(typeof(Mortal))]
 public class Healthbar : MonoBehaviour {
     public GameObject hpBarPrefab;
     public float hpBarOffset = 2f;

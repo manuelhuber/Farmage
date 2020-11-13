@@ -1,14 +1,13 @@
 using System.Collections.Generic;
-using System.Linq;
+using Features.Common;
 using Features.Ui.Selection;
-using Grimity.Singleton;
 using Grimity.UserInput;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static Grimity.Cursor.CursorUtil;
 
 namespace Features.Ui.UserInput {
-public class InputManager : GrimitySingleton<InputManager> {
+public class InputManager : Manager<InputManager> {
     public LayerMask clickableLayers;
     public LayerMask terrainLayers;
     private readonly Stack<IInputReceiver> _memory = new Stack<IInputReceiver>();

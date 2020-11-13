@@ -107,8 +107,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2205635369062945559}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.6, y: 0.5, z: 8.3}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2205635368484272821}
@@ -130,17 +130,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d37e54943bd9f84e865d411bd00e36b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wave:
+    spawns:
+    - prefab: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      min: 3
+      max: 8
+    - prefab: {fileID: 8053426005235240194, guid: 7c13745fb5f4d4c4b9e80e125e92c941,
+        type: 3}
+      min: 1
+      max: 2
   allFarmerBuildings: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376, type: 2}
-  enemyPrefab: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
-    type: 3}
   spawnPoints:
   - {fileID: 2205635368484272810}
   - {fileID: 2205635369360576550}
   - {fileID: 2205635370107971669}
   - {fileID: 2205635369979343470}
   waveInterval: 25
-  minSpawnCount: 3
-  maxSpawnCount: 6
 --- !u!1 &2205635369137954808
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,7 +202,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   workerPrefab: {fileID: 7329494047211502047, guid: 4c8cc492a8dd6b94fbcabd5bb4d50bcf,
     type: 3}
-  necessities: {fileID: 2205635369137954808}
 --- !u!1 &2205635369310942929
 GameObject:
   m_ObjectHideFlags: 0

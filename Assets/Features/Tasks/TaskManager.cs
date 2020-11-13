@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Features.Common;
 using Features.Save;
 using Features.Units.Robots;
 using Grimity.Data;
 using Grimity.ScriptableObject;
-using Grimity.Singleton;
 using MonKey.Extensions;
 using UnityEngine;
 
 namespace Features.Tasks {
-public class TaskManager : GrimitySingleton<TaskManager>, ISavableComponent<TaskManagerData> {
+public class TaskManager : Manager<TaskManager>, ISavableComponent<TaskManagerData> {
     public RuntimeGameObjectSet allWorkers;
     private readonly List<BaseTask> _availableTasks = new List<BaseTask>();
     private readonly Dictionary<Worker, WorkerData> _workers = new Dictionary<Worker, WorkerData>();

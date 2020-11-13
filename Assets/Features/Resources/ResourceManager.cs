@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Features.Building.Structures.Warehouse;
+using Features.Common;
 using Features.Delivery;
 using Features.Save;
 using Features.Tasks;
 using Grimity.Data;
 using Grimity.ScriptableObject;
-using Grimity.Singleton;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Features.Resources {
-public class ResourceManager : GrimitySingleton<ResourceManager>, ISavableComponent<ResourceManagerData> {
+public class ResourceManager : Manager<ResourceManager>, ISavableComponent<ResourceManagerData> {
     public Cost startingCash;
     public RuntimeGameObjectSet allFarmerBuildings;
     public Grimity.Data.IObservable<Cost> Have => _have;

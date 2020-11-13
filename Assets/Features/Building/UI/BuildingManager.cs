@@ -2,16 +2,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Features.Building.BuildMenu;
 using Features.Building.Placement;
+using Features.Common;
 using Features.Resources;
 using Features.Tasks;
 using Features.Ui.Actions;
 using Features.Ui.UserInput;
 using Grimity.Data;
-using Grimity.Singleton;
 using UnityEngine;
 
 namespace Features.Building.UI {
-public class BuildingManager : GrimitySingleton<BuildingManager>, IOnKeyUp {
+public class BuildingManager : Manager<BuildingManager>, IOnKeyUp {
     public static readonly int GridSize = 4;
 
     [SerializeField] private PlacementSettings placementSettings;

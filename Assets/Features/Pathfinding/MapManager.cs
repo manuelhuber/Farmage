@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Features.Common;
 using Grimity.Layer;
 using Grimity.Loops;
 using Grimity.Math;
 using Grimity.NativeCollections;
-using Grimity.Singleton;
 using Sirenix.OdinInspector;
 using Unity.Collections;
 using Unity.Jobs;
@@ -21,7 +21,7 @@ public struct PathRequest {
     public Action<Vector3[]> Callback;
 }
 
-public class MapManager : GrimitySingleton<MapManager> {
+public class MapManager : Manager<MapManager> {
     public int nodeScansPerFrame;
     public float cellSize;
     public float sizeX;

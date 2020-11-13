@@ -1,5 +1,4 @@
-﻿using Features.Ui.UserInput;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Features.Animations {
@@ -11,7 +10,7 @@ public class AnimationHandler : MonoBehaviour {
     private Animator _animator;
     private string _lastTrigger;
 
-    private void Start() {
+    private void Awake() {
         _animator = gameObject.GetComponent<Animator>();
     }
 

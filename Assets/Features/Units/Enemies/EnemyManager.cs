@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Features.Common;
 using Features.Health;
 using Features.Time;
 using Grimity.Collections;
@@ -9,15 +10,15 @@ using MonKey.Extensions;
 using UnityEngine;
 
 namespace Features.Units.Enemies {
-public class Spawner : MonoBehaviour {
+public class EnemyManager : Manager<EnemyManager> {
+    public EnemyWave wave;
+
     public RuntimeGameObjectSet allFarmerBuildings;
-    public GameObject enemyPrefab;
+    public int DeathCount { get; private set; }
 
     public GameObject[] spawnPoints;
     public float waveInterval = 5f;
 
-    public int minSpawnCount;
-    public int maxSpawnCount;
 
     private float _lastSpawn;
     private GameTime _time;
@@ -37,16 +38,30 @@ public class Spawner : MonoBehaviour {
         if (_availableBuildings.IsEmpty()) return;
         var target = _availableBuildings.GetRandomElement();
         var spawnLocation = spawnPoints.GetRandomElement().transform;
-        var count = Random.Range(minSpawnCount, maxSpawnCount);
-        var offset = 0;
-        for (var i = 0; i < count; i++) {
-            var offsetLocation = spawnLocation.position + new Vector3(0, 0, offset);
-            var enemy = Instantiate(enemyPrefab, offsetLocation, spawnLocation.rotation, transform);
-            enemy.GetComponent<EnemyScript>().DefaultTarget = target;
-            offset += 10;
+        foreach (var enemySpawnInfo in wave.spawns) {
+            Spawn(enemySpawnInfo, spawnLocation, target);
         }
 
         _lastSpawn = _time.Time;
+    }
+
+    private void Spawn(EnemySpawnInfo enemySpawnInfo,
+                       Transform spawnLocation,
+                       Mortal target
+    ) {
+        var count = Random.Range(enemySpawnInfo.min, enemySpawnInfo.max);
+
+        for (var i = 0; i < count; i++) {
+            var position = spawnLocation.position;
+            position += new Vector3(Random.Range(-2, 2), 0, Random.Range(-2, 2));
+            spawnLocation.position = position;
+            var enemy = Instantiate(enemySpawnInfo.prefab,
+                position,
+                spawnLocation.rotation,
+                transform);
+            enemy.GetComponent<Mortal>().onDeath.AddListener(() => DeathCount++);
+            enemy.GetComponent<EnemyScript>().DefaultTarget = target;
+        }
     }
 }
 }

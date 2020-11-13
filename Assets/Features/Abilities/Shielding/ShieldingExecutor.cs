@@ -1,7 +1,9 @@
 using Features.Health;
 using Grimity.Actions;
+using UnityEngine;
 
 namespace Features.Abilities.Shielding {
+[RequireComponent(typeof(Mortal))]
 public class ShieldingExecutor : AbilityExecutor<ShieldingAbility> {
     public override void Activate() {
         var mortal = GetComponent<Mortal>();
