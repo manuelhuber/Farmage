@@ -15,7 +15,7 @@ MonoBehaviour:
   cooldownInS: 3
   abilityName: 
   description: 
-  animationTrigger: 
+  animationTrigger: nom
   icon: {fileID: 0}
   damage: 10
   range: 3
