@@ -43,7 +43,7 @@ public class AdvancedMovementController : MonoBehaviour {
                 var huntTargetPosition = _huntTarget.position;
                 _movementAgent.IsStopped = false;
                 if (_movementAgent.CurrentDestination == huntTargetPosition) return;
-                _movementAgent.SetDestination(huntTargetPosition, false);
+                _movementAgent.SetDestination(huntTargetPosition, true);
                 break;
         }
     }
@@ -56,7 +56,7 @@ public class AdvancedMovementController : MonoBehaviour {
 
     public void AttackMoveTo(Vector3 pos) {
         _moveMode = MoveMode.AttackMove;
-        _movementAgent.SetDestination(pos, false);
+        _movementAgent.SetDestination(pos, true);
         _movementAgent.IsStopped = false;
     }
 
