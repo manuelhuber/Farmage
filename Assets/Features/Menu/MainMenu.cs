@@ -14,7 +14,7 @@ public class MainMenu : MonoBehaviour {
 
     private void GenerateMissionSettings() {
         var settings = ScriptableObject.CreateInstance<MissionSettings>();
-        settings.startingMoney = new Cost {cash = 123};
+        settings.startingMoney = new Cost {cash = 400};
         settings.walkerPrefab = walkerPrefab;
         settings.mapSize = new Vector2 {x = 500, y = 500};
         settings.workerCount = 1;

@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodeScansPerFrame: 200
-  cellSize: 2
+  cellSize: 4
   sizeX: 500
   sizeZ: 500
   blockingLayer:
@@ -134,7 +134,7 @@ MonoBehaviour:
     spawns:
     - prefab: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
         type: 3}
-      min: 3
+      min: 5
       max: 8
     - prefab: {fileID: 8053426005235240194, guid: 7c13745fb5f4d4c4b9e80e125e92c941,
         type: 3}
@@ -146,7 +146,7 @@ MonoBehaviour:
   - {fileID: 2205635369360576550}
   - {fileID: 2205635370107971669}
   - {fileID: 2205635369979343470}
-  waveInterval: 25
+  waveInterval: 45
 --- !u!1 &2205635369137954808
 GameObject:
   m_ObjectHideFlags: 0

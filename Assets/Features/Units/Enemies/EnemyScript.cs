@@ -28,7 +28,7 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
     private void Awake() {
         _movementController = GetComponent<AdvancedMovementController>();
 
-        GetComponent<Mortal>().OnDamageInterceptor.Add(OnDamage);
+        GetComponent<Mortal>().OnDamageInterceptor.Add(UpdateThreateningTarget);
         if (initialTarget != null) {
             DefaultTarget = initialTarget;
         }
@@ -40,18 +40,16 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
     }
 
 
-    private Damage OnDamage(Damage damage) {
-        if (!_threateningTarget.HasValue && damage.Source != null) {
-            var mortal = damage.Source.GetComponent<Mortal>();
-            if (mortal != null) {
-                _threateningTarget = mortal.AsOptional();
-                mortal.onDeath.AddListener(() => {
-                    _threateningTarget = Optional<Mortal>.NoValue();
-                    UpdateTarget();
-                });
-                UpdateTarget();
-            }
-        }
+    private Damage UpdateThreateningTarget(Damage damage) {
+        if (_threateningTarget.HasValue || damage.Source == null) return damage;
+        var mortal = damage.Source.GetComponent<Mortal>();
+        if (mortal == null) return damage;
+        _threateningTarget = mortal.AsOptional();
+        mortal.onDeath.AddListener(() => {
+            _threateningTarget = Optional<Mortal>.NoValue();
+            UpdateTarget();
+        });
+        UpdateTarget();
 
         return damage;
     }
