@@ -33,7 +33,7 @@ public class InstantSellStorage : Storage.Storage {
 
     public override bool AcceptDelivery(GameObject goods) {
         var resourceObject = goods.GetComponent<ResourceObject>();
-        _resourceManager.Add(resourceObject.resource.worth);
+        _resourceManager.Add(resourceObject.resource.worth * resourceObject.count);
         Destroy(goods);
         return true;
     }

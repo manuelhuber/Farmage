@@ -5,6 +5,10 @@ namespace Features.Resources {
 public struct Cost {
     public int cash;
 
+    public static Cost operator *(Cost a, int multiplier )
+    {
+        return new Cost {cash = a.cash * multiplier};
+    }
     public static Cost operator -(Cost a) {
         return new Cost {cash = -a.cash};
     }
