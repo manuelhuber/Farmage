@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using Features.Time;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Features.Animations {
@@ -9,9 +11,15 @@ namespace Features.Animations {
 public class AnimationHandler : MonoBehaviour {
     private Animator _animator;
     private string _lastTrigger;
+    private GameTime _gameTime;
 
     private void Awake() {
+        _gameTime = GameTime.Instance;
         _animator = gameObject.GetComponent<Animator>();
+    }
+
+    private void Update() {
+        _animator.speed = _gameTime.Speed;
     }
 
     public void SetTrigger(string trigger) {
