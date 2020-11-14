@@ -15,6 +15,16 @@ public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IOnKey
     private SplatManager _splatManager;
     private Team _team;
 
+    private void Start() {
+        _team = GetComponent<ITeam>().Team;
+        _splatManager = GetComponentInChildren<SplatManager>();
+        _splat = Instantiate(ability.splat, _splatManager.transform);
+        _splat.gameObject.name = SplatName;
+        _splat.Scale = 2 * ability.radius;
+        _splat.Range = ability.range;
+        _splat.Progress = 1;
+        _splatManager.Initialize();
+    }
 
     #region InputReceiver
 
@@ -29,17 +39,6 @@ public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IOnKey
     }
 
     #endregion
-
-    private void Start() {
-        _team = GetComponent<ITeam>().Team;
-        _splatManager = GetComponentInChildren<SplatManager>();
-        _splat = Instantiate(ability.splat, _splatManager.transform);
-        _splat.gameObject.name = SplatName;
-        _splat.Scale = 2 * ability.radius;
-        _splat.Range = ability.range;
-        _splat.Progress = 1;
-        _splatManager.Initialize();
-    }
 
     public override void Activate() {
         _alreadyFired = 0;

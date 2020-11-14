@@ -8,9 +8,9 @@ namespace Features.Abilities {
 public abstract class AbilityExecutor<T> : MonoBehaviour, IAbilityExecutor where T : Ability {
     public T ability;
     public bool IsOnCooldown => GameTime.getTime() < NextCooldown;
+    protected AnimationHandler AnimationHandler;
     protected GameTime GameTime;
     protected float NextCooldown;
-    protected AnimationHandler AnimationHandler;
 
     public virtual void Awake() {
         GameTime = GameTime.Instance;

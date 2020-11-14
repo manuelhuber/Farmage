@@ -17,15 +17,9 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
         new Observable<IReadOnlyList<Mortal>>(new Mortal[] { });
 
     private Optional<Mortal> _currentTarget = Optional<Mortal>.NoValue();
-    private Optional<Mortal> _priorityTarget = Optional<Mortal>.NoValue();
     private Optional<MovementAgent> _movementAgent = Optional<MovementAgent>.NoValue();
+    private Optional<Mortal> _priorityTarget = Optional<Mortal>.NoValue();
     private Team _team;
-
-    private void Update() {
-        if (!IsOnCooldown) {
-            Activate();
-        }
-    }
 
     private void Start() {
         var rangeCollider = RangeCollider.AddTo(gameObject, ability.range);
@@ -33,6 +27,12 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
         rangeCollider.OnExit(RemoveEnemy);
         _movementAgent = GetComponent<MovementAgent>().AsOptional();
         _team = GetComponent<ITeam>().Team;
+    }
+
+    private void Update() {
+        if (!IsOnCooldown) {
+            Activate();
+        }
     }
 
     public override void Activate() {

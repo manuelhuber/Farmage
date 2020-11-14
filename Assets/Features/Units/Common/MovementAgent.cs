@@ -18,6 +18,7 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
     public bool HasArrived { get; private set; }
     public bool IsStopped { get; set; }
     public Vector3 CurrentDestination { get; private set; }
+    private readonly Observable<bool> _isMovingObservable = new Observable<bool>(false);
 
     private Action _cancelPath;
     private int _currentNode = -1;
@@ -25,7 +26,6 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
     private Vector3[] _path = new Vector3[0];
     private Rigidbody _rigidbody;
     private GameTime _time;
-    private readonly Observable<bool> _isMovingObservable = new Observable<bool>(false);
 
     private void Awake() {
         _mapManager = MapManager.Instance;

@@ -37,10 +37,6 @@ public class Worker : MonoBehaviour, IHasActions {
             {new ActionEntryData {Active = true, OnSelect = AbandonCurrentTask}});
     }
 
-    public void AbandonCurrentTask() {
-        _activeBehaviour?.AbandonTask();
-    }
-
     private void Update() {
         _activeBehaviour?.Behave();
     }
@@ -58,6 +54,10 @@ public class Worker : MonoBehaviour, IHasActions {
 
     public Grimity.Data.IObservable<ActionEntryData[]> GetActions() {
         return actions;
+    }
+
+    public void AbandonCurrentTask() {
+        _activeBehaviour?.AbandonTask();
     }
 
     /// <summary>

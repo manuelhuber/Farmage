@@ -16,6 +16,8 @@ public class CameraControl : MonoBehaviour, IOnKeyPressed {
         InputManager.Instance.RegisterForPermanentInput(this);
     }
 
+    #region InputReceiver
+
     public event YieldControlHandler YieldControl;
 
     public void OnKeyPressed(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
@@ -34,5 +36,7 @@ public class CameraControl : MonoBehaviour, IOnKeyPressed {
         movement *= _control.cameraMovementSpeed;
         transform.Translate(movement);
     }
+
+    #endregion
 }
 }

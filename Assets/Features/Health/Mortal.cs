@@ -8,7 +8,6 @@ using UnityEngine.Events;
 namespace Features.Health {
 public class Mortal : MonoBehaviour, ISavableComponent<MortalData>, ITeam {
     public UnityEvent onDeath = new UnityEvent();
-    public Team Team => team;
     [SerializeField] private Team team;
 
     [field: SerializeField] public int MaxHitpoints { get; set; }
@@ -16,15 +15,17 @@ public class Mortal : MonoBehaviour, ISavableComponent<MortalData>, ITeam {
     public Grimity.Data.IObservable<int> Hitpoints => _hitpoints;
     public Grimity.Data.IObservable<int> Shield => _shield;
     public Grimity.Data.IObservable<int> MaxShield => _maxShield;
-
-    public readonly List<Func<Damage, Damage>> OnDamageInterceptor = new List<Func<Damage, Damage>>();
     private readonly Observable<int> _hitpoints = new Observable<int>(0);
     private readonly Observable<int> _maxShield = new Observable<int>(0);
     private readonly Observable<int> _shield = new Observable<int>(0);
 
+    public readonly List<Func<Damage, Damage>> OnDamageInterceptor = new List<Func<Damage, Damage>>();
+
     private void Awake() {
         _hitpoints.Set(MaxHitpoints);
     }
+
+    public Team Team => team;
 
     public void ChangeMaxShield(int change) {
         _maxShield.Set(Math.Max(_maxShield.Value + change, 0));

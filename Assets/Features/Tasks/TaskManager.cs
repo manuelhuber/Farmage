@@ -13,8 +13,8 @@ namespace Features.Tasks {
 public class TaskManager : Manager<TaskManager>, ISavableComponent<TaskManagerData> {
     public RuntimeGameObjectSet allWorkers;
     private readonly List<BaseTask> _availableTasks = new List<BaseTask>();
-    private readonly Dictionary<Worker, WorkerData> _workers = new Dictionary<Worker, WorkerData>();
     private readonly List<BaseTask> _cancelledTasks = new List<BaseTask>();
+    private readonly Dictionary<Worker, WorkerData> _workers = new Dictionary<Worker, WorkerData>();
 
     private void Awake() {
         UpdateAllWorkerList(allWorkers.Items);

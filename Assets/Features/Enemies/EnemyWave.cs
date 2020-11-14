@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Features.Units.Enemies {
+namespace Features.Enemies {
 [Serializable]
 public class EnemyWave {
     public EnemySpawnInfo[] spawns;

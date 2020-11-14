@@ -13,6 +13,15 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IOnKeyUp {
     private Cone _coneSplat;
     private SplatManager _splatManager;
 
+    private void Start() {
+        _splatManager = GetComponentInChildren<SplatManager>();
+        _coneSplat = Instantiate(ability.splat, _splatManager.transform);
+        _coneSplat.gameObject.name = SplatName;
+        _coneSplat.Angle = ability.arc;
+        _coneSplat.Scale = 2 * ability.radius;
+        _splatManager.Initialize();
+    }
+
     #region InputReceiver
 
     public event YieldControlHandler YieldControl;
@@ -23,15 +32,6 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IOnKeyUp {
     }
 
     #endregion
-
-    private void Start() {
-        _splatManager = GetComponentInChildren<SplatManager>();
-        _coneSplat = Instantiate(ability.splat, _splatManager.transform);
-        _coneSplat.gameObject.name = SplatName;
-        _coneSplat.Angle = ability.arc;
-        _coneSplat.Scale = 2 * ability.radius;
-        _splatManager.Initialize();
-    }
 
     public override void Activate() {
         InputManager.Instance.RequestControlWithMemory(this);

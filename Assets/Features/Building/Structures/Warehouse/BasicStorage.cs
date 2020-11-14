@@ -8,7 +8,7 @@ using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Building.Structures.Warehouse {
-public class BasicStorage : Storage.Storage, ISavableComponent<StorageData>  {
+public class BasicStorage : Storage.Storage, ISavableComponent<StorageData> {
     [SerializeField] private Resource[] resources;
     public int capacity;
 

@@ -13,15 +13,14 @@ internal enum MoveMode {
 [RequireComponent(typeof(AutoAttackExecutor))]
 [RequireComponent(typeof(MovementAgent))]
 public class AdvancedMovementController : MonoBehaviour {
+    public IObservable<bool> IsMoving => _movementAgent.IsMoving;
     private bool _anyEnemiesInRange;
+    private AutoAttackExecutor _autoAttack;
     private Transform _huntTarget;
     private Optional<Mortal> _huntTargetMortal = Optional<Mortal>.NoValue();
-    private MoveMode _moveMode = MoveMode.Move;
     private MovementAgent _movementAgent;
+    private MoveMode _moveMode = MoveMode.Move;
     private bool _selectingAttackMove;
-    private AutoAttackExecutor _autoAttack;
-
-    public IObservable<bool> IsMoving => _movementAgent.IsMoving;
 
     private void Awake() {
         _movementAgent = GetComponent<MovementAgent>();

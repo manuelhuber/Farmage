@@ -20,7 +20,7 @@ public class ActionsGui : MonoBehaviour, IOnKeyUp {
         KeyCode.Alpha2,
         KeyCode.Alpha3,
         KeyCode.Alpha4,
-        KeyCode.E,
+        KeyCode.E
     };
 
 
@@ -33,6 +33,20 @@ public class ActionsGui : MonoBehaviour, IOnKeyUp {
             actionEntry.SetCooldown(data.Cooldown);
         }
     }
+
+    #region InputReceiver
+
+    public event YieldControlHandler YieldControl;
+
+    public void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
+        for (var i = 0; i < Math.Min(_actions.Count, _hotkeys.Length); i++) {
+            if (keys.Contains(_hotkeys[i])) {
+                InvokeAction(_actions[i].Item1);
+            }
+        }
+    }
+
+    #endregion
 
     public void BuildUi(IEnumerable<ActionEntryData> actions) {
         foreach (var child in root.transform.GetChildren()) {
@@ -55,16 +69,6 @@ public class ActionsGui : MonoBehaviour, IOnKeyUp {
 
     private static void InvokeAction(ActionEntryData action) {
         if (action.Active) action.OnSelect.Invoke();
-    }
-
-    public event YieldControlHandler YieldControl;
-
-    public void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
-        for (var i = 0; i < Math.Min(_actions.Count, _hotkeys.Length); i++) {
-            if (keys.Contains(_hotkeys[i])) {
-                InvokeAction(_actions[i].Item1);
-            }
-        }
     }
 }
 }

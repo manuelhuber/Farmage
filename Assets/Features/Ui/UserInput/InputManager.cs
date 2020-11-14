@@ -11,16 +11,16 @@ public class InputManager : Manager<InputManager> {
     public LayerMask clickableLayers;
     public LayerMask terrainLayers;
     private readonly Stack<IInputReceiver> _memory = new Stack<IInputReceiver>();
+    private readonly HashSet<IInputReceiver> _permanentReceiver = new HashSet<IInputReceiver>();
 
 
     private IInputReceiver _activeReceiver;
-    private readonly HashSet<IInputReceiver> _permanentReceiver = new HashSet<IInputReceiver>();
     private UnityEngine.Camera _camera;
     private IInputReceiver _defaultReceiver;
-    private HashSet<KeyCode> _pressedKeys;
     private HashSet<KeyCode> _downKeys;
-    private HashSet<KeyCode> _upKeys;
     private MouseLocation _mouseLocation;
+    private HashSet<KeyCode> _pressedKeys;
+    private HashSet<KeyCode> _upKeys;
 
     private void Awake() {
         _camera = UnityEngine.Camera.main;

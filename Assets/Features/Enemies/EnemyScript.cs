@@ -7,10 +7,12 @@ using Features.Units.Common;
 using Grimity.Data;
 using UnityEngine;
 
-namespace Features.Units.Enemies {
+namespace Features.Enemies {
 [RequireComponent(typeof(AdvancedMovementController))]
 [RequireComponent(typeof(Mortal))]
 public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
+    [SerializeField] public Mortal initialTarget;
+
     public Mortal DefaultTarget {
         set {
             _defaultTarget = value.AsOptional();
@@ -18,11 +20,10 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
         }
     }
 
-    [SerializeField] public Mortal initialTarget;
+    private Optional<Mortal> _defaultTarget;
+    private AdvancedMovementController _movementController;
 
     private Optional<Mortal> _threateningTarget = Optional<Mortal>.NoValue();
-    private AdvancedMovementController _movementController;
-    private Optional<Mortal> _defaultTarget;
 
 
     private void Awake() {
@@ -61,7 +62,6 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
             _movementController.AttackMoveTo(_defaultTarget.Value.transform.position);
         }
     }
-
 
     #region Save
 

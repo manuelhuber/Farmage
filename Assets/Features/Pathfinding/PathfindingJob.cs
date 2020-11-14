@@ -142,7 +142,7 @@ public struct PathfindingJob : IJob {
                 return leftWalkable || upWalkable;
             }
 
-            if (@from.Z > to.Z) {
+            if (from.Z > to.Z) {
                 return leftWalkable || downWalkable;
             }
         }

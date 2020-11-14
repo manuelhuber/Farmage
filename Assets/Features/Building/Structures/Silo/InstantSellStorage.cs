@@ -1,20 +1,19 @@
 using System.Linq;
-using Features.Building.Structures.Warehouse;
 using Features.Resources;
 using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Building.Structures.Silo {
 /// <summary>
-/// Will sell any item stored here instantly.
-/// Can't dispense items obviously
+///     Will sell any item stored here instantly.
+///     Can't dispense items obviously
 /// </summary>
 public class InstantSellStorage : Storage.Storage {
     [SerializeField] private Resource[] resources;
-    private ResourceManager _resourceManager;
 
     public override int TotalResourceCount => 0;
     public override bool IsFull => false;
+    private ResourceManager _resourceManager;
 
     private void Awake() {
         _resourceManager = ResourceManager.Instance;

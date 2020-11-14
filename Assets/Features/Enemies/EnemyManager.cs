@@ -9,28 +9,24 @@ using Grimity.ScriptableObject;
 using MonKey.Extensions;
 using UnityEngine;
 
-namespace Features.Units.Enemies {
+namespace Features.Enemies {
 public class EnemyManager : Manager<EnemyManager> {
     public EnemyWave wave;
 
     public RuntimeGameObjectSet allFarmerBuildings;
-    public int DeathCount { get; private set; }
 
     public GameObject[] spawnPoints;
     public float waveInterval = 5f;
+    public int DeathCount { get; private set; }
+    private List<Mortal> _availableBuildings = new List<Mortal>();
 
 
     private float _lastSpawn;
     private GameTime _time;
-    private List<Mortal> _availableBuildings = new List<Mortal>();
 
     private void Awake() {
         _time = GameTime.Instance;
         allFarmerBuildings.OnChange += OnBuildingChange;
-    }
-
-    private void OnBuildingChange(ReadOnlyCollection<GameObject> items) {
-        _availableBuildings = items.Select(go => go.GetComponent<Mortal>()).ToList();
     }
 
     private void Update() {
@@ -43,6 +39,10 @@ public class EnemyManager : Manager<EnemyManager> {
         }
 
         _lastSpawn = _time.Time;
+    }
+
+    private void OnBuildingChange(ReadOnlyCollection<GameObject> items) {
+        _availableBuildings = items.Select(go => go.GetComponent<Mortal>()).ToList();
     }
 
     private void Spawn(EnemySpawnInfo enemySpawnInfo,

@@ -1,17 +1,16 @@
-﻿using System;
-using Features.Time;
+﻿using Features.Time;
 using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Features.Animations {
 /// <summary>
-/// Light wrapper around units Animator to make it easier to handle callbacks
+///     Light wrapper around units Animator to make it easier to handle callbacks
 /// </summary>
 [RequireComponent(typeof(Animator))]
 public class AnimationHandler : MonoBehaviour {
     private Animator _animator;
-    private string _lastTrigger;
     private GameTime _gameTime;
+    private string _lastTrigger;
 
     private void Awake() {
         _gameTime = GameTime.Instance;

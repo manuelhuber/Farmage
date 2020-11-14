@@ -6,7 +6,7 @@ using Features.Units.Common;
 using Grimity.Data;
 using UnityEngine;
 
-namespace Features.Units.Walkers {
+namespace Features.Walkers {
 [RequireComponent(typeof(AdvancedMovementController))]
 [RequireComponent(typeof(ITeam))]
 public class Walker : MonoBehaviour, IOnKeyDown, IOnKeyUp, IOnReceiveControl, IHasActions {

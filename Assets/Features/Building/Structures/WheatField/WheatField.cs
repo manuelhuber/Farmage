@@ -16,11 +16,11 @@ public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
     public Grimity.Data.IObservable<float> Progress => _progress;
 
     private readonly Observable<float> _progress = new Observable<float>(0);
+    private SimpleTask _harvestTask;
     private ResourceManager _resourceManager;
     private TaskManager _taskManager;
     private GameTime _time;
     private bool _waitingForHarvest;
-    private SimpleTask _harvestTask;
 
     private void Awake() {
         _time = GameTime.Instance;
@@ -37,6 +37,10 @@ public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
         }
     }
 
+    private void OnDestroy() {
+        _taskManager.CancelTask(_harvestTask);
+    }
+
     private void UpdateProgress() {
         _progress.Set(_progress.Value + _time.DeltaTime);
     }
@@ -45,10 +49,6 @@ public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
         _waitingForHarvest = true;
         _harvestTask = new SimpleTask(gameObject, TaskType.Harvest);
         _taskManager.Enqueue(_harvestTask);
-    }
-
-    private void OnDestroy() {
-        _taskManager.CancelTask(_harvestTask);
     }
 
     public void Harvest() {
