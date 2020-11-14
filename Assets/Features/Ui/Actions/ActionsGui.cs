@@ -44,9 +44,7 @@ public class ActionsGui : MonoBehaviour, IOnKeyUp {
         foreach (var action in actions) {
             var actionEntry = Instantiate(iconPrefab, root.transform, false);
 
-            actionEntry.OnClick(() => {
-                if (action.Active) action.OnSelect.Invoke();
-            });
+            actionEntry.OnClick(() => InvokeAction(action));
             if (action.Image != null) {
                 actionEntry.icon.sprite = action.Image;
             }
@@ -55,12 +53,16 @@ public class ActionsGui : MonoBehaviour, IOnKeyUp {
         }
     }
 
+    private static void InvokeAction(ActionEntryData action) {
+        if (action.Active) action.OnSelect.Invoke();
+    }
+
     public event YieldControlHandler YieldControl;
 
     public void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         for (var i = 0; i < Math.Min(_actions.Count, _hotkeys.Length); i++) {
             if (keys.Contains(_hotkeys[i])) {
-                _actions[i].Item1.OnSelect.Invoke();
+                InvokeAction(_actions[i].Item1);
             }
         }
     }
