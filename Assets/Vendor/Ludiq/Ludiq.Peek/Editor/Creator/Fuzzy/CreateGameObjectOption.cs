@@ -15,17 +15,15 @@ namespace Ludiq.Peek
 
 	public class CreateGameObjectOption : FuzzyOption<LudiqGUI.PopupFunc>
 	{
-		private static UnityObject editorTarget;
-
-		private static UEditor editor;
-
 		public string primitivePath { get; private set; }
 
 		public string primitiveFolder => PathUtility.NaiveParent(primitivePath);
 
-		public AssetDatabaseEntry assetDatabaseEntry { get; private set; }
+		public HierarchyPropertyCache assetDatabaseEntry { get; private set; }
 
-		public string assetFolder => PathUtility.NaiveNormalize(Path.GetDirectoryName(assetDatabaseEntry.path));
+		public string assetFolder { get; private set; }
+
+		public string assetPath { get; private set; }
 
 		public bool assetIsLoaded { get; private set; }
 
@@ -65,29 +63,31 @@ namespace Ludiq.Peek
 			return option;
 		}
 
-		private static CreateGameObjectOption Asset(AssetDatabaseEntry assetDatabaseEntry)
+		private static CreateGameObjectOption Asset(HierarchyPropertyCache assetDatabaseEntry)
 		{
 			var option = new CreateGameObjectOption();
 			option.assetDatabaseEntry = assetDatabaseEntry;
 			option.label = assetDatabaseEntry.name;
 			option.getIcon = option.GetAssetIcon;
+			option.assetPath = assetDatabaseEntry.assetPath;
+			option.assetFolder = PathUtility.NaiveNormalize(Path.GetDirectoryName(option.assetPath));
 			return option;
 		}
 
-		public static CreateGameObjectOption Prefab(AssetDatabaseEntry assetDatabaseEntry)
+		public static CreateGameObjectOption Prefab(HierarchyPropertyCache assetDatabaseEntry)
 		{
 			var option = Asset(assetDatabaseEntry);
 			option.value = option.InstantiatePrefab;
 			return option;
 		}
 
-		public static CreateGameObjectOption Model(AssetDatabaseEntry assetDatabaseEntry)
+		public static CreateGameObjectOption Model(HierarchyPropertyCache assetDatabaseEntry)
 		{
 			// Models are still prefabs as far as Unity is concerned
 			return Prefab(assetDatabaseEntry);
 		}
 
-		public static CreateGameObjectOption Sprite(AssetDatabaseEntry assetDatabaseEntry)
+		public static CreateGameObjectOption Sprite(HierarchyPropertyCache assetDatabaseEntry)
 		{
 			var option = Asset(assetDatabaseEntry);
 			option.value = option.InstantiateSprite;
@@ -100,32 +100,34 @@ namespace Ludiq.Peek
 			{
 				throw new InvalidOperationException();
 			}
-			
-			// Make sure the object is loaded into memory; not sure if this is guaranteed by instanceID existence
-			AssetDatabase.LoadMainAssetAtPath(assetDatabaseEntry.path);
-			AssetDatabase.LoadAllAssetRepresentationsAtPath(assetDatabaseEntry.path);
-			
+
+			// Make sure the object is loaded into memory; this is not guaranteed by instanceID existence
+			AssetDatabase.LoadMainAssetAtPath(assetPath);
+			AssetDatabase.LoadAllAssetRepresentationsAtPath(assetPath);
+
 			var result = EditorUtility.InstanceIDToObject(assetDatabaseEntry.instanceID);
 
 			if (result == null)
 			{
-				Debug.LogWarning($"Failed to lazy load asset for creator:\n{assetDatabaseEntry.path}::{assetDatabaseEntry.instanceID}");
+				Debug.LogWarning($"Failed to lazy load asset for creator:\n{assetPath}::{assetDatabaseEntry.instanceID}");
 			}
-
+			
 			return result;
 		}
 
 		private EditorTexture GetAssetIcon()
 		{
-			if (PeekPlugin.Configuration.enablePreviewIcons && 
-			    PreviewUtility.TryGetPreview(asset, out var preview) && 
-			    !AssetPreview.IsLoadingAssetPreview(asset.GetInstanceID()))
+			if (PeekPlugin.Configuration.enablePreviewIcons &&
+				AssetDatabase.IsMainAssetAtPathLoaded(assetPath) &&
+				PreviewUtility.TryGetPreview(asset, out var preview) && 
+			    !AssetPreview.IsLoadingAssetPreview(asset.GetInstanceID()) && 
+				preview != null)
 			{
 				return EditorTexture.Single(preview);
 			}
 			else
 			{
-				return asset.Icon();
+				return EditorTexture.Single(AssetDatabase.GetCachedIcon(assetPath));
 			}
 		}
 
@@ -185,7 +187,11 @@ namespace Ludiq.Peek
 			return topmostPrimitive != null;
 		}
 
-		public override bool hasFooter => isAsset && prefab != null && prefab.GetComponentInChildren<Renderer>() != null;
+		public override bool hasFooter =>
+			isAsset &&
+			PreviewUtility.TryGetPreview(asset, out var preview) &&
+			!AssetPreview.IsLoadingAssetPreview(asset.GetInstanceID()) &&
+			preview != null;
 
 		public override float GetFooterHeight(FuzzyOptionNode node, float width)
 		{
@@ -194,16 +200,7 @@ namespace Ludiq.Peek
 
 		public override void OnFooterGUI(FuzzyOptionNode node, Rect position)
 		{
-			if (editorTarget != prefab)
-			{
-				editorTarget = prefab;
-				UEditor.CreateCachedEditor(editorTarget, null, ref editor);
-			}
-
-			if (editor != null)
-			{
-				editor.DrawPreview(position);
-			}
+			GUI.DrawTexture(position, PreviewUtility.GetPreview(asset), ScaleMode.ScaleToFit);
 		}
 
 		public override string SearchResultLabel(string query)

@@ -26,6 +26,8 @@ namespace Ludiq.Peek
 
 		public int? shortcutIndex { get; set; }
 
+		public string shortcutLabel { get; set; }
+		
 		public ToolbarControl toolbarControl { get; }
 
 		public Rect activatorScreenPosition
@@ -369,7 +371,7 @@ namespace Ludiq.Peek
 
 			if (showTooltip)
 			{
-				var tooltipContent = new GUIContent(hasShortcut ? (shortcutIndex % 10).ToString() : tool.tooltip);
+				var tooltipContent = new GUIContent(hasShortcut ? shortcutLabel : tool.tooltip);
 				var tooltipStyle = PeekStyles.sceneViewTooltip;
 				var tooltipSize = tooltipStyle.CalcSize(tooltipContent);
 

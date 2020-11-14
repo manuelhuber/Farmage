@@ -37,6 +37,12 @@ namespace Ludiq.Peek
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
+			if (!PluginContainer.initialized)
+			{
+				base.OnGUI(position, property, label);
+				return;
+			}
+
 			if (PeekPlugin.Configuration.enableReferenceInspector && !property.hasMultipleDifferentValues && property.objectReferenceValue != null)
 			{
 				Rect buttonPosition, fieldPosition;

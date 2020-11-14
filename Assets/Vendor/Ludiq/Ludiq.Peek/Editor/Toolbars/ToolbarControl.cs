@@ -1,8 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using UnityEditor;
 using UnityEngine;
+#if UNITY_2019_1_OR_NEWER
+using UnityEditor.ShortcutManagement;
+#endif
 using UnityObject = UnityEngine.Object;
 
 namespace Ludiq.Peek
@@ -130,13 +134,12 @@ namespace Ludiq.Peek
 					return;
 				}
 			}
-
 		}
 
 		public void DrawMainToolInTreeView(Rect position, Rect visibleRect)
 		{
 			var tool = toolbar.mainTool;
-			
+
 			if (tool == null || !tool.IsVisible(this))
 			{
 				return;
@@ -338,6 +341,89 @@ namespace Ludiq.Peek
 			return new Vector2(width, height);
 		}
 
+#if UNITY_2019_1_OR_NEWER
+		private static KeyCombination? GetShortcutBinding(int index, bool primary)
+		{
+			var shortcutID = $"Peek/{(primary ? "Primary" : "Secondary")} Toolbar {index}";
+
+			var shortcutExists = ShortcutManager.instance.GetAvailableShortcutIds().Contains(shortcutID);
+
+			if (!shortcutExists)
+			{
+				return null;
+			}
+
+			var mapping = ShortcutManager.instance.GetShortcutBinding(shortcutID);
+
+			if (!mapping.keyCombinationSequence.Any())
+			{
+				return null;
+			}
+
+			var combination = mapping.keyCombinationSequence.FirstOrDefault();
+			
+			if (combination.keyCode == KeyCode.None)
+			{
+				return null;
+			}
+
+			return combination;
+		}
+#endif
+
+		private static bool HasShortcut(int index, bool primary)
+		{
+#if UNITY_2019_1_OR_NEWER
+			return GetShortcutBinding(index, primary) != null;
+#else
+			return index <= 10;
+#endif
+		}
+
+		private static string GetShortcutLabel(int index, bool primary)
+		{
+#if UNITY_2019_1_OR_NEWER
+			return GetShortcutBinding(index, primary).Value.keyCode.ToNiceString();
+#else
+			return index.ToString();
+#endif
+		}
+
+		public static EventModifiers GetShortcutModifiers(int index, bool primary)
+		{
+#if UNITY_2019_1_OR_NEWER
+			var mapping = GetShortcutBinding(index, primary).Value;
+
+			var modifiers = EventModifiers.None;
+
+			if (mapping.action)
+			{
+				modifiers |= Application.platform == RuntimePlatform.OSXEditor ? EventModifiers.Command : EventModifiers.Control;
+			}
+
+			if (mapping.shift)
+			{
+				modifiers |= EventModifiers.Shift;
+			}
+
+			if (mapping.alt)
+			{
+				modifiers |= EventModifiers.Alt;
+			}
+
+			return modifiers;
+#else
+			if (primary)
+			{
+				return EventModifiers.Alt;
+			}
+			else
+			{
+				return EventModifiers.Alt | EventModifiers.Shift;
+			}
+#endif
+		}
+
 		public void DrawInSceneView()
 		{
 			GUILayout.BeginArea(guiPosition);
@@ -385,7 +471,7 @@ namespace Ludiq.Peek
 
 			var delayedTooltips = ListPool<DelayedTooltip>.New();
 
-			int shortcutIndex = 1;
+			var shortcutIndex = 1;
 
 			for (var i = 0; i < toolbar.Count; i++)
 			{
@@ -402,17 +488,13 @@ namespace Ludiq.Peek
 				var hasSecondaryShortcuts = ShortcutsIntegration.secondaryToolbar == this;
 				var hasShortcuts = hasPrimaryShortcuts || hasSecondaryShortcuts;
 
-				if (hasShortcuts && tool.isShortcuttable && shortcutIndex <= 10)
+				if (hasShortcuts && tool.isShortcuttable)
 				{
-					toolControl.shortcutIndex = shortcutIndex % 10;
-
-					if (hasPrimaryShortcuts)
+					if (HasShortcut(shortcutIndex, hasPrimaryShortcuts))
 					{
-						toolControl.shortcutModifiers = EventModifiers.Alt;
-					}
-					else if (hasSecondaryShortcuts)
-					{
-						toolControl.shortcutModifiers = EventModifiers.Alt | EventModifiers.Shift;
+						toolControl.shortcutIndex = shortcutIndex % 10;
+						toolControl.shortcutLabel = GetShortcutLabel(shortcutIndex, hasPrimaryShortcuts);
+						toolControl.shortcutModifiers = GetShortcutModifiers(shortcutIndex, hasPrimaryShortcuts);
 					}
 
 					shortcutIndex++;
@@ -421,8 +503,9 @@ namespace Ludiq.Peek
 				{
 					toolControl.shortcutIndex = null;
 					toolControl.shortcutModifiers = EventModifiers.None;
+					toolControl.shortcutLabel = null;
 				}
-				
+
 				var isFirst = i == 0;
 				var isLast = i == toolbar.Count - 1;
 

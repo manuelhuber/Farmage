@@ -28,7 +28,10 @@ namespace Ludiq.PeekCore
 
 			EditorApplication.update += FreeIfNeeded;
 
-			EditorApplicationUtility.onEnterEditMode += FreeAll; // Assemblies don't get reloaded
+			if (cache)
+			{
+				EditorApplicationUtility.onEnterEditMode += FreeAll; // Assemblies don't get reloaded
+			}
 		}
 
 		protected virtual IEqualityComparer<TDecorated> decoratedComparer => null;
@@ -95,7 +98,9 @@ namespace Ludiq.PeekCore
 		
 		protected virtual Type GetDecoratedType(TDecorated decorated)
 		{
-			if (decorated is Type type)
+			var type = decorated as Type;
+
+			if (type != null)
 			{
 				return type;
 			}

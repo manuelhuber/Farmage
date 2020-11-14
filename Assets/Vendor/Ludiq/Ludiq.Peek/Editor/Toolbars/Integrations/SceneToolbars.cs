@@ -98,16 +98,14 @@ namespace Ludiq.Peek
 				dragToolbarLocked = false;
 			}
 		}
-
+		
 		internal static void OnSceneGUI(SceneView sceneView)
 		{
-			if (e.type == EventType.KeyDown && 
-			    e.modifiers == EventModifiers.None && 
-			    e.keyCode == KeyCode.B)
+			if (PeekPlugin.Configuration.toggleToolbarShortcut.Check())
 			{
 				PeekPlugin.Configuration.displaySceneToolbars = !PeekPlugin.Configuration.displaySceneToolbars;
 				PeekPlugin.Configuration.Save();
-				e.Use();
+				e.TryUse();
 			}
 
 			if (!PeekPlugin.Configuration.enableSceneToolbars.Display(sceneView.maximized) ||
@@ -137,10 +135,7 @@ namespace Ludiq.Peek
 					RefreshDragToolbar(sceneView);
 				}
 
-				if (PeekPlugin.Configuration.enableHierarchySpaceShortcut &&
-				    e.type == EventType.KeyDown && 
-				    e.modifiers == EventModifiers.None && 
-				    e.keyCode == KeyCode.Space)
+				if (PeekPlugin.Configuration.selectionHierarchyShortcut.Check(e))
 				{
 					if (OpenHierarchyTool())
 					{

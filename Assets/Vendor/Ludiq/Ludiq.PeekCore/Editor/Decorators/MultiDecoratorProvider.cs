@@ -40,7 +40,9 @@ namespace Ludiq.PeekCore
 
 		protected virtual Type GetDecoratedType(TDecorated decorated)
 		{
-			if (decorated is Type type)
+			var type = decorated as Type;
+
+			if (type != null)
 			{
 				return type;
 			}

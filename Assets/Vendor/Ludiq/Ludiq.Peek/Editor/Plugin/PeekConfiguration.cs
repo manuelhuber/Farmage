@@ -113,6 +113,10 @@ namespace Ludiq.Peek
 		public List<string> openTabs { get; set; } = new List<string>();
 
 		[EditorPref]
+		[InspectorLabel("Persistent Pins (Experimental)")]
+		public bool persistentPinnedEditors { get; set; } = false;
+		
+		[EditorPref]
 		[InspectorLabel("Inspector Popup Width")]
 		public int editorPopupWidth { get; set; } = 330;
 
@@ -145,33 +149,29 @@ namespace Ludiq.Peek
 		public SceneViewDisplay enableCreator { get; set; } = SceneViewDisplay.Always;
 
 		/// <summary>
-		/// Whether double-clicking the scene view should maximize / minimize it.
+		/// Where the creator should place new objects in the hierarchy.
+		/// Root: At the root.
+		/// Sibling: After the object under the cursor, if any.
+		/// Sibling Outside Prefabs: Like siblings, but never within a prefab instance.
 		/// </summary>
 		[EditorPref]
-		[InspectorLabel("Quick Scene Maximize")]
-		public bool enableQuickSceneMaximize { get; set; } = true;
-		
+		[InspectorLabel("Creator Parenting")]
+		public CreatorParenting creatorParenting { get; set; } = CreatorParenting.SiblingOutsidePrefabs;
+
+		/// <summary>
+		/// Whether the replacer should preserve the scale.
+		/// </summary>
+		[EditorPref]
+		[InspectorLabel("Preserve Scale on Replace")]
+		public bool preserveScaleOnReplace { get; set; } = false;
+
 		/// <summary>
 		/// Whether pressing Escape should clear the selection. 
 		/// </summary>
 		[EditorPref]
 		[InspectorLabel("Quick Deselect")]
 		public bool enableQuickDeselect { get; set; } = true;
-
-		/// <summary>
-		/// Whether pressing space in the scene view should bring up the hierarchy popup.
-		/// </summary>
-		[EditorPref]
-		[InspectorLabel("Hierarchy Space Shortcut")]
-		public bool enableHierarchySpaceShortcut { get; set; } = true;
-
-		/// <summary>
-		/// Whether pressing Ctrl+F (Cmd+F on Mac) in the scene view should use the hierarchy popup instead of the default search. 
-		/// </summary>
-		[EditorPref]
-		[InspectorLabel("Hierarchy Find Shortcut")]
-		public bool enableHierarchyFindShortcut { get; set; } = true;
-
+		
 		/// <summary>
 		/// Whether strips should be shown in the hierarchy window.
 		/// </summary>
@@ -282,6 +282,35 @@ namespace Ludiq.Peek
 			UnityEditorDynamic.UnityEditorAssembly.GetType("UnityEditor.InspectorWindow"),
 			UnityEditorDynamic.UnityEditorAssembly.GetType("UnityEditor.SceneView"),
 		};
+
+		#endregion
+
+
+		#region Shortcuts
+
+		[EditorPref]
+		[InspectorLabel("Toggle Toolbar Shortcut")]
+		public KeyboardShortcut toggleToolbarShortcut { get; set; } = new KeyboardShortcut(KeyCode.B, ShortcutModifiers.None);
+
+		[EditorPref]
+		[InspectorLabel("Creator Shortcut")]
+		public PolyShortcut creatorShortcut { get; set; } = new PolyShortcut(MouseShortcutButton.Left, ShortcutModifiers.Action | ShortcutModifiers.Shift);
+
+		[EditorPref]
+		[InspectorLabel("Probe Shortcut")]
+		public PolyShortcut probeShortcut { get; set; } = new PolyShortcut(MouseShortcutButton.Right, ShortcutModifiers.None);
+
+		[EditorPref]
+		[InspectorLabel("Maximize Shortcut")]
+		public PolyShortcut maximizeShortcut { get; set; } = new PolyShortcut(MouseShortcutButton.Left, ShortcutModifiers.None, MouseShortcutAction.DoubleClick);
+
+		[EditorPref]
+		[InspectorLabel("Scene Hierarchy Shortcut")]
+		public KeyboardShortcut sceneHierarchyShortcut { get; set; } = new KeyboardShortcut(KeyCode.F, ShortcutModifiers.Action);
+
+		[EditorPref]
+		[InspectorLabel("Selection Hierarchy Shortcut")]
+		public KeyboardShortcut selectionHierarchyShortcut { get; set; } = new KeyboardShortcut(KeyCode.Space, ShortcutModifiers.None);
 
 		#endregion
 	}

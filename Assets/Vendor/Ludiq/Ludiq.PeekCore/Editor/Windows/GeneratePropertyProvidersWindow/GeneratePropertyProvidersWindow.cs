@@ -18,7 +18,7 @@ namespace Ludiq.PeekCore
 		
 		public static GeneratePropertyProvidersWindow instance { get; private set; }
 
-		[MenuItem("Tools/Peek/Ludiq/Generate Custom Inspectors...", priority = LudiqProduct.ToolsMenuPriority + 302)]
+		// [MenuItem("Tools/Peek/Ludiq/Generate Custom Inspectors...", priority = LudiqProduct.ToolsMenuPriority + 302)]
 		public new static void Show()
 		{
 			if (instance != null)

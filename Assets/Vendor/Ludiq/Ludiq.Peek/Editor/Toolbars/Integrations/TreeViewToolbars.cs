@@ -19,9 +19,26 @@ namespace Ludiq.Peek
 
 			try
 			{
+				// TODO: We can hook into AssetsTreeViewGUI.postAssetIconDrawCallback
+				// to draw under the VCS integration icons
+
+				var leftPadding = 0;
+
+				if (toolbarControlProvider.window == ToolbarWindow.Project)
+				{
+					if (UnityEditor.VersionControl.Provider.enabled)
+					{
+						leftPadding = 9;
+					}
+					else
+					{
+						leftPadding = 2;
+					}
+				}
+
 				var iconPosition = new Rect
 				(
-					contentPosition.x,
+					contentPosition.x + leftPadding,
 					contentPosition.y,
 					IconSize.Small,
 					IconSize.Small

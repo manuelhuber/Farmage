@@ -4,14 +4,11 @@ using Ludiq.PeekCore.ReflectionMagic;
 using UnityEditor;
 using UnityObject = UnityEngine.Object;
 
-namespace Ludiq.Peek
+namespace Ludiq.PeekCore
 {
-	// ReSharper disable once RedundantUsingDirective
-	using PeekCore;
-
 	public static class AssetDatabaseUtility
 	{
-		public static IEnumerable<AssetDatabaseEntry> FindAssets(string query)
+		public static IEnumerable<HierarchyPropertyCache> FindAssets(string query)
 		{
 			// AssetDatabase.FindAssets returns GUIDs, which is not specific enough to identify sub-assets.
 			// Internally, it uses another method that returns a IEnumerable<HierarchyProperty>, then selects the GUID from that.
@@ -24,15 +21,7 @@ namespace Ludiq.Peek
 
 			foreach (var hierarchyProperty in hierarchyProperties)
 			{
-				yield return new AssetDatabaseEntry
-				{
-					instanceID = hierarchyProperty.instanceID,
-					guid = hierarchyProperty.guid,
-					name = hierarchyProperty.name,
-					path = AssetDatabase.GUIDToAssetPath(hierarchyProperty.guid),
-					isMainAsset = hierarchyProperty.isMainRepresentation,
-					isFolder = hierarchyProperty.isFolder
-				};
+				yield return new HierarchyPropertyCache((HierarchyProperty)hierarchyProperty);
 			}
 		}
 	}

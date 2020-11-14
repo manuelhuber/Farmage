@@ -7,6 +7,28 @@ namespace Ludiq.Peek
 {
 	public static class PreviewUtility
 	{
+		public static Texture2D GetPreview(int instanceID)
+		{
+			return UnityEditorDynamic.AssetPreview.GetAssetPreview(instanceID);
+		}
+
+		public static bool TryGetPreview(HierarchyPropertyCache hierarchyProperty, out Texture2D preview)
+		{
+			preview = null;
+
+			if (!hierarchyProperty.hasFullPreviewImage)
+			{
+				return false;
+			}
+
+			return GetPreview(hierarchyProperty.instanceID);
+		}
+
+		public static bool HasPreview(HierarchyPropertyCache target)
+		{
+			return TryGetPreview(target, out var preview);
+		}
+
 		public static bool HasPreview(UnityObject target)
 		{
 			return TryGetPreview(target, out var preview);

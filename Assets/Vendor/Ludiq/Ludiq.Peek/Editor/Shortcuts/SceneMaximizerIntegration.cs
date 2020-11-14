@@ -17,11 +17,6 @@ namespace Ludiq.Peek
 
 		internal static void OnSceneGUI(SceneView sceneView)
 		{
-			if (!PeekPlugin.Configuration.enableQuickSceneMaximize)
-			{
-				return;
-			}
-
 			if (SceneViewIntegration.used)
 			{
 				return;
@@ -31,10 +26,7 @@ namespace Ludiq.Peek
 
 			Handles.BeginGUI();
 
-			if (!SceneViewIntegration.used &&
-			    e.type == EventType.MouseDown &&
-			    e.clickCount == 2 &&
-			    e.button == (int)MouseButton.Left &&
+			if (PeekPlugin.Configuration.maximizeShortcut.Check(e) &&
 			    position.Contains(e.mousePosition))
 			{
 				GUIUtility.hotControl = 0;

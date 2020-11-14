@@ -139,7 +139,7 @@ namespace Ludiq.Peek
 
 					foreach (var meshFilter in _meshFilters)
 					{
-						var mesh = Application.isPlaying ? meshFilter.mesh : meshFilter.sharedMesh;
+						var mesh = meshFilter.sharedMesh;
 
 						if (mesh == null)
 						{
@@ -275,7 +275,7 @@ namespace Ludiq.Peek
 
 					foreach (var meshFilter in _meshFilters)
 					{
-						var mesh = (Application.isPlaying ? meshFilter.mesh : meshFilter.sharedMesh);
+						var mesh = meshFilter.sharedMesh;
 
 						if (mesh == null)
 						{

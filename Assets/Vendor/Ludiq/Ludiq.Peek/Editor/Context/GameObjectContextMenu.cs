@@ -122,11 +122,6 @@ namespace Ludiq.Peek
 
 			var hierarchyLabel = "Hierarchy...";
 
-			if (Application.platform == RuntimePlatform.WindowsEditor && PeekPlugin.Configuration.enableHierarchySpaceShortcut)
-			{
-				hierarchyLabel += " _Space";
-			}
-
 			menu.AddItem(new GUIContent(hierarchyLabel), false, () => ShowHierarchy(targets, activatorPosition));
 			menu.AddItem(new GUIContent("Replace..."), false, () => Replace(targets, activatorPosition));
 

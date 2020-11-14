@@ -708,69 +708,53 @@ namespace Ludiq.Peek
 				PeekProBuilderIntegration.DrawHighlight(proBuilderHighlight);
 #endif
 
-				if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Alpha0)
-				{
-					Selection.activeGameObject = sceneView.camera.gameObject;
-				}
+				var shortcut = PeekPlugin.Configuration.probeShortcut;
 
-				if (e.IsContextMouseButton() && !e.alt && !e.CtrlOrCmd() && !SceneViewIntegration.used)
+				// Make sure not to conflict with right-click pan
+				shortcut.mouseShortcut.checkRelease = true;
+				shortcut.mouseShortcut.requireStaticRelease = true;
+
+				if (shortcut.Check(e) && !SceneViewIntegration.used)
 				{
-					if (e.type == EventType.MouseDown)
+					var hits = ListPool<ProbeHit>.New();
+
+					try
 					{
-						pressPosition = e.mousePosition;
-					}
-					else if (e.type == EventType.MouseUp)
-					{
-						if (pressPosition.HasValue)
+						PickAllNonAlloc(hits, ProbeFilter.@default, sceneView, e.mousePosition, PeekPlugin.Configuration.probeLimit);
+
+						if (hits.Count > 0)
 						{
-							var pressDistance = Vector2.Distance(e.mousePosition, pressPosition.Value);
+							var add = e.shift;
+							
+							var activatorPosition = new Rect(e.mousePosition, Vector2.zero);
+							activatorPosition.width = 220;
+							activatorPosition = LudiqGUIUtility.GUIToScreenRect(activatorPosition);
 
-							if (pressDistance <= 1)
-							{
-								var hits = ListPool<ProbeHit>.New();
+							// Note: Had to make FuzzyWindow use OnMouseUp for select here instead
+							// of OnMouseDown because otherwise escaping the default RectSelection
+							// behaviour with the event order and DefaultControl ID's was... hell.
 
-								try
+							LudiqGUI.FuzzyDropdown
+							(
+								activatorPosition,
+								new ProbeOptionTree(hits),
+								null,
+								(_hit) =>
 								{
-									PickAllNonAlloc(hits, ProbeFilter.@default, sceneView, e.mousePosition, PeekPlugin.Configuration.probeLimit);
-
-									if (hits.Count > 0)
-									{
-										var add = e.shift;
-										
-										var activatorPosition = new Rect(e.mousePosition, Vector2.zero);
-										activatorPosition.width = 220;
-										activatorPosition = LudiqGUIUtility.GUIToScreenRect(activatorPosition);
-
-										// Note: Had to make FuzzyWindow use OnMouseUp for select here instead
-										// of OnMouseDown because otherwise escaping the default RectSelection
-										// behaviour with the event order and DefaultControl ID's was... hell.
-
-										LudiqGUI.FuzzyDropdown
-										(
-											activatorPosition,
-											new ProbeOptionTree(hits),
-											null,
-											(_hit) =>
-											{
-												add |= e?.shift ?? false;
-												var hit = (ProbeHit)_hit;
-												hit.Select(add);
-											}
-										);
-
-										FuzzyWindow.instance.Focus();
-										GUIUtility.hotControl = 0; // Escape the default RectSelection control
-										e.Use();
-									}
+									add |= e?.shift ?? false;
+									var hit = (ProbeHit)_hit;
+									hit.Select(add);
 								}
-								finally
-								{
-									hits.Free();
-								}
-							}
+							);
 
-							pressPosition = null;
+							FuzzyWindow.instance.Focus();
+							GUIUtility.hotControl = 0; // Escape the default RectSelection control
+							e.Use();
 						}
+					}
+					finally
+					{
+						hits.Free();
 					}
 				}
 			}

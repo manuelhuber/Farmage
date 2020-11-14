@@ -18,6 +18,6 @@ namespace Ludiq.Peek
 
 		public override string description => "Workflow Tools for Unity.";
 
-		public override SemanticVersion version => "1.1.8";
+		public override SemanticVersion version => "1.3.1";
 	}
 }
