@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2300175361875700626}
   - component: {fileID: 2105963005436823643}
   m_Layer: 9
-  m_Name: Slider
+  m_Name: HPSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 2992498948261627668}
   m_HandleRect: {fileID: 0}
