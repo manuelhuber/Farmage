@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Features.Delivery;
 using Features.Resources;
 using Features.Save;
 using Grimity.Collections;
@@ -9,20 +8,19 @@ using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Building.Structures.Warehouse {
-public class Storage : MonoBehaviour, IDeliveryAcceptor, IDeliveryDispenser,
-    ISavableComponent<StorageData> {
+public class BasicStorage : Storage.Storage, ISavableComponent<StorageData>  {
     [SerializeField] private Resource[] resources;
     public int capacity;
 
-    private int TotalResourceCount => _storage.Select(pair => pair.Value.Total()).Sum();
-    public bool IsFull => TotalResourceCount == capacity;
+    public override int TotalResourceCount => _storage.Select(pair => pair.Value.Total()).Sum();
+    public override bool IsFull => TotalResourceCount == capacity;
 
     private readonly Dictionary<Resource, StoredResource>
         _storage = new Dictionary<Resource, StoredResource>();
 
     private readonly List<ResourceObject> _waitingForPickup = new List<ResourceObject>();
 
-    public bool AcceptDelivery(GameObject goods) {
+    public override bool AcceptDelivery(GameObject goods) {
         var item = goods.GetComponent<ResourceObject>();
         if (!CanAccept(item)) return false;
         var storedResource = _storage.GetOrDefault(item.resource, new StoredResource());
@@ -32,7 +30,7 @@ public class Storage : MonoBehaviour, IDeliveryAcceptor, IDeliveryDispenser,
         return true;
     }
 
-    public bool DispenseDelivery(GameObject goods) {
+    public override bool DispenseDelivery(GameObject goods) {
         var resourceObject = goods.GetComponent<ResourceObject>();
         if (!_waitingForPickup.Contains(resourceObject)) {
             return false;
@@ -43,7 +41,7 @@ public class Storage : MonoBehaviour, IDeliveryAcceptor, IDeliveryDispenser,
         return true;
     }
 
-    public Optional<ResourceObject> ReserveItem(Resource resource, int count) {
+    public override Optional<ResourceObject> ReserveItem(Resource resource, int count) {
         if (!_storage.TryGetValue(resource, out var storedResource) || storedResource.available < count) {
             return Optional<ResourceObject>.NoValue();
         }
@@ -60,13 +58,13 @@ public class Storage : MonoBehaviour, IDeliveryAcceptor, IDeliveryDispenser,
         return resourceObject.AsOptional();
     }
 
-    public bool CanAccept(ResourceObject item) {
+    public override bool CanAccept(ResourceObject item) {
         var hasCapacity = item.count + TotalResourceCount <= capacity;
         var storesThisResource = StoresResource(item.resource);
         return hasCapacity && storesThisResource;
     }
 
-    public bool StoresResource(Resource resource) {
+    public override bool StoresResource(Resource resource) {
         return resources.Contains(resource);
     }
 

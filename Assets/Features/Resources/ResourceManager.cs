@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Features.Building.Structures.Warehouse;
+using Features.Building.Storage;
 using Features.Common;
 using Features.Delivery;
 using Features.Save;
