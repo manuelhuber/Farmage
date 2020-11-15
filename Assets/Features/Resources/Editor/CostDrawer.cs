@@ -3,7 +3,7 @@ using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 
-namespace Features.Resources {
+namespace Features.Resources.Editor {
 // ReSharper disable once UnusedType.Global
 public class CostDrawer : OdinValueDrawer<Cost> {
     protected override void DrawPropertyLayout(GUIContent label) {
