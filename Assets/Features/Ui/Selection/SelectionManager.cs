@@ -5,7 +5,7 @@ using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Ui.Selection {
-public class SelectionManager : Manager<SelectionManager>, IOnKeyDown, IOnKeyUp {
+public class SelectionManager : Manager<SelectionManager>, IKeyDownReceiver, IKeyUpReceiver {
     public Observable<List<Selectable>> Selection { get; } =
         new Observable<List<Selectable>>(new List<Selectable>());
 
@@ -16,8 +16,6 @@ public class SelectionManager : Manager<SelectionManager>, IOnKeyDown, IOnKeyUp 
     }
 
     #region InputReceiver
-
-    public event YieldControlHandler YieldControl;
 
     public void OnKeyDown(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         if (keys.Contains(KeyCode.Mouse0)) {

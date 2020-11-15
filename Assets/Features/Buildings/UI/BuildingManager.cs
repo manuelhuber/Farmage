@@ -13,7 +13,7 @@ using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Buildings.UI {
-public class BuildingManager : Manager<BuildingManager>, IOnKeyUp {
+public class BuildingManager : Manager<BuildingManager>, IKeyUpReceiver, IInputYielder {
     public static readonly int GridSize = 4;
 
     [SerializeField] private PlacementSettings placementSettings;
@@ -162,6 +162,8 @@ public class BuildingManager : Manager<BuildingManager>, IOnKeyUp {
                 UpdateBuildingOptions();
             });
         }
+
+        _existingBuildings.Set(_existingBuildings.Value.Append(building).ToArray());
     }
 }
 }

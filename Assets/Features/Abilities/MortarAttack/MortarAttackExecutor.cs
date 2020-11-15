@@ -7,7 +7,9 @@ using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
 namespace Features.Abilities.MortarAttack {
 [RequireComponent(typeof(ITeam))]
-public class MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IOnKeyDown, IOnKeyUp {
+public class
+    MortarAttackExecutor : AbilityExecutor<MortarAttackAbility>, IKeyDownReceiver, IKeyUpReceiver,
+        IInputYielder {
     private string SplatName => ability.name + " Mortar Attack Splat";
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
     private int _alreadyFired;

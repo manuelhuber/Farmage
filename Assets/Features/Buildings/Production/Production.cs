@@ -8,7 +8,7 @@ using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Buildings.Production {
-public class Production : MonoBehaviour, IHasActions, IOnKeyDown, IOnKeyUp {
+public class Production : MonoBehaviour, IHasActions, IKeyDownReceiver, IKeyUpReceiver, IInputYielder {
     public int queueSize;
     public UnitProductionEntry[] entries;
     public Transform spawnPoint;

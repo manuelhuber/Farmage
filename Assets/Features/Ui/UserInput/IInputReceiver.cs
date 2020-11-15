@@ -2,24 +2,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Features.Ui.UserInput {
-public interface IOnReceiveControl : IInputReceiver {
+public interface IControlReceiver : IInputReceiver {
     void OnReceiveControl();
 }
 
-public interface IOnKeyDown : IInputReceiver {
+public interface IKeyDownReceiver : IInputReceiver {
     void OnKeyDown(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation);
 }
 
-public interface IOnKeyPressed : IInputReceiver {
+public interface IKeyPressedReceiver : IInputReceiver {
     void OnKeyPressed(HashSet<KeyCode> keys, MouseLocation mouseLocation);
 }
 
-public interface IOnKeyUp : IInputReceiver {
+public interface IKeyUpReceiver : IInputReceiver {
     void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation);
 }
 
-public interface IInputReceiver {
+public interface IInputYielder : IInputReceiver {
     event YieldControlHandler YieldControl;
+}
+
+public interface IInputReceiver {
 }
 
 public delegate void YieldControlHandler(IInputReceiver sender, YieldControlEventArgs args);

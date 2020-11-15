@@ -58,15 +58,15 @@ public class InputManager : Manager<InputManager> {
 
     private void SendCurrentInputToReceiver(IInputReceiver receiver) {
         if (_downKeys.Count > 0) {
-            (receiver as IOnKeyDown)?.OnKeyDown(_downKeys, _pressedKeys, _mouseLocation);
+            (receiver as IKeyDownReceiver)?.OnKeyDown(_downKeys, _pressedKeys, _mouseLocation);
         }
 
         if (_pressedKeys.Count > 0 || Input.mouseScrollDelta.y != 0) {
-            (receiver as IOnKeyPressed)?.OnKeyPressed(_pressedKeys, _mouseLocation);
+            (receiver as IKeyPressedReceiver)?.OnKeyPressed(_pressedKeys, _mouseLocation);
         }
 
         if (_upKeys.Count > 0) {
-            (receiver as IOnKeyUp)?.OnKeyUp(_upKeys, _pressedKeys, _mouseLocation);
+            (receiver as IKeyUpReceiver)?.OnKeyUp(_upKeys, _pressedKeys, _mouseLocation);
         }
     }
 
@@ -75,20 +75,26 @@ public class InputManager : Manager<InputManager> {
     }
 
     public void RequestControl(IInputReceiver newReceiver) {
-        _activeReceiver.YieldControl -= GiveControlToDefaultReceiver;
-        _activeReceiver.YieldControl -= GiveControlToPreviousReceiver;
-        _activeReceiver = newReceiver;
-        _activeReceiver.YieldControl += GiveControlToDefaultReceiver;
-        (_activeReceiver as IOnReceiveControl)?.OnReceiveControl();
+        GiveControl(newReceiver, GiveControlToDefaultReceiver);
     }
 
     public void RequestControlWithMemory(IInputReceiver newReceiver) {
         _memory.Push(_activeReceiver);
-        _activeReceiver.YieldControl -= GiveControlToDefaultReceiver;
-        _activeReceiver.YieldControl -= GiveControlToPreviousReceiver;
+        GiveControl(newReceiver, GiveControlToPreviousReceiver);
+    }
+
+    private void GiveControl(IInputReceiver newReceiver, YieldControlHandler newReceiverOnYield) {
+        if (_activeReceiver is IInputYielder previousYielder) {
+            previousYielder.YieldControl -= GiveControlToDefaultReceiver;
+            previousYielder.YieldControl -= GiveControlToPreviousReceiver;
+        }
 
         _activeReceiver = newReceiver;
-        _activeReceiver.YieldControl += GiveControlToPreviousReceiver;
+        if (newReceiver is IInputYielder newYielder) {
+            newYielder.YieldControl += newReceiverOnYield;
+        }
+
+        (newReceiver as IControlReceiver)?.OnReceiveControl();
     }
 
     private void GiveControlToPreviousReceiver(IInputReceiver inputReceiver, YieldControlEventArgs args) {

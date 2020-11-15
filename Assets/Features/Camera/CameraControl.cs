@@ -4,7 +4,7 @@ using Features.Ui.UserInput;
 using UnityEngine;
 
 namespace Features.Camera {
-public class CameraControl : MonoBehaviour, IOnKeyPressed {
+public class CameraControl : MonoBehaviour, IKeyPressedReceiver {
     private Transform _camera;
     private Control _control;
     private Hotkeys _hotkeys;
@@ -17,8 +17,6 @@ public class CameraControl : MonoBehaviour, IOnKeyPressed {
     }
 
     #region InputReceiver
-
-    public event YieldControlHandler YieldControl;
 
     public void OnKeyPressed(HashSet<KeyCode> keys, MouseLocation mouseLocation) {
         var movement = new Vector3();

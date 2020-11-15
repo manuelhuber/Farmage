@@ -7,7 +7,7 @@ using UnityEngine;
 using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
 namespace Features.Abilities.AreaDamage {
-public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IOnKeyUp {
+public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IKeyUpReceiver, IInputYielder {
     private string SplatName => $"{ability.name} - area damage splat";
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
     private Cone _coneSplat;

@@ -5,7 +5,7 @@ using MonKey.Extensions;
 using UnityEngine;
 
 namespace Features.Ui.Actions {
-public class ActionsGui : MonoBehaviour, IOnKeyUp {
+public class ActionsGui : MonoBehaviour, IKeyUpReceiver {
     public ActionEntry iconPrefab;
 
     [SerializeField] private GameObject root;
@@ -35,8 +35,6 @@ public class ActionsGui : MonoBehaviour, IOnKeyUp {
     }
 
     #region InputReceiver
-
-    public event YieldControlHandler YieldControl;
 
     public void OnKeyUp(HashSet<KeyCode> keys, HashSet<KeyCode> pressedKeys, MouseLocation mouseLocation) {
         for (var i = 0; i < Math.Min(_actions.Count, _hotkeys.Length); i++) {

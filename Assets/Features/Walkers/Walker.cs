@@ -9,7 +9,8 @@ using UnityEngine;
 namespace Features.Walkers {
 [RequireComponent(typeof(AdvancedMovementController))]
 [RequireComponent(typeof(ITeam))]
-public class Walker : MonoBehaviour, IOnKeyDown, IOnKeyUp, IOnReceiveControl, IHasActions {
+public class Walker : MonoBehaviour, IKeyDownReceiver, IKeyUpReceiver, IControlReceiver, IInputYielder,
+    IHasActions {
     public Sprite attackMoveIcon;
     public Sprite stopIcon;
 
