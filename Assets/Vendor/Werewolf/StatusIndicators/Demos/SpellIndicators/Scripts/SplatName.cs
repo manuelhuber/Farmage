@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Werewolf.StatusIndicators.Demo {
+namespace Vendor.Werewolf.StatusIndicators.Demos.SpellIndicators.Scripts {
 public class SplatName : MonoBehaviour {
     private void OnEnable() {
         GetComponent<Text>().text = "";

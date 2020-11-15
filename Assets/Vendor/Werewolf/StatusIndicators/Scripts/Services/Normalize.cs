@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Werewolf.StatusIndicators.Services {
+namespace Vendor.Werewolf.StatusIndicators.Scripts.Services {
 public class Normalize {
     public float Factor;
     public float Max;

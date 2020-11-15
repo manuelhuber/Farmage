@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+using Vendor.Werewolf.StatusIndicators.Scripts.Base;
+using Vendor.Werewolf.StatusIndicators.Scripts.Options;
 
-namespace Werewolf.StatusIndicators.Components {
+namespace Vendor.Werewolf.StatusIndicators.Scripts.Components {
 public class LineMissile : SpellIndicator {
     public GameObject ArrowHead;
     public float MinimumRange;

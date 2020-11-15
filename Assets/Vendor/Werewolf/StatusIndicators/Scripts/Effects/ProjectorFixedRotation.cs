@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Werewolf.StatusIndicators.Effects {
+namespace Vendor.Werewolf.StatusIndicators.Scripts.Effects {
 public class ProjectorFixedRotation : MonoBehaviour {
     public float Angle;
 

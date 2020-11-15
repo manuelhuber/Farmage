@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using Werewolf.StatusIndicators.Components;
+using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
-namespace Werewolf.StatusIndicators.Demo {
+namespace Vendor.Werewolf.StatusIndicators.Demos.Scripts {
 public class DemoConeExpand : MonoBehaviour {
     private Cone spellIndicator;
 

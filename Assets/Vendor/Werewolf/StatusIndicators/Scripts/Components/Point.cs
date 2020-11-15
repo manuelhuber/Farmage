@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+using Vendor.Werewolf.StatusIndicators.Scripts.Base;
+using Vendor.Werewolf.StatusIndicators.Scripts.Options;
 
-namespace Werewolf.StatusIndicators.Components {
+namespace Vendor.Werewolf.StatusIndicators.Scripts.Components {
 public class Point : SpellIndicator {
     /// <summary>
     ///     Determine if you want the Splat to be restricted to the Range Indicator bounds. Applies to "Point" Splats

@@ -4,7 +4,7 @@ using Features.Health;
 using Features.Ui.UserInput;
 using Grimity.Math;
 using UnityEngine;
-using Werewolf.StatusIndicators.Components;
+using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
 namespace Features.Abilities.AreaDamage {
 public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IOnKeyUp {

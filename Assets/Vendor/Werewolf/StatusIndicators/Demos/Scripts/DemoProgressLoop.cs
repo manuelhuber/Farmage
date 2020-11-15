@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using Werewolf.StatusIndicators.Components;
+using Vendor.Werewolf.StatusIndicators.Scripts.Base;
 
-namespace Werewolf.StatusIndicators.Demo {
+namespace Vendor.Werewolf.StatusIndicators.Demos.Scripts {
 public class DemoProgressLoop : MonoBehaviour {
     private Splat splat;
 

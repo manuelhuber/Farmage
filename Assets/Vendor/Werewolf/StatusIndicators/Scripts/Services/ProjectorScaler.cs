@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using Vendor.Werewolf.StatusIndicators.Scripts.Options;
 
-namespace Werewolf.StatusIndicators.Services {
+namespace Vendor.Werewolf.StatusIndicators.Scripts.Services {
 public class ProjectorScaler {
     public static void Resize(Projector projector, float scale) {
         if (projector != null) {

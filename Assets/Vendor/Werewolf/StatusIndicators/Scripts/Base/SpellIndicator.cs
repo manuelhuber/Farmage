@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
-namespace Werewolf.StatusIndicators.Components {
+namespace Vendor.Werewolf.StatusIndicators.Scripts.Base {
 public abstract class SpellIndicator : Splat {
     // Fields
 

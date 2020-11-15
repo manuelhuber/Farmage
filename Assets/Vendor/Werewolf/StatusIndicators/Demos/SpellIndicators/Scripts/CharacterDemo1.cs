@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Werewolf.StatusIndicators.Components;
+using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
-namespace Werewolf.StatusIndicators.Demo {
+namespace Vendor.Werewolf.StatusIndicators.Demos.SpellIndicators.Scripts {
 public class CharacterDemo1 : MonoBehaviour {
     public SplatManager Splats { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
-using Werewolf.StatusIndicators.Components;
+using Vendor.Werewolf.StatusIndicators.Scripts.Base;
+using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
 namespace Werewolf.StatusIndicators.Editors {
 public class SplatEditor<T> : Editor where T : Splat {

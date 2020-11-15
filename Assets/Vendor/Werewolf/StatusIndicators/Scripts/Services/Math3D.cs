@@ -2,7 +2,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Werewolf.StatusIndicators.Services {
+namespace Vendor.Werewolf.StatusIndicators.Scripts.Services {
 public class Math3D {
     private static Transform tempChild;
     private static Transform tempParent;

@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Werewolf.StatusIndicators.Services;
+using Vendor.Werewolf.StatusIndicators.Scripts.Base;
+using Vendor.Werewolf.StatusIndicators.Scripts.Options;
+using Vendor.Werewolf.StatusIndicators.Scripts.Services;
 
-namespace Werewolf.StatusIndicators.Components {
+namespace Vendor.Werewolf.StatusIndicators.Scripts.Components {
 public class Cone : SpellIndicator {
     // Constants
 

@@ -1,5 +1,5 @@
 using UnityEngine;
-using Werewolf.StatusIndicators.Components;
+using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
 namespace Features.Abilities.MortarAttack {
 [CreateAssetMenu(menuName = "abilities/mortar attack")]

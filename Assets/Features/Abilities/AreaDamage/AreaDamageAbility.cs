@@ -1,5 +1,5 @@
 using UnityEngine;
-using Werewolf.StatusIndicators.Components;
+using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
 namespace Features.Abilities.AreaDamage {
 [CreateAssetMenu(menuName = "abilities/area damage")]

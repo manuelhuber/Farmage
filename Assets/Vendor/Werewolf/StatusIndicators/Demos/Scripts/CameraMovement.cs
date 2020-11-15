@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Werewolf.StatusIndicators.Demo {
+namespace Vendor.Werewolf.StatusIndicators.Demos.Scripts {
 public class CameraMovement : MonoBehaviour {
     public GameObject player;
     public float offsetX = -5;

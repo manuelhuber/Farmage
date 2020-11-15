@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using UnityEngine;
+using Vendor.Werewolf.StatusIndicators.Scripts.Base;
 
-namespace Werewolf.StatusIndicators.Components {
+namespace Vendor.Werewolf.StatusIndicators.Scripts.Components {
 /// <summary>
 ///     Apply this to the GameObject which holds all your Splats. Make sure the origin is correctly centered at
 ///     the base of the Character.

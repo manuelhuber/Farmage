@@ -3,7 +3,7 @@ using System.Linq;
 using Features.Health;
 using Features.Ui.UserInput;
 using UnityEngine;
-using Werewolf.StatusIndicators.Components;
+using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
 namespace Features.Abilities.MortarAttack {
 [RequireComponent(typeof(ITeam))]

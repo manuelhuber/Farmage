@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Features.Building.UI;
+using Features.Buildings.UI;
 using Features.Health;
 using Features.Ui.Actions;
 using Grimity.Data;

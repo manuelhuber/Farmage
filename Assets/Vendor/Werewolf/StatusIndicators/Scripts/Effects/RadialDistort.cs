@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Werewolf.StatusIndicators.Effects {
+namespace Vendor.Werewolf.StatusIndicators.Scripts.Effects {
 public class RadialDistort : MonoBehaviour {
     public float Speed;
     private Material Material;
