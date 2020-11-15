@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Features.Animations;
 using Features.Health;
-using Features.Save;
 using Features.Units.Common;
 using Grimity.Data;
 using UnityEngine;
@@ -10,7 +9,7 @@ using UnityEngine;
 namespace Features.Enemies {
 [RequireComponent(typeof(AdvancedMovementController))]
 [RequireComponent(typeof(Mortal))]
-public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
+public class EnemyScript : MonoBehaviour {
     [SerializeField] public Mortal initialTarget;
 
     public Mortal DefaultTarget {
@@ -62,22 +61,5 @@ public class EnemyScript : MonoBehaviour, ISavableComponent<EnemyData> {
             _movementController.AttackMoveTo(_defaultTarget.Value.transform.position);
         }
     }
-
-    #region Save
-
-    public string SaveKey => "EnemyController";
-
-    public EnemyData Save() {
-        return new EnemyData();
-    }
-
-    public void Load(EnemyData data, IReadOnlyDictionary<string, GameObject> objects) {
-    }
-
-    #endregion
-}
-
-[Serializable]
-public struct EnemyData {
 }
 }

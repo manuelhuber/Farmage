@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Features.Common;
 using Features.Health;
-using Features.Save;
 using Features.Time;
 using Grimity.Actions;
 using UnityEngine;
 
 namespace Features.Building.Structures.Turret {
-public class Turret : MonoBehaviour, ISavableComponent<TurretData> {
+public class Turret : MonoBehaviour {
     public float attackSpeed;
     public int damage;
     public int range;
@@ -84,32 +82,5 @@ public class Turret : MonoBehaviour, ISavableComponent<TurretData> {
         var target = other.gameObject.GetComponent<Mortal>();
         RemoveTarget(target);
     }
-
-    #region Save
-
-    public string SaveKey => "Turret";
-
-    public TurretData Save() {
-        return new TurretData {
-            currentTarget = _currentTarget.getSaveID(),
-            nextAttack = _attack.NextExecution
-        };
-    }
-
-    public void Load(TurretData data, IReadOnlyDictionary<string, GameObject> objects) {
-        _attack.SetNextExecution(data.nextAttack);
-        var target = objects.getBySaveID(data.currentTarget)?.GetComponent<Mortal>();
-        if (target != null) {
-            SetTarget(target);
-        }
-    }
-
-    #endregion
-}
-
-[Serializable]
-public struct TurretData {
-    public string currentTarget;
-    public float nextAttack;
 }
 }

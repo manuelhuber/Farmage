@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using Features.Common;
-using Features.Save;
 using UnityEngine;
 
 namespace Features.Time {
-public class GameTime : Manager<GameTime>, ISavableComponent<float> {
+public class GameTime : Manager<GameTime> {
     [SerializeField] private float _speed = 1;
     public float Time { get; private set; }
 
@@ -24,19 +22,5 @@ public class GameTime : Manager<GameTime>, ISavableComponent<float> {
     public float getTime() {
         return Time;
     }
-
-    #region Save
-
-    public string SaveKey => "GameTime";
-
-    public float Save() {
-        return Time;
-    }
-
-    public void Load(float data, IReadOnlyDictionary<string, GameObject> objects) {
-        Time = data;
-    }
-
-    #endregion
 }
 }

@@ -5,7 +5,6 @@ using System.Linq;
 using Features.Building.Storage;
 using Features.Common;
 using Features.Delivery;
-using Features.Save;
 using Features.Tasks;
 using Grimity.Data;
 using Grimity.ScriptableObject;
@@ -13,7 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Features.Resources {
-public class ResourceManager : Manager<ResourceManager>, ISavableComponent<ResourceManagerData> {
+public class ResourceManager : Manager<ResourceManager> {
     public Cost startingCash;
     public RuntimeGameObjectSet allFarmerBuildings;
     public Grimity.Data.IObservable<Cost> Have => _have;
@@ -94,26 +93,5 @@ public class ResourceManager : Manager<ResourceManager>, ISavableComponent<Resou
         _taskManager.Enqueue(deliveryTask);
         return true;
     }
-
-    #region Save
-
-    public string SaveKey => "resources";
-
-    public ResourceManagerData Save() {
-        return new ResourceManagerData {
-            cost = _have.Value
-        };
-    }
-
-    public void Load(ResourceManagerData rawData, IReadOnlyDictionary<string, GameObject> objects) {
-        _have.Set(rawData.cost);
-    }
-
-    #endregion
-}
-
-[Serializable]
-public struct ResourceManagerData {
-    public Cost cost;
 }
 }

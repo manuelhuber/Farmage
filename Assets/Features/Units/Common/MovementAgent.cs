@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Features.Common;
 using Features.Pathfinding;
-using Features.Save;
 using Features.Time;
 using Grimity.Data;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace Features.Units.Common {
-public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData> {
+public class MovementAgent : MonoBehaviour {
     public float speed = 3f;
     public float stoppingDistance = 1f;
     public float turnSpeed = 10f;
@@ -80,35 +79,5 @@ public class MovementAgent : MonoBehaviour, ISavableComponent<MovementAgentData>
             }
         });
     }
-
-    #region Save
-
-    public string SaveKey => "MovementAgent";
-
-    public MovementAgentData Save() {
-        var hasDestination = _path.Length > 0;
-        return new MovementAgentData {
-            destination = hasDestination ? SerialisableVector3.From(_path[0]) : new SerialisableVector3(),
-            isStopped = IsStopped,
-            hasDestination = hasDestination
-        };
-    }
-
-    public void Load(MovementAgentData data, IReadOnlyDictionary<string, GameObject> objects) {
-        if (data.hasDestination) {
-            SetDestination(data.destination.To(), true);
-        }
-
-        IsStopped = data.isStopped;
-    }
-
-    #endregion
-}
-
-[Serializable]
-public struct MovementAgentData {
-    public SerialisableVector3 destination;
-    public bool isStopped;
-    public bool hasDestination;
 }
 }

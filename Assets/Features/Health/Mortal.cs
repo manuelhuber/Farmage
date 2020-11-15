@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Features.Save;
 using Grimity.Data;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Features.Health {
-public class Mortal : MonoBehaviour, ISavableComponent<MortalData>, ITeam {
+public class Mortal : MonoBehaviour, ITeam {
     public UnityEvent onDeath = new UnityEvent();
     [SerializeField] private Team team;
 
@@ -58,32 +57,5 @@ public class Mortal : MonoBehaviour, ISavableComponent<MortalData>, ITeam {
         onDeath.Invoke();
         Destroy(gameObject);
     }
-
-    #region Save
-
-    public string SaveKey => "Mortal";
-
-    public MortalData Save() {
-        return new MortalData {
-            hp = _hitpoints.Value,
-            currentShield = _shield.Value,
-            maxShield = _maxShield.Value
-        };
-    }
-
-    public void Load(MortalData data, IReadOnlyDictionary<string, GameObject> objects) {
-        _hitpoints.Set(data.hp);
-        _maxShield.Set(data.maxShield);
-        _shield.Set(data.currentShield);
-    }
-
-    #endregion
-}
-
-[Serializable]
-public struct MortalData {
-    public int hp;
-    public int maxShield;
-    public int currentShield;
 }
 }

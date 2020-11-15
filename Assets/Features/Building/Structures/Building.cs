@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using Features.Health;
-using Features.Save;
+﻿using Features.Health;
 using Features.Tasks;
 using UnityEngine;
 
 namespace Features.Building.Structures {
-public class Building : MonoBehaviour, ISavableComponent<bool> {
+public class Building : MonoBehaviour {
     private readonly bool _autoRepair = false;
     private bool _waitingForRepair;
 
@@ -23,19 +21,5 @@ public class Building : MonoBehaviour, ISavableComponent<bool> {
             _waitingForRepair = true;
         });
     }
-
-    #region Save
-
-    public string SaveKey => "building";
-
-    public bool Save() {
-        return _waitingForRepair;
-    }
-
-    public void Load(bool data, IReadOnlyDictionary<string, GameObject> objects) {
-        _waitingForRepair = data;
-    }
-
-    #endregion
 }
 }

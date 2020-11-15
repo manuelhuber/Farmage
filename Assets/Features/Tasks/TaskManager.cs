@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Features.Common;
-using Features.Save;
 using Features.Units.Robots;
 using Grimity.Data;
 using Grimity.ScriptableObject;
@@ -10,7 +9,7 @@ using MonKey.Extensions;
 using UnityEngine;
 
 namespace Features.Tasks {
-public class TaskManager : Manager<TaskManager>, ISavableComponent<TaskManagerData> {
+public class TaskManager : Manager<TaskManager> {
     public RuntimeGameObjectSet allWorkers;
     private readonly List<BaseTask> _availableTasks = new List<BaseTask>();
     private readonly List<BaseTask> _cancelledTasks = new List<BaseTask>();
@@ -63,7 +62,6 @@ public class TaskManager : Manager<TaskManager>, ISavableComponent<TaskManagerDa
     }
 
     private void OnTaskCompleted(Worker worker, BaseTask task) {
-        Debug.Log($"Worker={worker.getSaveID()} completed task={task.Type}");
         FreeWorker(worker);
         FindTaskForWorker(worker);
     }
@@ -106,70 +104,18 @@ public class TaskManager : Manager<TaskManager>, ISavableComponent<TaskManagerDa
         var workerData = _workers[worker];
         switch (taskResponse) {
             case TaskResponse.Accepted:
-                Debug.Log($"Worker={worker.getSaveID()} accepted task={task.Type}");
                 workerData.Task = task.AsOptional();
                 _availableTasks.Remove(task);
                 break;
             case TaskResponse.Completed:
-                Debug.Log($"Worker={worker.getSaveID()} completed instantly task={task.Type}");
                 _availableTasks.Remove(task);
                 break;
             case TaskResponse.Declined:
-                Debug.Log($"Worker={worker.getSaveID()} declined task={task.Type}");
                 workerData.DeclinedTasks.Add(task);
                 break;
         }
 
         return taskResponse;
     }
-
-    #region Save
-
-    public string SaveKey => "TaskManager";
-
-    public TaskManagerData Save() {
-        string SerialiseWorkerData(WorkerData data) {
-            return !data.Task.HasValue ? null : TaskSerializationUtil.SerializeTask(data.Task.Value);
-        }
-
-        var assignedTasks = _workers
-            .Where(pair => pair.Value.Task.HasValue)
-            .ToDictionary(
-                tuple => tuple.Key.getSaveID(),
-                tuple => SerialiseWorkerData(tuple.Value));
-        return new TaskManagerData {
-            AvailableTasks =
-                _availableTasks.Select(TaskSerializationUtil.SerializeTask).ToList(),
-            AssignedTasks = assignedTasks
-        };
-    }
-
-    public void Load(TaskManagerData data, IReadOnlyDictionary<string, GameObject> objects) {
-        _availableTasks.Clear();
-        _availableTasks.AddRange(
-            data.AvailableTasks.Select(json => TaskSerializationUtil.LoadTask(json, objects)));
-        var loadedAssignedTasks = data.AssignedTasks.ToDictionary(
-            pair => objects.getBySaveID(pair.Key).GetComponent<Worker>(),
-            pair => TaskSerializationUtil.LoadTask(pair.Value, objects));
-        foreach (var (worker, baseTask) in loadedAssignedTasks) {
-            if (!_workers.ContainsKey(worker)) {
-                Debug.LogWarning("Trying to load task for a worker that's not here!");
-                continue;
-            }
-
-            if (_workers[worker].Task.HasValue) {
-                Debug.LogWarning("Loading a task for a worker that already has a task!");
-            }
-
-            AssignTaskToWorker(baseTask, worker);
-        }
-    }
-
-    #endregion
-}
-
-public struct TaskManagerData {
-    public Dictionary<string, string> AssignedTasks;
-    public List<string> AvailableTasks;
 }
 }

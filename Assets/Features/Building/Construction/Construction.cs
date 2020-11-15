@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Features.Building.BuildMenu;
 using Features.Health;
 using Features.Resources;
-using Features.Save;
 using Features.Ui.Actions;
 using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Building.Construction {
-public class Construction : MonoBehaviour, ISavableComponent<ConstructionData>, IHasActions {
+public class Construction : MonoBehaviour, IHasActions {
     public float progressTarget;
     public Material material;
     public float Progress { get; private set; }
@@ -20,7 +16,7 @@ public class Construction : MonoBehaviour, ISavableComponent<ConstructionData>, 
 
     private BuildingMenuEntry _building;
 
-    public Grimity.Data.IObservable<ActionEntryData[]> GetActions() {
+    public IObservable<ActionEntryData[]> GetActions() {
         return _actions;
     }
 
@@ -62,29 +58,5 @@ public class Construction : MonoBehaviour, ISavableComponent<ConstructionData>, 
         _building.InitBuilding(completedBuilding);
         Destroy(gameObject);
     }
-
-    #region Save
-
-    public string SaveKey => "ConstructionSite";
-
-    public ConstructionData Save() {
-        return new ConstructionData {progress = Progress, menuEntry = _building.buildingName};
-    }
-
-    public void Load(ConstructionData data, IReadOnlyDictionary<string, GameObject> objects) {
-        var menuEntries = SaveGame.GetAllBuildings();
-        var menuEntry = menuEntries.First(entry => entry.buildingName == data.menuEntry);
-        Init(menuEntry);
-
-        Progress = data.progress;
-    }
-
-    #endregion
-}
-
-[Serializable]
-public struct ConstructionData {
-    public float progress;
-    public string menuEntry;
 }
 }

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Features.Resources;
-using Features.Save;
 using Features.Tasks;
 using Features.Time;
 using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Building.Structures.WheatField {
-public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
+public class WheatField : MonoBehaviour {
     public Resource wheatResource;
     public Transform dumpingPlace;
     public int harvestCount;
@@ -58,27 +57,5 @@ public class WheatField : MonoBehaviour, ISavableComponent<WheatFieldData> {
         wheat.transform.position = dumpingPlace.position;
         _resourceManager.RegisterNewResource(wheat);
     }
-
-    #region Save
-
-    public string SaveKey => "WheatField";
-
-    public WheatFieldData Save() {
-        return new WheatFieldData
-            {progress = _progress.Value, waitingForHarvest = _waitingForHarvest};
-    }
-
-    public void Load(WheatFieldData data, IReadOnlyDictionary<string, GameObject> objects) {
-        _progress.Set(data.progress);
-        _waitingForHarvest = data.waitingForHarvest;
-    }
-
-    #endregion
-}
-
-[Serializable]
-public struct WheatFieldData {
-    public float progress;
-    public bool waitingForHarvest;
 }
 }

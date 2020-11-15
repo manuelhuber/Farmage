@@ -21,7 +21,6 @@ public class BuildingMenuEntry : ScriptableObject {
 
 public static class BuildingMenuEntryExtensions {
     public static void InitBuilding(this BuildingMenuEntry entry, GameObject building) {
-        InitSavableObject(building, entry.buildingName);
         InitUnit(building, entry);
         InitBoxCollider(building, entry);
     }
@@ -40,11 +39,6 @@ public static class BuildingMenuEntryExtensions {
         var unit = building.GetComponent<Selectable>();
         unit.icon = entry.image;
         unit.displayName = entry.buildingName;
-    }
-
-    private static void InitSavableObject(GameObject building, string name) {
-        var savableObject = building.GetComponent<SavableObject>();
-        savableObject.PrefabName = name;
     }
 }
 }
