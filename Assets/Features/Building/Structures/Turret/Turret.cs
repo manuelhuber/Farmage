@@ -23,7 +23,6 @@ public class Turret : MonoBehaviour, ISavableComponent<TurretData> {
     private void Awake() {
         _time = GameTime.Instance;
         _attack = gameObject.AddComponent<PeriodicalAction>();
-        _attack.initialDelay = true;
         _attack.action = Shoot;
         _attack.interval = attackSpeed;
         _attack.getTime = () => _time.Time;
