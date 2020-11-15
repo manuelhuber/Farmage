@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84747c50b2b8422683e10affc725c9db, type: 3}
+  m_Name: SniperNest_MenuEntry
+  m_EditorClassIdentifier: 
+  buildingName: SniperNest
+  buildingPrefab: {fileID: 8691052097810327060, guid: 5da16763da722ac49b770b4939023b77,
+    type: 3}
+  modelPrefab: {fileID: 3090680745431253482, guid: 1ff47439bc37f044d8fa5bdcb2915d94,
+    type: 3}
+  size:
+    x: 1
+    y: 1
+  cost:
+    cash: 100
+  image: {fileID: 21300000, guid: cc947177ff067b44a8f0b8d61e57c922, type: 3}
