@@ -29,3 +29,7 @@ MonoBehaviour:
     cost:
       cash: 75
     rollWeight: 4
+  - item: {fileID: 11400000, guid: e541ce2cd1835a54590df3421dd876b2, type: 2}
+    cost:
+      cash: 50
+    rollWeight: 4
