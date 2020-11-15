@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using Features.Buildings.UI;
 using Features.Enemies;
 using Features.Pathfinding;
 using Features.Resources;
@@ -15,7 +15,7 @@ public class MissionManager : MonoBehaviour {
 
     private void Awake() {
         _startTime = DateTime.Now.ToString("yyyyMMddHHmmss");
-        var settings = UnityEngine.Resources.FindObjectsOfTypeAll<MissionSettings>().FirstOrDefault();
+        var settings = UnityEngine.Resources.Load<MissionSettings>("NormalMission");
         if (settings != null) {
             InitialiseMission(settings);
         }
@@ -29,9 +29,15 @@ public class MissionManager : MonoBehaviour {
     }
 
     private void InitialiseMission(MissionSettings settings) {
+        var buildingManager = BuildingManager.Instance;
+        foreach (var building in settings.startingBuildings) {
+            buildingManager.AddBuildingOption(building);
+        }
+
         ResourceManager.Instance.startingCash = settings.startingMoney;
-        MapManager.Instance.sizeX = settings.mapSize.x;
-        MapManager.Instance.sizeZ = settings.mapSize.y;
+        var mapManager = MapManager.Instance;
+        mapManager.sizeX = settings.mapSize.x;
+        mapManager.sizeZ = settings.mapSize.y;
         Instantiate(settings.walkerPrefab, Vector3.zero, Quaternion.identity);
 
         for (var i = 0; i < settings.workerCount; i++) {

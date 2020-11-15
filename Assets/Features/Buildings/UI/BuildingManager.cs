@@ -9,6 +9,7 @@ using Features.Resources;
 using Features.Tasks;
 using Features.Ui.Actions;
 using Features.Ui.UserInput;
+using Grimity.Collections;
 using Grimity.Data;
 using UnityEngine;
 
@@ -64,7 +65,8 @@ public class BuildingManager : Manager<BuildingManager>, IKeyUpReceiver, IInputY
 
         if (keys.Contains(KeyCode.Mouse0) && _hasActivePlaceable) {
             var createdBuilding = PlaceBuilding();
-            var continueBuilding = pressedKeys.Contains(KeyCode.LeftShift);
+            var canBuildAnother = _buildCount[_selected] > 0;
+            var continueBuilding = pressedKeys.Contains(KeyCode.LeftShift) && canBuildAnother;
             if (createdBuilding && !continueBuilding) {
                 StopBuilding();
             }
@@ -73,13 +75,20 @@ public class BuildingManager : Manager<BuildingManager>, IKeyUpReceiver, IInputY
 
     #endregion
 
+    public void AddBuildingOption(BuildingMenuEntry buildingMenuEntry) {
+        var currentCount = _buildCount.GetOrCompute(buildingMenuEntry, entry => 0);
+        _buildCount[buildingMenuEntry] = ++currentCount;
+        UpdateBuildingOptions();
+    }
+
     private void UpdateSelectedBuilding() {
         if (!_hasActivePlaceable) return;
         _placeable.MayBePlaced.Set(_resourceManager.CanBePayed(_selected.cost));
     }
 
     private void UpdateBuildingOptions() {
-        var actions = _buildCount.Select(pair => {
+        var actions = _buildCount.Where(pair => pair.Value > 0)
+            .Select(pair => {
                 var (building, availableCount) = pair;
                 return new ActionEntryData {
                     Image = building.image,

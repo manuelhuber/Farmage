@@ -1,3 +1,4 @@
+using Features.Buildings.BuildMenu;
 using Features.Resources;
 using UnityEngine;
 
@@ -8,5 +9,6 @@ public class MissionSettings : ScriptableObject {
     public Vector2 mapSize;
     public int workerCount;
     public GameObject walkerPrefab;
+    public BuildingMenuEntry[] startingBuildings;
 }
 }
