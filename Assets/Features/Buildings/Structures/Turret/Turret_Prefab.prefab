@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &2774853051401455831
+--- !u!114 &-7065374621221380796
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6936962898103013789}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4a5945d3035c8b4c88d80b5984c59d3, type: 3}
+  m_Script: {fileID: 11500000, guid: 22eca743c34e4d3aa1df405a5210da1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackSpeed: 3
-  damage: 5
-  range: 25
-  turret: {fileID: 5276590107733473373}
+  ability: {fileID: 11400000, guid: 0cf217ec4620d114f8ea639c6eb03c74, type: 2}
 --- !u!114 &5299649950924735061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,9 +203,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dba058e4a21168f41a5b6694df4d3c09, type: 3}
---- !u!1 &5276590107733473373 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3551803582804971397, guid: dba058e4a21168f41a5b6694df4d3c09,
-    type: 3}
-  m_PrefabInstance: {fileID: 8678643418932967384}
-  m_PrefabAsset: {fileID: 0}
