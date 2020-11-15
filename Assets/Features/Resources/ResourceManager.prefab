@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2950863613626052320}
   - component: {fileID: 8911651612414844084}
-  - component: {fileID: 4960544995974298224}
   m_Layer: 0
   m_Name: ResourceManager
   m_TagString: Untagged
@@ -46,17 +45,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingCash:
     cash: 500
-  allFarmerBuildings: {fileID: 0}
---- !u!114 &4960544995974298224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8002137157083666836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1752f719abbe433db8a49d5e8fd8b765, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Key: ResourceManager

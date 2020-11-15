@@ -116,7 +116,7 @@ Transform:
   - {fileID: 2205635370107971668}
   - {fileID: 2205635369979343465}
   m_Father: {fileID: 2205635369137954811}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2205635369062945558
 MonoBehaviour:
@@ -140,7 +140,6 @@ MonoBehaviour:
         type: 3}
       min: 1
       max: 2
-  allFarmerBuildings: {fileID: 11400000, guid: 30afb8187a2e4104c8a581f8817ac376, type: 2}
   spawnPoints:
   - {fileID: 2205635368484272810}
   - {fileID: 2205635369360576550}
@@ -181,7 +180,6 @@ Transform:
   - {fileID: 2205635369959619284}
   - {fileID: 1756313765455720761}
   - {fileID: 2205635368588425868}
-  - {fileID: 2205635369310942931}
   - {fileID: 2205635369546078529}
   - {fileID: 2205635369479691018}
   - {fileID: 2205635369062945553}
@@ -202,49 +200,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   workerPrefab: {fileID: 7329494047211502047, guid: 4c8cc492a8dd6b94fbcabd5bb4d50bcf,
     type: 3}
---- !u!1 &2205635369310942929
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2205635369310942931}
-  - component: {fileID: 2205635369310942928}
-  m_Layer: 0
-  m_Name: SaveGame
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2205635369310942931
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2205635369310942929}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2205635369137954811}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2205635369310942928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2205635369310942929}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1d2c5bb6f3b404f93ad0bbd65b09cb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2205635369360576550
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,7 +240,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2205635369479691018}
   - component: {fileID: 2205635369479691029}
-  - component: {fileID: 2205635369479691028}
   m_Layer: 0
   m_Name: TaskManager
   m_TagString: Untagged
@@ -305,7 +259,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2205635369137954811}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2205635369479691029
 MonoBehaviour:
@@ -320,19 +274,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allWorkers: {fileID: 11400000, guid: abf8e1df5664ac741848cf0f78dcfc37, type: 2}
---- !u!114 &2205635369479691028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2205635369479691019}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1752f719abbe433db8a49d5e8fd8b765, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Key: TaskManager
 --- !u!1 &2205635369546078535
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,7 +303,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2205635369137954811}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2205635369546078534
 MonoBehaviour:
@@ -528,7 +469,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2198800329529374229, guid: d665c925bb22d6345b2e9a37b5b4e485, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d665c925bb22d6345b2e9a37b5b4e485, type: 3}
 --- !u!4 &2205635369959619284 stripped
 Transform:
@@ -699,7 +641,8 @@ PrefabInstance:
       propertyPath: startingCash.cash
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4960544995974298224, guid: fcf03f3cb95f5b44eaeb6f6e7be053be, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fcf03f3cb95f5b44eaeb6f6e7be053be, type: 3}
 --- !u!4 &1756313765455720761 stripped
 Transform:

@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 2645792495775059461}
   - component: {fileID: 2645792495775059460}
   - component: {fileID: 1780074856439431488}
-  - component: {fileID: -1677847347412762025}
   m_Layer: 9
   m_Name: Construction_Prefab
   m_TagString: Building
@@ -94,16 +93,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   progressTarget: 0
   material: {fileID: 2100000, guid: c15ef801e9b27514ea305ccaa4bc9496, type: 2}
---- !u!114 &-1677847347412762025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2645792495775059467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 858e061d5a2e4ce09cf2a299e739793e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PrefabName: Construction

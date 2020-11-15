@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6864924311058860212}
   - component: {fileID: -1727360201151231877}
   - component: {fileID: -3613381265995802453}
-  - component: {fileID: 5325617851731396072}
   - component: {fileID: 5113770741720891809}
   m_Layer: 0
   m_Name: WheatPrefab
@@ -64,19 +63,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &5325617851731396072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3072298920336211751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 858e061d5a2e4ce09cf2a299e739793e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PrefabName: WheatBundle
 --- !u!114 &5113770741720891809
 MonoBehaviour:
   m_ObjectHideFlags: 0

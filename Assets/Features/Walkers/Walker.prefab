@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: -4546622269705769975}
   - component: {fileID: 7966996125411664316}
   - component: {fileID: 1529997821547828744}
-  - component: {fileID: -1530088961022039333}
   - component: {fileID: 6349337612622607645}
   - component: {fileID: 6859268409047782799}
   - component: {fileID: 5028860787348379859}
@@ -135,19 +134,6 @@ MonoBehaviour:
   hpBarPrefab: {fileID: 211962310666974151, guid: 0363b05f9d394f74a8f9c5f67672091b,
     type: 3}
   hpBarOffset: 2
---- !u!114 &-1530088961022039333
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3004080222666722163}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 858e061d5a2e4ce09cf2a299e739793e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PrefabName: Walker
 --- !u!114 &6349337612622607645
 MonoBehaviour:
   m_ObjectHideFlags: 0
