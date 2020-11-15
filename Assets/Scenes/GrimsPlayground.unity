@@ -191,22 +191,10 @@ PrefabInstance:
     - target: {fileID: 9207006124092333049, guid: 939ac5b7c3fbee045824ec5fbf62dcfe,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 939ac5b7c3fbee045824ec5fbf62dcfe, type: 3}
---- !u!114 &202227253 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2205635369310942928, guid: 60736afdfadbb23468efa56a36ca19d3,
-    type: 3}
-  m_PrefabInstance: {fileID: 2205635369513076965}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1d2c5bb6f3b404f93ad0bbd65b09cb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &225404884
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -460,6 +448,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bobling
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895268208643040504, guid: 46a5fb3125dcbea498a3599373bbb61e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a5fb3125dcbea498a3599373bbb61e, type: 3}
@@ -1241,12 +1234,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 202227253}
+      objectReference: {fileID: 0}
     - target: {fileID: 290071571410936286, guid: fbe049e30c5be3d47bb669c967473c4d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 202227253}
+      objectReference: {fileID: 0}
     - target: {fileID: 290071571515157300, guid: fbe049e30c5be3d47bb669c967473c4d,
         type: 3}
       propertyPath: m_SizeDelta.x

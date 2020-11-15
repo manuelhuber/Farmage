@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Features.Buildings.Storage;
+using Features.Buildings.Structures;
+using Features.Buildings.UI;
 using Features.Common;
 using Features.Delivery;
 using Features.Tasks;
 using Grimity.Data;
-using Grimity.ScriptableObject;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Features.Resources {
 public class ResourceManager : Manager<ResourceManager> {
     public Cost startingCash;
-    public RuntimeGameObjectSet allFarmerBuildings;
     public Grimity.Data.IObservable<Cost> Have => _have;
     private readonly Observable<Cost> _have = new Observable<Cost>(new Cost());
     private List<Storage> _storages = new List<Storage>();
@@ -28,7 +27,7 @@ public class ResourceManager : Manager<ResourceManager> {
     private void Start() {
         _taskManager = TaskManager.Instance;
         Add(startingCash);
-        allFarmerBuildings.OnChange += OnBuildingChange;
+        BuildingManager.Instance.ExistingBuildings.OnChange(OnBuildingChange);
     }
 
     public Cost Add(Cost change) {
@@ -67,8 +66,8 @@ public class ResourceManager : Manager<ResourceManager> {
         }
     }
 
-    private void OnBuildingChange(ReadOnlyCollection<GameObject> items) {
-        _storages = allFarmerBuildings.Items.Select(o => o.GetComponent<Storage>())
+    private void OnBuildingChange(Building[] buildings) {
+        _storages = buildings.Select(o => o.GetComponent<Storage>())
             .Where(storage => storage != null)
             .ToList();
         _waitingForStorage = _waitingForStorage.Where(res => !EnqueueDeliveryToStorage(res)).ToList();

@@ -1,19 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
+using Features.Buildings.Structures;
+using Features.Buildings.UI;
 using Features.Common;
 using Features.Health;
 using Features.Time;
 using Grimity.Collections;
-using Grimity.ScriptableObject;
 using MonKey.Extensions;
 using UnityEngine;
 
 namespace Features.Enemies {
 public class EnemyManager : Manager<EnemyManager> {
     public EnemyWave wave;
-
-    public RuntimeGameObjectSet allFarmerBuildings;
 
     public GameObject[] spawnPoints;
     public float waveInterval = 5f;
@@ -26,7 +24,7 @@ public class EnemyManager : Manager<EnemyManager> {
 
     private void Awake() {
         _time = GameTime.Instance;
-        allFarmerBuildings.OnChange += OnBuildingChange;
+        BuildingManager.Instance.ExistingBuildings.OnChange(OnBuildingChange);
     }
 
     private void Update() {
@@ -41,8 +39,8 @@ public class EnemyManager : Manager<EnemyManager> {
         _lastSpawn = _time.Time;
     }
 
-    private void OnBuildingChange(ReadOnlyCollection<GameObject> items) {
-        _availableBuildings = items.Select(go => go.GetComponent<Mortal>()).ToList();
+    private void OnBuildingChange(Building[] buildings) {
+        _availableBuildings = buildings.Select(go => go.GetComponent<Mortal>()).ToList();
     }
 
     private void Spawn(EnemySpawnInfo enemySpawnInfo,
