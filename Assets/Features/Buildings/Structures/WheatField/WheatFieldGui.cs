@@ -21,7 +21,7 @@ public class WheatFieldGui : MonoBehaviour, ISingleSelectionDetailGui {
 
     private void SetProgress(float currentGrowth) {
         var percentage = TextUtil.PercentageString(currentGrowth, _growthGoal);
-        progessText.text = $"Growth: {percentage}%";
+        progessText.text = $"Growth: {percentage}";
     }
 }
 }
