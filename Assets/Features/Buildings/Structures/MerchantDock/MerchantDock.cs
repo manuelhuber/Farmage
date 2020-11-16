@@ -9,12 +9,15 @@ using Features.Ui.Actions;
 using Grimity.Collections;
 using Grimity.Data;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Features.Buildings.Structures.MerchantDock {
 public class MerchantDock : MonoBehaviour, IHasActions {
     public int visitIntervalsInSeconds;
     public int stayDurationInSeconds;
     public int itemSlots;
+    public UnityEvent MerchantIsHere = new UnityEvent();
+    public UnityEvent MerchantIsGone = new UnityEvent();
 
     [SerializeField] private MerchantInventory inventory;
 
@@ -56,6 +59,7 @@ public class MerchantDock : MonoBehaviour, IHasActions {
     private void FinishTrade() {
         Debug.Log("TRADE ENDED");
         _tradeInProgress = false;
+        MerchantIsGone.Invoke();
         _rolledItems.Clear();
         UpdateActionEntries();
         _nextTradeTimestamp = _gameTime.Time + visitIntervalsInSeconds;
@@ -64,6 +68,7 @@ public class MerchantDock : MonoBehaviour, IHasActions {
     private void InitTrade() {
         Debug.Log("TRADE STARTED");
         _tradeInProgress = true;
+        MerchantIsHere.Invoke();
         _nextTradeTimestamp = _gameTime.Time + stayDurationInSeconds;
         CreateActionsMenu();
         UpdateActionEntries();
