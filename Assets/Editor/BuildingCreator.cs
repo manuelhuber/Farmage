@@ -57,9 +57,14 @@ public class BuildingCreator : OdinEditorWindow {
         var newBuilding = PrefabUtility.InstantiatePrefab(baseBuilding) as GameObject;
         var minimap = newBuilding.transform.GetChild(0).transform;
         var scale = minimap.localScale;
-        scale.x = Map.CellSize * size.x;
-        scale.y = Map.CellSize * size.y;
+        var sizeX = Map.CellSize * size.x;
+        var sizeY = Map.CellSize * size.y;
+        scale.x = sizeX;
+        scale.y = sizeY;
         minimap.localScale = scale;
+
+        var boxCollider = newBuilding.GetComponent<BoxCollider>();
+        boxCollider.size = new Vector3(sizeX, 1, sizeY);
 
         PrefabUtility.InstantiatePrefab(modelPrefab, newBuilding.transform);
 
