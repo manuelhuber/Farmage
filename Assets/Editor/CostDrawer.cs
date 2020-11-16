@@ -1,10 +1,11 @@
+using Features.Resources;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 
-namespace Features.Resources.Editor {
-// ReSharper disable once UnusedType.Global
+[UsedImplicitly]
 public class CostDrawer : OdinValueDrawer<Cost> {
     protected override void DrawPropertyLayout(GUIContent label) {
         var value = ValueEntry.SmartValue;
@@ -27,5 +28,4 @@ public class CostDrawer : OdinValueDrawer<Cost> {
 
         ValueEntry.SmartValue = value;
     }
-}
 }
