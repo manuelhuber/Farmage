@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Constants;
-using Features.Buildings.UI;
 using Features.Pathfinding;
 using Grimity.Cursor;
 using Grimity.Data;
 using Grimity.Math;
 using Unity.Mathematics;
 using UnityEngine;
+using static Constants.Map;
 
 namespace Features.Buildings.Placement {
 public class Placeable : MonoBehaviour {
@@ -47,15 +47,14 @@ public class Placeable : MonoBehaviour {
 
     private void Update() {
         var pos = MouseToTerrain().point;
-        var gridSize = BuildingManager.GridSize;
         var nodePosition = _mapManager.WorldPositionToNode(pos);
         var newWorldPos = _mapManager.GridToWorldPosition(nodePosition.x, nodePosition.y);
         if (_size.x.IsEven()) {
-            newWorldPos.x -= gridSize / 2;
+            newWorldPos.x -= CellSize / 2;
         }
 
         if (_size.y.IsEven()) {
-            newWorldPos.z -= gridSize / 2;
+            newWorldPos.z -= CellSize / 2;
         }
 
         newWorldPos.y = transform.position.y;
@@ -87,7 +86,7 @@ public class Placeable : MonoBehaviour {
         _size = newSize;
         _collider.center = new Vector3(0, -0.5f, 0);
         _collider.isTrigger = true;
-        _collider.size = new Vector3(_size.x, 1, _size.y) * BuildingManager.GridSize;
+        _collider.size = new Vector3(_size.x, 1, _size.y) * CellSize;
     }
 
     public void OccupyTerrain() {

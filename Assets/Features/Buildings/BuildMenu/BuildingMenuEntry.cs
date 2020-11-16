@@ -1,6 +1,6 @@
 using System;
+using Constants;
 using Features.Buildings.Structures;
-using Features.Buildings.UI;
 using Features.Resources;
 using Features.Ui.Selection;
 using Sirenix.OdinInspector;
@@ -33,7 +33,7 @@ public static class BuildingMenuEntryExtensions {
 
     private static void InitBoxCollider(GameObject building, BuildingMenuEntry entry) {
         var boxCollider = building.GetComponent<BoxCollider>();
-        boxCollider.size = new Vector3(entry.size.x, 1, entry.size.y) * BuildingManager.GridSize;
+        boxCollider.size = new Vector3(entry.size.x, 1, entry.size.y) * Map.CellSize;
     }
 
     private static void InitUnit(GameObject building, BuildingMenuEntry entry) {

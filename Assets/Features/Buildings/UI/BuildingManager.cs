@@ -15,8 +15,6 @@ using UnityEngine;
 
 namespace Features.Buildings.UI {
 public class BuildingManager : Manager<BuildingManager>, IKeyUpReceiver, IInputYielder {
-    public static readonly int GridSize = 4;
-
     [SerializeField] private PlacementSettings placementSettings;
     [SerializeField] private GameObject constructionSitePrefab;
     [SerializeField] private LayerMask terrainLayer = 0;
