@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e2ec1c9ec1be4415ab80ae420c50ab22, type: 3}
-  m_Name: Greenhouse_MerchantEntry
+  m_Name: Plantation_MerchantEntry
   m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 77bba10c730e5ce4c839ff0679d16a0c, type: 2}
+  item: {fileID: 11400000, guid: e541ce2cd1835a54590df3421dd876b2, type: 2}
   cost:
     cash: 100
   rollWeight: 2
