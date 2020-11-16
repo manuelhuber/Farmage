@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resource: {fileID: 11400000, guid: 466d1d9c5bbb81c45a9459c36f5ec9e2, type: 2}
   dumpingPlace: {fileID: 719261422105857628}
-  generationCount: 5
+  generationCount: 8
   generationDurationInSeconds: 60
   autoHarvest: 1
 --- !u!1 &2490933172925615123

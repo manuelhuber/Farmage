@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visitIntervalsInSeconds: 50
   stayDurationInSeconds: 20
-  itemSlots: 4
+  itemSlots: 6
   inventory: {fileID: 11400000, guid: 94904dff3279e9b468ce71f83dad305c, type: 2}
 --- !u!1001 &664419944725218271
 PrefabInstance:
