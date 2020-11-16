@@ -125,9 +125,9 @@ public struct PathfindingJob : IJob {
         neighbours.Dispose();
 
         var upWalkable = upIndex != -1 && Map[upIndex].IsWalkable;
-        var downWalkable = upIndex != -1 && Map[downIndex].IsWalkable;
-        var leftWalkable = upIndex != -1 && Map[leftIndex].IsWalkable;
-        var rightWalkable = upIndex != -1 && Map[rightIndex].IsWalkable;
+        var downWalkable = downIndex != -1 && Map[downIndex].IsWalkable;
+        var leftWalkable = leftIndex != -1 && Map[leftIndex].IsWalkable;
+        var rightWalkable = rightIndex != -1 && Map[rightIndex].IsWalkable;
 
         if (from.X < to.X) {
             if (from.Z < to.Z) {
