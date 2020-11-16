@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 2b16a463fb4e5dc409847d96c4e343ba, type: 2}
   cost:
-    cash: 50
-  rollWeight: 10
+    cash: 150
+  rollWeight: 5

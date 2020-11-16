@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e75b9db26f94b6bb7c0bbf168d3b6e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
+  speed: 5
   stoppingDistance: 1
   turnSpeed: 10
 --- !u!114 &1489985236975754127
@@ -167,6 +167,7 @@ MonoBehaviour:
   hpBarPrefab: {fileID: 211962310666974151, guid: 0363b05f9d394f74a8f9c5f67672091b,
     type: 3}
   hpBarOffset: 2
+  showWhenFull: 1
 --- !u!114 &4976861513082777649
 MonoBehaviour:
   m_ObjectHideFlags: 0

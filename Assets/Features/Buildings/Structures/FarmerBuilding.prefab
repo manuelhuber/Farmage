@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5890649793366211811}
   - component: {fileID: 2744936451345570462}
   - component: {fileID: -6387577232689518829}
+  - component: {fileID: 6671865694139733489}
   m_Layer: 9
   m_Name: FarmerBuilding
   m_TagString: Building
@@ -110,6 +111,21 @@ MonoBehaviour:
       m_Calls: []
   team: 0
   <MaxHitpoints>k__BackingField: 100
+--- !u!114 &6671865694139733489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990117219375781617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a239753c1ed04804a03c4d9b32934276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpBarPrefab: {fileID: 211962310666974151, guid: 0363b05f9d394f74a8f9c5f67672091b,
+    type: 3}
+  hpBarOffset: 2
 --- !u!1001 &3896456847192153623
 PrefabInstance:
   m_ObjectHideFlags: 0
