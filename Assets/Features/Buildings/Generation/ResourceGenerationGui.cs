@@ -3,20 +3,20 @@ using Features.Ui.Selection;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Features.Buildings.Structures.WheatField {
-public class WheatFieldGui : MonoBehaviour, ISingleSelectionDetailGui {
+namespace Features.Buildings.Generation {
+public class ResourceGenerationGui : MonoBehaviour, ISingleSelectionDetailGui {
     public Text progessText;
+    private ResourceGenerator _generator;
     private int _growthGoal;
-    private WheatField _wheatField;
 
     private void OnDestroy() {
-        _wheatField.Progress.RemoveOnChange(SetProgress);
+        _generator.Progress.RemoveOnChange(SetProgress);
     }
 
     public void Init(GameObject selectedUnit) {
-        _wheatField = selectedUnit.GetComponent<WheatField>();
-        _growthGoal = _wheatField.growthDurationInSeconds;
-        _wheatField.Progress.OnChange(SetProgress);
+        _generator = selectedUnit.GetComponent<ResourceGenerator>();
+        _growthGoal = _generator.generationDurationInSeconds;
+        _generator.Progress.OnChange(SetProgress);
     }
 
     private void SetProgress(float currentGrowth) {

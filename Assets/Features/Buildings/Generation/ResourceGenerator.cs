@@ -1,15 +1,16 @@
-﻿using Features.Resources;
+using Features.Resources;
 using Features.Tasks;
 using Features.Time;
 using Grimity.Data;
 using UnityEngine;
 
-namespace Features.Buildings.Structures.WheatField {
-public class WheatField : MonoBehaviour {
-    public Resource wheatResource;
+namespace Features.Buildings.Generation {
+public class ResourceGenerator : MonoBehaviour {
+    public Resource resource;
     public Transform dumpingPlace;
-    public int harvestCount;
-    public int growthDurationInSeconds;
+    public int generationCount;
+    public int generationDurationInSeconds;
+    public bool autoHarvest;
     public IObservable<float> Progress => _progress;
 
     private readonly Observable<float> _progress = new Observable<float>(0);
@@ -27,7 +28,7 @@ public class WheatField : MonoBehaviour {
 
     private void Update() {
         if (_waitingForHarvest) return;
-        if (_progress.Value >= growthDurationInSeconds) {
+        if (_progress.Value >= generationDurationInSeconds) {
             FinishGrowth();
         } else {
             UpdateProgress();
@@ -43,17 +44,21 @@ public class WheatField : MonoBehaviour {
     }
 
     private void FinishGrowth() {
-        _waitingForHarvest = true;
-        _harvestTask = new SimpleTask(gameObject, TaskType.Harvest);
-        _taskManager.Enqueue(_harvestTask);
+        if (autoHarvest) {
+            Harvest();
+        } else {
+            _waitingForHarvest = true;
+            _harvestTask = new SimpleTask(gameObject, TaskType.Harvest);
+            _taskManager.Enqueue(_harvestTask);
+        }
     }
 
     public void Harvest() {
         _waitingForHarvest = false;
-        _progress.Set(0);
-        var wheat = wheatResource.CreateResourceObject(harvestCount);
-        wheat.transform.position = dumpingPlace.position;
-        _resourceManager.RegisterNewResource(wheat);
+        _progress.Set(_progress.Value - generationDurationInSeconds);
+        var resourceObject = resource.CreateResourceObject(generationCount);
+        resourceObject.transform.position = dumpingPlace.position;
+        _resourceManager.RegisterNewResource(resourceObject);
     }
 }
 }

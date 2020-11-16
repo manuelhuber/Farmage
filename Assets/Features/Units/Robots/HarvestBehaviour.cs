@@ -1,4 +1,4 @@
-using Features.Buildings.Structures.WheatField;
+using Features.Buildings.Generation;
 using Features.Tasks;
 using Features.Units.Common;
 using Grimity.Data;
@@ -22,7 +22,7 @@ public class HarvestBehaviour : UnitBehaviourBase<SimpleTask> {
 
     public override void Behave() {
         if (!_movementAgent.HasArrived) return;
-        _target.GetComponent<WheatField>().Harvest();
+        _target.GetComponent<ResourceGenerator>().Harvest();
         CompleteTask();
     }
 }

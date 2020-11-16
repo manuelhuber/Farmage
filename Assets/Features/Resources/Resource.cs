@@ -9,7 +9,8 @@ public class Resource : ScriptableObject {
 
     public ResourceObject CreateResourceObject(int count) {
         var o = Instantiate(prefab);
-        var resourceObject = o.GetComponent<ResourceObject>();
+        var resourceObject = o.AddComponent<ResourceObject>();
+        resourceObject.resource = this;
         resourceObject.count = count;
         return resourceObject;
     }

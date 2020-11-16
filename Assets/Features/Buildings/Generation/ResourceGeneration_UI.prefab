@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8921813363722734647}
   - component: {fileID: 3070750859757497845}
-  - component: {fileID: 6022318750316600271}
+  - component: {fileID: 1461743718419909581}
   m_Layer: 0
-  m_Name: WheatField_UI
+  m_Name: ResourceGeneration_UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &6022318750316600271
+--- !u!114 &1461743718419909581
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -72,7 +72,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7559707857088061386}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 969a3e6d074eaed49888becc35ce296f, type: 3}
+  m_Script: {fileID: 11500000, guid: d9d88329cb5b483f924b434d33c7d66b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   progessText: {fileID: 225413184235273279}
