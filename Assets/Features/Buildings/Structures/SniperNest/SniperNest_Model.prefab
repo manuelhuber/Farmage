@@ -8994,7 +8994,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8163462972094552971}
   m_Layer: 0
-  m_Name: Towertest
+  m_Name: SniperNest_Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

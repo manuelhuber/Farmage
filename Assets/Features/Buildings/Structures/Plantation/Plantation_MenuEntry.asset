@@ -22,4 +22,4 @@ MonoBehaviour:
     y: 4
   cost:
     cash: 100
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: 58050e502ad23f844b3f293a35e4cbd4, type: 3}

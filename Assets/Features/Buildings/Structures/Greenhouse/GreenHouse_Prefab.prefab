@@ -15,22 +15,32 @@ PrefabInstance:
     - target: {fileID: 990117219375781617, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: m_Name
-      value: GreenHouse_Prefab
+      value: Greenhouse_Prefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775064199641335406, guid: 367f8f4e80502e14a8ef8a46497b32b7,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775064199641335406, guid: 367f8f4e80502e14a8ef8a46497b32b7,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8703393173598853011, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.4953203
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8703393173598853011, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.64
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8703393173598853011, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 22.42
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8703393173598853011, guid: 367f8f4e80502e14a8ef8a46497b32b7,
         type: 3}

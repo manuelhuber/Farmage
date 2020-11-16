@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84747c50b2b8422683e10affc725c9db, type: 3}
-  m_Name: GreenHouse_MenuEntry
+  m_Name: Greenhouse_MenuEntry
   m_EditorClassIdentifier: 
   buildingName: Greenhouse
   buildingPrefab: {fileID: 3219606524388449522, guid: 54cffd5881811094d836de8a3883130e,
@@ -22,4 +22,4 @@ MonoBehaviour:
     y: 2
   cost:
     cash: 75
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: 464577b6883d4e248b83b642b6ce8107, type: 3}
