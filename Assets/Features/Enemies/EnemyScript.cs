@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Features.Animations;
+﻿using Features.Animations;
 using Features.Health;
 using Features.Units.Common;
 using Grimity.Data;
@@ -44,14 +42,18 @@ public class EnemyScript : MonoBehaviour {
         if (_threateningTarget.HasValue || damage.Source == null) return damage;
         var mortal = damage.Source.GetComponent<Mortal>();
         if (mortal == null) return damage;
+        SetHighPriorityTarget(mortal);
+
+        return damage;
+    }
+
+    public void SetHighPriorityTarget(Mortal mortal) {
         _threateningTarget = mortal.AsOptional();
         mortal.onDeath.AddListener(() => {
             _threateningTarget = Optional<Mortal>.NoValue();
             UpdateTarget();
         });
         UpdateTarget();
-
-        return damage;
     }
 
     private void UpdateTarget() {
