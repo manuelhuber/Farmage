@@ -165,6 +165,8 @@ public class BuildingManager : Manager<BuildingManager>, IKeyUpReceiver, IInputY
         var mortal = building.GetComponent<Mortal>();
         if (mortal != null) {
             mortal.onDeath.AddListener(() => {
+                var updatedBuildings = _existingBuildings.Value.Where(b => b != building).ToArray();
+                _existingBuildings.Set(updatedBuildings);
                 _buildCount[building.menuEntry]++;
                 UpdateBuildingOptions();
             });
