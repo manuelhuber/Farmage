@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Features.Buildings.BuildMenu;
 using Features.Buildings.UI;
+using Features.Merchant;
 using Features.Resources;
 using Features.Time;
 using Features.Ui.Actions;
@@ -20,7 +21,7 @@ public class MerchantDock : MonoBehaviour, IHasActions {
     private readonly Observable<ActionEntryData[]>
         _actions = new Observable<ActionEntryData[]>(new ActionEntryData[0]);
 
-    private readonly List<PurchaseCost> _rolledItems = new List<PurchaseCost>();
+    private readonly List<MerchantEntry> _rolledItems = new List<MerchantEntry>();
     private BuildingManager _buildingManager;
 
     private GameTime _gameTime;
@@ -69,7 +70,7 @@ public class MerchantDock : MonoBehaviour, IHasActions {
     }
 
     private void CreateActionsMenu() {
-        var lootTable = new List<PurchaseCost>();
+        var lootTable = new List<MerchantEntry>();
         foreach (var entry in inventory.costs) {
             for (var i = 0; i < entry.rollWeight; i++) {
                 lootTable.Add(entry);
@@ -86,7 +87,7 @@ public class MerchantDock : MonoBehaviour, IHasActions {
         _actions.Set(_rolledItems.Select(CreateActionEntry).ToArray());
     }
 
-    private ActionEntryData CreateActionEntry(PurchaseCost arg) {
+    private ActionEntryData CreateActionEntry(MerchantEntry arg) {
         if (!(arg.item is BuildingMenuEntry buildingMenuEntry)) return null;
 
         void BuyBuilding() {
