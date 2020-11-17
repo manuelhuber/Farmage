@@ -166,7 +166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpBarPrefab: {fileID: 211962310666974151, guid: 0363b05f9d394f74a8f9c5f67672091b,
     type: 3}
-  hpBarOffset: 2
+  hpBarOffset: 1
   showWhenFull: 1
 --- !u!114 &4976861513082777649
 MonoBehaviour:

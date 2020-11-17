@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Features.Health {
 [RequireComponent(typeof(Mortal))]
-public class Healthbar : MonoBehaviour {
+public class HealthBar : MonoBehaviour {
     public GameObject hpBarPrefab;
     public float hpBarOffset = 2f;
     public bool showWhenFull;
@@ -15,7 +15,7 @@ public class Healthbar : MonoBehaviour {
     private Mortal _mortal;
     private RectTransform _rectTransform;
     private bool _showBar;
-    private Slider _slider;
+    private Image _slider;
 
     private void Awake() {
         _camera = UnityEngine.Camera.main;
@@ -26,8 +26,8 @@ public class Healthbar : MonoBehaviour {
 
         _mortal = GetComponent<Mortal>();
         _hpBar = Instantiate(hpBarPrefab, GameObject.FindWithTag("HitpointCanvas").transform);
-        _slider = _hpBar.GetComponentInChildren<Slider>();
-        _slider.maxValue = _mortal.MaxHitpoints;
+        _slider = _hpBar.transform.GetChild(1).GetComponent<Image>();
+        _slider.fillAmount = 1;
 
         _mortal.Hitpoints.OnChange(OnHpChange);
         _mortal.onDeath.AddListener(() => Destroy(_rectTransform.gameObject));
@@ -46,7 +46,7 @@ public class Healthbar : MonoBehaviour {
 
     private void OnHpChange(int hp) {
         _hpBar.SetActive(_mortal.MaxHitpoints != hp || showWhenFull);
-        _slider.value = hp;
+        _slider.fillAmount = (float) hp / _mortal.MaxHitpoints;
     }
 
     private void SetHpBarSize() {

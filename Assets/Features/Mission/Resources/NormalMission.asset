@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NormalMission
   m_EditorClassIdentifier: 
   startingMoney:
-    cash: 400
+    cash: 4000
   mapSize: {x: 500, y: 500}
   workerCount: 1
   walkerPrefab: {fileID: 3004080222666722163, guid: 016f3ff2592c1604ba1de6711423a6f9,
@@ -27,3 +27,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2b16a463fb4e5dc409847d96c4e343ba, type: 2}
   - {fileID: 11400000, guid: 2b16a463fb4e5dc409847d96c4e343ba, type: 2}
   - {fileID: 11400000, guid: e541ce2cd1835a54590df3421dd876b2, type: 2}
+  - {fileID: 11400000, guid: e80d9cf8b190d4a4aa18668c810d7ffb, type: 2}
+  - {fileID: 11400000, guid: b1ffaa5147d387e4897f1548a4dc776e, type: 2}
+  - {fileID: 11400000, guid: b1ffaa5147d387e4897f1548a4dc776e, type: 2}
+  - {fileID: 11400000, guid: b1ffaa5147d387e4897f1548a4dc776e, type: 2}
