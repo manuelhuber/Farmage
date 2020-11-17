@@ -1,3 +1,4 @@
+using Features.Buildings.Power;
 using Features.Resources;
 using Features.Tasks;
 using Features.Time;
@@ -5,16 +6,18 @@ using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Buildings.Generation {
-public class ResourceGenerator : MonoBehaviour {
-    public Resource resource;
-    public Transform dumpingPlace;
+public class ResourceGenerator : MonoBehaviour, IPowerConsumer {
+    [SerializeField] private Resource resource;
+    [SerializeField] private Transform dumpingPlace;
     public int generationCount;
     public int generationDurationInSeconds;
     public bool autoHarvest;
+    [SerializeField] private int powerRequirements;
     public IObservable<float> Progress => _progress;
 
     private readonly Observable<float> _progress = new Observable<float>(0);
     private SimpleTask _harvestTask;
+    private bool _hasPower;
     private ResourceManager _resourceManager;
     private TaskManager _taskManager;
     private GameTime _time;
@@ -27,6 +30,7 @@ public class ResourceGenerator : MonoBehaviour {
     }
 
     private void Update() {
+        if (powerRequirements > 0 && !_hasPower) return;
         if (_waitingForHarvest) return;
         if (_progress.Value >= generationDurationInSeconds) {
             FinishGrowth();
@@ -37,6 +41,16 @@ public class ResourceGenerator : MonoBehaviour {
 
     private void OnDestroy() {
         _taskManager.CancelTask(_harvestTask);
+    }
+
+    public int PowerRequirements => powerRequirements;
+
+    public void SupplyPower() {
+        _hasPower = true;
+    }
+
+    public void CutPower() {
+        _hasPower = false;
     }
 
     private void UpdateProgress() {
