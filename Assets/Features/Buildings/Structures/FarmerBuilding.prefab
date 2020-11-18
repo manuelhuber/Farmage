@@ -78,6 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12e8f5f4af17cd9488a4fc760e4a021d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RepairIcon: {fileID: 21300000, guid: df3372276840de94483e568748760bb4, type: 3}
   menuEntry: {fileID: 0}
 --- !u!114 &2744936451345570462
 MonoBehaviour:

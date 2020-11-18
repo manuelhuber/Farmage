@@ -13,21 +13,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ability: {fileID: 11400000, guid: 0cf217ec4620d114f8ea639c6eb03c74, type: 2}
---- !u!114 &5299649950924735061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6936962898103013789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a239753c1ed04804a03c4d9b32934276, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hpBarPrefab: {fileID: 211962310666974151, guid: 0363b05f9d394f74a8f9c5f67672091b,
-    type: 3}
-  hpBarOffset: 2
 --- !u!1001 &7924243376929146732
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -2,33 +2,44 @@
 using Features.Buildings.UI;
 using Features.Health;
 using Features.Tasks;
+using Features.Ui.Actions;
+using Grimity.Data;
 using UnityEngine;
 
 namespace Features.Buildings.Structures {
-public class Building : MonoBehaviour {
+public class Building : MonoBehaviour, IHasActions {
+    [SerializeField] private Sprite RepairIcon;
     public BuildingMenuEntry menuEntry;
-    private readonly bool _autoRepair = false;
+
+    private readonly Observable<ActionEntryData[]> _actions =
+        new Observable<ActionEntryData[]>(new ActionEntryData[] { });
+
+    private Mortal _mortal;
     private bool _waitingForRepair;
 
     private void Start() {
+        _mortal = GetComponent<Mortal>();
         BuildingManager.Instance.RegisterNewBuilding(this);
-        if (_autoRepair) {
-            RegisterAutoRepair();
-        }
+        _mortal.Hitpoints.OnChange(hitpoints => {
+            if (hitpoints == _mortal.MaxHitpoints) {
+                _waitingForRepair = false;
+            }
+        });
+
+        _actions.Set(new[] {
+            new ActionEntryData {
+                Active = true, Image = RepairIcon, OnSelect =
+                    () => {
+                        if (_waitingForRepair || _mortal.Hitpoints.Value == _mortal.MaxHitpoints) return;
+                        TaskManager.Instance.Enqueue(new SimpleTask(gameObject, TaskType.Repair));
+                        _waitingForRepair = true;
+                    }
+            }
+        });
     }
 
-    private void RegisterAutoRepair() {
-        var mortal = GetComponent<Mortal>();
-        mortal.Hitpoints.OnChange(hitpoints => {
-            if (hitpoints == mortal.MaxHitpoints) {
-                _waitingForRepair = false;
-                return;
-            }
-
-            if (_waitingForRepair) return;
-            TaskManager.Instance.Enqueue(new SimpleTask(gameObject, TaskType.Repair));
-            _waitingForRepair = true;
-        });
+    public IObservable<ActionEntryData[]> GetActions() {
+        return _actions;
     }
 }
 }
