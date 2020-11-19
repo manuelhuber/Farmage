@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f07d60b1a82d4afb98e36e51a5177f50, type: 3}
   m_Name: Nom
   m_EditorClassIdentifier: 
-  cooldownInS: 3
   abilityName: 
   description: 
-  animationTrigger: nom
   icon: {fileID: 0}
-  damage: 10
+  cooldownInS: 3
+  animationTrigger: nom
   range: 3
   shootDuringMove: 0
+  damage: {fileID: 11400000, guid: a8f01aa7607f5cd46b84743ebb935dd5, type: 2}
+  projectile: {fileID: 0}
+  trajectory: {fileID: 0}

@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f07d60b1a82d4afb98e36e51a5177f50, type: 3}
   m_Name: Nibble
   m_EditorClassIdentifier: 
-  cooldownInS: 1.5
   abilityName: Nibble
   description: 
-  animationTrigger: nibble
   icon: {fileID: 0}
-  damage: 2
+  cooldownInS: 1.5
+  animationTrigger: nibble
   range: 2
   shootDuringMove: 0
+  damage: {fileID: 11400000, guid: 57127d6122050bc4d98a1cdf276d7590, type: 2}
+  projectile: {fileID: 0}
+  trajectory: {fileID: 0}
