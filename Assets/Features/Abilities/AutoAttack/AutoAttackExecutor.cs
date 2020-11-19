@@ -75,7 +75,7 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
 
         if (ability.projectile != null) {
             var projectile = Instantiate(ability.projectile, transform.position, Quaternion.identity)
-                .GetComponent<ProjectileMovement>();
+                .AddComponent<ProjectileMovement>();
             projectile.Go(target.Value.transform.position, ability.trajectory, Damage);
         } else {
             Damage();

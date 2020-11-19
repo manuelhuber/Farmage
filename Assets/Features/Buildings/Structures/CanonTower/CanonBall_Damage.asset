@@ -9,13 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebf2f9e33d2c41e482fc87fd62a25d18, type: 3}
-  m_Name: Protec
+  m_Script: {fileID: 11500000, guid: 613239a2c422417a85537bfd59ae19ef, type: 3}
+  m_Name: CanonBall_Damage
   m_EditorClassIdentifier: 
-  abilityName: he protec
-  description: 
-  icon: {fileID: 21300000, guid: 410e978350382ff448b61a2a47b2c571, type: 3}
-  cooldownInS: 10
-  animationTrigger: 
-  shieldAmount: 100
-  durationInS: 20
+  amount: 5
+  dealsAoE: 1
+  radius: 5

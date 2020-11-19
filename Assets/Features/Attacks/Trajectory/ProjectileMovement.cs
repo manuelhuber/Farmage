@@ -29,12 +29,13 @@ public class ProjectileMovement : MonoBehaviour {
         trans.position = newPosition;
         if (!(currentDistance < speed)) return;
         Destroy(gameObject);
-        var impactFX = Instantiate(_trajectory.impactFx, _target, Quaternion.identity);
+        if (_trajectory.impactFx != null) {
+            var impactFX = Instantiate(_trajectory.impactFx, _target, Quaternion.identity);
+            // Can't figure out how to calculate lifetime of particle system so let's use a large value
+            const int timeToLife = 10;
+            Destroy(impactFX, timeToLife);
+        }
 
-        // Can't figure out how to calculate lifetime of particle system so let's use a large value
-        const int timeToLife = 10;
-
-        Destroy(impactFX, timeToLife);
         _onArrival.Invoke();
     }
 
