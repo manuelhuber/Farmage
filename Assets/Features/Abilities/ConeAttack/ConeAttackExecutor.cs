@@ -7,8 +7,8 @@ using Grimity.Math;
 using UnityEngine;
 using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
-namespace Features.Abilities.AreaDamage {
-public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IKeyUpReceiver, IInputYielder {
+namespace Features.Abilities.ConeAttack {
+public class AreaDamageExecutor : AbilityExecutor<ConeAttackAbility>, IKeyUpReceiver, IInputYielder {
     private string SplatName => $"{ability.name} - area damage splat";
     private readonly KeyCode[] _cancelKeys = {KeyCode.Escape, KeyCode.Mouse1};
     private Cone _coneSplat;
@@ -19,7 +19,7 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IKeyUpRece
         _coneSplat = Instantiate(ability.splat, _splatManager.transform);
         _coneSplat.gameObject.name = SplatName;
         _coneSplat.Angle = ability.arc;
-        _coneSplat.Scale = 2 * ability.radius;
+        _coneSplat.Scale = 2 * ability.damage.radius;
         _splatManager.Initialize();
     }
 
@@ -52,7 +52,7 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IKeyUpRece
     private void DealDamage() {
         var enemies = GetEnemiesInRange();
         foreach (var mortal in enemies) {
-            mortal.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage});
+            mortal.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage.amount});
         }
 
         Deactivate();
@@ -70,7 +70,7 @@ public class AreaDamageExecutor : AbilityExecutor<AreaDamageAbility>, IKeyUpRece
         }
 
 
-        var hits = Physics.OverlapSphere(position, ability.radius);
+        var hits = Physics.OverlapSphere(position, ability.damage.radius);
         return hits
             .Where(IsInArc)
             .Select(hit => hit.transform.gameObject.GetComponent<Mortal>())
