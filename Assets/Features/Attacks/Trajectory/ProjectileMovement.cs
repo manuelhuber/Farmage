@@ -28,7 +28,6 @@ public class ProjectileMovement : MonoBehaviour {
         trans.LookAt(newPosition);
         trans.position = newPosition;
         if (!(currentDistance < speed)) return;
-        Destroy(gameObject);
         if (_trajectory.impactFx != null) {
             var impactFX = Instantiate(_trajectory.impactFx, _target, Quaternion.identity);
             // Can't figure out how to calculate lifetime of particle system so let's use a large value
@@ -37,6 +36,7 @@ public class ProjectileMovement : MonoBehaviour {
         }
 
         _onArrival.Invoke();
+        Destroy(gameObject);
     }
 
     public void Go(Vector3 target, Trajectory trajectory, Action onArrival) {
@@ -47,7 +47,7 @@ public class ProjectileMovement : MonoBehaviour {
         _totalDistance = DistanceAsTheCrowFlies(transform.position, target);
     }
 
-    public float DistanceAsTheCrowFlies(Vector3 a, Vector3 b) {
+    private static float DistanceAsTheCrowFlies(Vector3 a, Vector3 b) {
         a.y = 0;
         b.y = 0;
         return (a - b).magnitude;

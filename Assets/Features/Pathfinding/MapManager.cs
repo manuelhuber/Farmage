@@ -17,7 +17,6 @@ namespace Features.Pathfinding {
 public struct PathRequest {
     public Vector3 From;
     public Vector3 To;
-    public Transform Movement;
     public Action<Vector3[]> Callback;
 }
 

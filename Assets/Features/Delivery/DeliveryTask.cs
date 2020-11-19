@@ -10,11 +10,10 @@ public class DeliveryTask : BaseTask {
         Destination = destination;
     }
 
-    public static string SaveKeyStatic => "DeliveryTask";
     public override TaskType Type => TaskType.Deliver;
 
-    public Optional<GameObject> Origin { get; private set; }
-    public GameObject Goods { get; private set; }
-    public Optional<GameObject> Destination { get; private set; }
+    public Optional<GameObject> Origin { get; }
+    public GameObject Goods { get; }
+    public Optional<GameObject> Destination { get; }
 }
 }

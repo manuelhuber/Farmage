@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Features.Common;
 using Features.Pathfinding;
 using Features.Time;
 using Grimity.Data;
@@ -67,11 +65,9 @@ public class MovementAgent : MonoBehaviour {
         CurrentDestination = pos;
         HasArrived = false;
         _cancelPath?.Invoke();
-        var trans = transform;
         _cancelPath = _mapManager.RequestPath(new PathRequest {
-            From = trans.position,
+            From = transform.position,
             To = pos,
-            Movement = trans,
             Callback = path => {
                 _path = bruteMove ? path.Prepend(pos).ToArray() : path;
                 _currentNode = _path.Length - 1;
