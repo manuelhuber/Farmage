@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Features.Health;
+using Features.Projectile;
 using Features.Ui.UserInput;
+using Unity.Mathematics;
 using UnityEngine;
 using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
@@ -59,13 +61,19 @@ public class
 
     private void FireProjectile() {
         var target = _splatManager.GetSpellCursorPosition();
-        var hits = Physics.OverlapSphere(target, ability.radius);
-        var enemies = hits
-            .Select(hit => hit.transform.gameObject.GetComponent<Mortal>())
-            .Where(enemy => enemy != null && enemy.Team != _team);
-        foreach (var enemy in enemies) {
-            enemy.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage});
-        }
+        var bullet = Instantiate(ability.projectile, transform.position, quaternion.identity);
+        var proj = bullet.AddComponent<ProjectileMovement>();
+        proj.Go(target,
+            ability.trajectory,
+            () => {
+                var hits = Physics.OverlapSphere(target, ability.radius);
+                var enemies = hits
+                    .Select(hit => hit.transform.gameObject.GetComponent<Mortal>())
+                    .Where(enemy => enemy != null && enemy.Team != _team);
+                foreach (var enemy in enemies) {
+                    enemy.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage});
+                }
+            });
 
         _alreadyFired++;
         if (_alreadyFired == ability.projectileCount) {

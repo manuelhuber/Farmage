@@ -1,3 +1,4 @@
+using Features.Projectile;
 using UnityEngine;
 using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
@@ -7,6 +8,7 @@ public class MortarAttackAbility : Ability {
     public Point splat;
     public int projectileCount;
     public GameObject projectile;
+    public Trajectory trajectory;
     public float radius;
     public int damage;
     public float range;

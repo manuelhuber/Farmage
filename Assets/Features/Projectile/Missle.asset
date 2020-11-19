@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd6fd8063d40464c96ed5ae80bb4e737, type: 3}
+  m_Name: Missle
+  m_EditorClassIdentifier: 
+  height:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.20137349
+      value: 0.49800557
+      inSlope: -0.074117735
+      outSlope: -0.074117735
+      tangentMode: 0
+      weightedMode: 1
+      inWeight: 1
+      outWeight: 0.068779394
+    - serializedVersion: 3
+      time: 1
+      value: 0.0023498535
+      inSlope: -0.62063515
+      outSlope: -1.1827902
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0.05120475
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  speed:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.3779602
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.07138403
+    - serializedVersion: 3
+      time: 0.25820506
+      value: 0.5159609
+      inSlope: 1.9389838
+      outSlope: 22.063921
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.19789642
+      outWeight: 0.027005041
+    - serializedVersion: 3
+      time: 0.38932246
+      value: 1.8541255
+      inSlope: 2.637074
+      outSlope: 2.637074
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.10524612
+    - serializedVersion: 3
+      time: 0.9957882
+      value: 2.4944263
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.07506844
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  baseSpeed: 0.5
+  impactFx: {fileID: 1804206099813350, guid: 4dd02b5f854b6c84990fbeb810abffe4, type: 3}
