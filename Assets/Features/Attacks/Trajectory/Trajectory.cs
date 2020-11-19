@@ -1,7 +1,7 @@
 using UnityEngine;
 
-namespace Features.Projectile {
-[CreateAssetMenu(menuName = "Trajectory")]
+namespace Features.Attacks.Trajectory {
+[CreateAssetMenu(menuName = "Attacks/Trajectory")]
 public class Trajectory : ScriptableObject {
     public AnimationCurve height;
     public AnimationCurve speed;

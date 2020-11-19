@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f07d60b1a82d4afb98e36e51a5177f50, type: 3}
-  m_Name: ZapEm
+  m_Name: SmackEm
   m_EditorClassIdentifier: 
-  cooldownInS: 0.5
-  abilityName: ZapEm
+  abilityName: Smack 'em
   description: 
-  icon: {fileID: 21300000, guid: b1e801de82488f04ca81e3628df4327e, type: 3}
-  damage: 2
-  range: 10
-  shootDuringMove: 1
+  icon: {fileID: 21300000, guid: b4bc6a9763de35647918bffc6a38d275, type: 3}
+  cooldownInS: 2
+  animationTrigger: 
+  range: 5
+  shootDuringMove: 0
+  damage: {fileID: 11400000, guid: 3b19840e63c9a294d96b2f964098f061, type: 2}
+  projectile: {fileID: 0}
+  trajectory: {fileID: 0}

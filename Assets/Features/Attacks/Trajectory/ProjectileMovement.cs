@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Features.Projectile {
+namespace Features.Attacks.Trajectory {
 public class ProjectileMovement : MonoBehaviour {
     private Action _onArrival;
     private float _progress;

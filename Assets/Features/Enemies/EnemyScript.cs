@@ -1,4 +1,5 @@
 ﻿using Features.Animations;
+using Features.Attacks.Damage;
 using Features.Health;
 using Features.Units.Common;
 using Grimity.Data;
@@ -8,7 +9,8 @@ namespace Features.Enemies {
 [RequireComponent(typeof(AdvancedMovementController))]
 [RequireComponent(typeof(Mortal))]
 public class EnemyScript : MonoBehaviour {
-    [SerializeField] public Mortal initialTarget;
+    [SerializeField]
+    public Mortal initialTarget;
 
     public Mortal DefaultTarget {
         set {

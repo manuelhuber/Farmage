@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Features.Attacks.Damage;
+using Features.Attacks.Trajectory;
 using Features.Common;
 using Features.Health;
 using Features.Units.Common;
@@ -56,7 +58,19 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
     private void DealDamage() {
         var target = GetAttackTarget();
         if (!target.HasValue) return;
-        target.Value.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage});
+
+        void Damage() {
+            target.Value.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage.amount});
+        }
+
+        if (ability.projectile != null) {
+            var projectile = Instantiate(ability.projectile, transform.position, Quaternion.identity)
+                .GetComponent<ProjectileMovement>();
+            projectile.Go(target.Value.transform.position, ability.trajectory, Damage);
+        } else {
+            Damage();
+        }
+
         CalculateNextCooldown();
     }
 

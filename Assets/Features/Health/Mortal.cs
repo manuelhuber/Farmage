@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Features.Attacks.Damage;
 using Grimity.Data;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,9 +8,12 @@ using UnityEngine.Events;
 namespace Features.Health {
 public class Mortal : MonoBehaviour, ITeam {
     public UnityEvent onDeath = new UnityEvent();
-    [SerializeField] private Team team;
 
-    [field: SerializeField] public int MaxHitpoints { get; set; }
+    [SerializeField]
+    private Team team;
+
+    [field: SerializeField]
+    public int MaxHitpoints { get; set; }
 
     public Grimity.Data.IObservable<int> Hitpoints => _hitpoints;
     public Grimity.Data.IObservable<int> Shield => _shield;

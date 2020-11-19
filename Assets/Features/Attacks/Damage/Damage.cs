@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Features.Health {
+namespace Features.Attacks.Damage {
 public struct Damage {
     public GameObject Source;
     public int Amount;

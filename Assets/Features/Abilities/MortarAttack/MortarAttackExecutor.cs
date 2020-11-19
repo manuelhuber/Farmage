@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using Features.Attacks.Damage;
+using Features.Attacks.Trajectory;
 using Features.Health;
-using Features.Projectile;
 using Features.Ui.UserInput;
 using Unity.Mathematics;
 using UnityEngine;

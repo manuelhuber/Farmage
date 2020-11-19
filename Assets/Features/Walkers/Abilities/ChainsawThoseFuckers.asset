@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06db15bd2dc94833bccc9578b7eac9d2, type: 3}
   m_Name: ChainsawThoseFuckers
   m_EditorClassIdentifier: 
-  cooldownInS: 2
   abilityName: Chainsaw
   description: WRRRRRRRR GRRRRRRR!
-  animationTrigger: 
   icon: {fileID: 21300000, guid: 72567a41ad6d35b4f9b48f956856b9d7, type: 3}
+  cooldownInS: 2
+  animationTrigger: 
   arc: 90
   radius: 10
   damage: 8

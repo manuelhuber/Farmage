@@ -9,13 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f07d60b1a82d4afb98e36e51a5177f50, type: 3}
-  m_Name: SmackEm
+  m_Script: {fileID: 11500000, guid: 613239a2c422417a85537bfd59ae19ef, type: 3}
+  m_Name: SmackEm_Damage
   m_EditorClassIdentifier: 
-  cooldownInS: 2
-  abilityName: Smack 'em
-  description: 
-  icon: {fileID: 21300000, guid: b4bc6a9763de35647918bffc6a38d275, type: 3}
-  damage: 10
-  range: 5
-  shootDuringMove: 0
+  amount: 10
+  dealsAoE: 0
+  radius: 0
