@@ -1,3 +1,4 @@
+using Features.Attacks.Damage;
 using Features.Attacks.Trajectory;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -8,6 +9,10 @@ namespace Features.Abilities.MortarAttack {
 public class MortarAttackAbility : Ability {
     public Point splat;
     public int projectileCount;
+    public float range;
+
+    [InlineEditor]
+    public DamageData damage;
 
     [AssetsOnly]
     public GameObject projectile;
@@ -15,9 +20,6 @@ public class MortarAttackAbility : Ability {
     [ShowIf("projectile")]
     public Trajectory trajectory;
 
-    public float radius;
-    public int damage;
-    public float range;
 
     public override IAbilityExecutor AddExecutor(GameObject gameObject) {
         var mortarAttackExecutor = gameObject.AddComponent<MortarAttackExecutor>();

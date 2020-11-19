@@ -26,7 +26,7 @@ public class
         _splatManager = GetComponentInChildren<SplatManager>();
         _splat = Instantiate(ability.splat, _splatManager.transform);
         _splat.gameObject.name = SplatName;
-        _splat.Scale = 2 * ability.radius;
+        _splat.Scale = 2 * ability.damage.radius;
         _splat.Range = ability.range;
         _splat.Progress = 1;
         _splatManager.Initialize();
@@ -69,8 +69,8 @@ public class
             ability.trajectory,
             () => {
                 DamageUtil.DamageEnemies(target,
-                    ability.radius,
-                    new Damage {Source = gameObject, Amount = ability.damage},
+                    ability.damage.radius,
+                    new Damage {Source = gameObject, Amount = ability.damage.amount},
                     _team);
             });
 

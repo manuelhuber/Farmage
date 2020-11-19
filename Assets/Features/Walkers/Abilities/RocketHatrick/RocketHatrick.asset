@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4db74e8073d143459ccada8818babd95, type: 3}
-  m_Name: Rocket Hatrick
+  m_Name: RocketHatrick
   m_EditorClassIdentifier: 
   abilityName: Rocket Hatrick
   description: 1 Walker 3 Missles
@@ -19,9 +19,8 @@ MonoBehaviour:
   animationTrigger: 
   splat: {fileID: 11487906, guid: e8d038476a8dad643b8e87791868999b, type: 3}
   projectileCount: 3
+  range: 30
+  damage: {fileID: 11400000, guid: 1b3b0bfc096e7a84f9e8468e54236f06, type: 2}
   projectile: {fileID: 4482226981002742114, guid: 62e9a85a4935ee84e948e0b7d16bdee8,
     type: 3}
   trajectory: {fileID: 11400000, guid: 482300c89eab4e9d81fbfc305b06d509, type: 2}
-  radius: 5
-  damage: 10
-  range: 50
