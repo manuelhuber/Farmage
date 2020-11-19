@@ -4,7 +4,7 @@ using Features.Attacks.Damage;
 using Features.Health;
 using UnityEngine;
 
-namespace Features.Abilities.MortarAttack {
+namespace Utils {
 public class DamageUtil {
     public static IEnumerable<Mortal> DamageEnemies(Vector3 target,
                                                     float radius,

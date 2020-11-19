@@ -6,6 +6,7 @@ using Features.Health;
 using Features.Ui.UserInput;
 using Unity.Mathematics;
 using UnityEngine;
+using Utils;
 using Vendor.Werewolf.StatusIndicators.Scripts.Components;
 
 namespace Features.Abilities.MortarAttack {
@@ -67,13 +68,10 @@ public class
         proj.Go(target,
             ability.trajectory,
             () => {
-                var hits = Physics.OverlapSphere(target, ability.radius);
-                var enemies = hits
-                    .Select(hit => hit.transform.gameObject.GetComponent<Mortal>())
-                    .Where(enemy => enemy != null && enemy.Team != _team);
-                foreach (var enemy in enemies) {
-                    enemy.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage});
-                }
+                DamageUtil.DamageEnemies(target,
+                    ability.radius,
+                    new Damage {Source = gameObject, Amount = ability.damage},
+                    _team);
             });
 
         _alreadyFired++;

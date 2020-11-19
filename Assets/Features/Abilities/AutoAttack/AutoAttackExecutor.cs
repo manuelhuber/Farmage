@@ -7,6 +7,7 @@ using Features.Health;
 using Features.Units.Common;
 using Grimity.Data;
 using UnityEngine;
+using Utils;
 
 namespace Features.Abilities.AutoAttack {
 [RequireComponent(typeof(ITeam))]
@@ -58,9 +59,18 @@ public class AutoAttackExecutor : AbilityExecutor<AutoAttackAbility> {
     private void DealDamage() {
         var target = GetAttackTarget();
         if (!target.HasValue) return;
+        var damage = new Damage {Source = gameObject, Amount = ability.damage.amount};
 
         void Damage() {
-            target.Value.TakeDamage(new Damage {Source = gameObject, Amount = ability.damage.amount});
+            if (ability.damage.dealsAoE) {
+                DamageUtil.DamageEnemies(target.Value.transform.position,
+                    ability.damage.radius,
+                    damage,
+                    _team
+                );
+            } else {
+                target.Value.TakeDamage(damage);
+            }
         }
 
         if (ability.projectile != null) {
